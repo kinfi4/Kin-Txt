@@ -1,0 +1,85 @@
+.controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 40px;
+
+    padding: 20px 100px;
+    height: 200px;
+}
+
+.controls div {
+    margin: 0 5px;
+
+    width: 150px;
+
+    height: 100%;
+    padding: 0 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.statsContainer {
+    position: relative;
+    min-height: 100vh;
+    height: fit-content;
+
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+
+    padding-top: 130px;
+    padding-left: 30%;
+    display: flex;
+    /*justify-content: center;*/
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+}
+
+.generateReportForm {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 40px 10px 10px;
+
+    width: 400px;
+
+    box-shadow: 0 0 10px #7744bb;
+}
+.choseReportLink {
+    text-decoration: none;
+    font-weight: bold;
+
+    position: absolute;
+    left: 20px;
+    top: 125px;
+}
+.choseReportLink a {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    transition: linear 0.1s;
+    color: #c2c2c2;
+}
+.choseReportLink a:hover {
+    color: #7b6991;
+}
+.generateReportsControlsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    height: 100%;
+    overflow: hidden;
+    font-size: 4px;
+}

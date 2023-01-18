@@ -1,0 +1,51 @@
+.enterLinkContainer{
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.enterLinkContainer *{
+    width: 80%;
+    margin-bottom: 20px;
+}
+.enterLinkContainer h4{
+     margin-bottom: 30px;
+}
+.channelsContainer {
+    box-shadow: 0 0 5px #7744bb;
+    width: 300px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 20px;
+    flex-wrap: wrap;
+}
+.postWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tape {
+    min-height: 100vh;
+    height: fit-content;
+
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+
+    padding-top: 130px;
+    padding-bottom: 200px;
+    margin-left: 30%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    background: rgb(21,32,43);
+    background: linear-gradient(90deg, rgba(21,32,43,1) 0%, rgba(78,76,93,1) 84%, rgba(88,84,91,1) 100%);
+}

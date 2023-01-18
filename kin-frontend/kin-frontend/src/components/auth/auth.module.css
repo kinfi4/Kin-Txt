@@ -1,0 +1,41 @@
+.formLink {
+    color: #f7fdff;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 20px;
+
+    margin-top: 40px;
+    text-align: center;
+}
+.authForm {
+    font-size: larger;
+    max-width: 700px;
+    height: fit-content;
+
+    padding: 40px 60px;
+
+    color: #f7fdff;
+    background-color: #15202B;
+    box-shadow: 30px 30px 40px #2b355b;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.authContainer{
+    width: 100%;
+    height: 100vh;
+
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.authContainer h2 {
+    margin-bottom: 50px;
+    font-size: 30px;
+}

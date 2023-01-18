@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  news-api:
+    build:
+      context: .
+      dockerfile: ./etc/kin-news/Dockerfile
+    image: "kin-news-api"
+    container_name: "kin-news-api"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./etc/kin-news/env/.dev.env
+    ports:
+      - "8000:8000"
+    networks:
+      - kin-network
+    volumes:
+      - ./kin_news_api/api:/app/api
+      - ./kin_news_api/config:/app/config
+      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./media/:/media
+      - ./kin_news_api/setup.cfg:/app/setup.cfg
+
+networks:
+  kin-network:
+    external:
+      name: kin-network

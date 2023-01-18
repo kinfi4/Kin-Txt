@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  kin-frontend:
+    build:
+      context: .
+      dockerfile: ./etc/Dockerfile
+    container_name: "kin-frontend"
+    volumes:
+      - ./kin-frontend:/app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./etc/env/.dev.env
+    command: npm start
+    networks:
+      - kin-network
+
+networks:
+  kin-network:
+    external:
+      name: kin-network

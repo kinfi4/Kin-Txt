@@ -1,0 +1,13 @@
+.estimateForm{
+    margin-top: 30px;
+}
+.estimateForm div {
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: linear 0.1s;
+}
+.active{
+    color: #7744bb;
+}

@@ -1,0 +1,48 @@
+.filterContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+
+    background-color: #2c4257;
+    border: solid black 1px;
+    border-radius: 2px;
+    width: 200px!important;
+    padding: 10px 20px;
+    color: #f7fdff;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+.filterContainer div:first-child {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.filterOptions {
+    z-index: 2;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    padding: 10px 20px;
+
+    width: 200px!important;
+    background-color: #2c4257;
+}
+.filterIcon {
+    font-size: 25px;
+    margin-top: 5px;
+    margin-right: 4px;
+}
+.filterOptions div {
+    border-bottom: 1px solid blueviolet;
+    padding: 10px 20px;
+
+    transition: linear 0.1s;
+}
+.filterOptions div:hover {
+    color: #7744bb;
+}

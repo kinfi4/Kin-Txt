@@ -1,0 +1,28 @@
+.rdrMonths, .rdrMonthAndYearWrapper, .rdrDateDisplayWrapper{
+    background-color: #15202B!important;
+    color: #f7fdff!important;
+}
+.rdrYearPicker *, .rdrMonthPicker *{
+    color: #f7fdff!important;
+    background-color: #15202B;
+}
+.rdrNextPrevButton {
+    background-color: #2CA884;
+}
+.rdrDayNumber span{
+    color: #f7fdff;
+}
+.rdrDayPassive span{
+    color: #4f4f4f !important;
+}
+.rdrDateInput {
+    color: #f7fdff!important;
+    background-color: #15202B;
+}
+.rdrCalendarWrapper {
+    box-shadow: 5px 5px 20px #7b6991;
+    transition: linear 0.1s;
+}
+.rdrCalendarWrapper:hover {
+    box-shadow: 5px 5px 20px #ad71ff;
+}
