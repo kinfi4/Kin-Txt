@@ -4,16 +4,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from api.domain.entities import UserEntity, UserRegistrationEntity
 from api.exceptions import LoginFailedError, UsernameAlreadyTakenError
-from api.infrastructure.clients.statistics_service import StatisticsServiceProxy
 from api.infrastructure.repositories import UserRepository
 from kin_news_core.auth import create_jwt_token
-from kin_news_core.exceptions import ServiceProxyError
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository, statistics_proxy: StatisticsServiceProxy):
+    def __init__(self, user_repository: UserRepository):
         self._repository = user_repository
-        self._statistics_service_proxy = statistics_proxy
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def login(self, user_entity: UserEntity) -> str:
@@ -29,11 +26,6 @@ class UserService:
 
     def register(self, user: UserRegistrationEntity) -> str:
         if self._repository.check_if_username_exists(user.username):
-            raise UsernameAlreadyTakenError(f'User with {user.username=} already exists, please select another username')
-
-        try:
-            self._statistics_service_proxy.send_create_user_request(username=user.username)
-        except ServiceProxyError:
             raise UsernameAlreadyTakenError(f'User with {user.username=} already exists, please select another username')
 
         created_user = self._repository.create_user(user.username, user.password)
