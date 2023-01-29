@@ -1,136 +1,119 @@
 import logging
 
 from dependency_injector.wiring import Provide, inject
-from django.conf import settings
-from pydantic import ValidationError
-from rest_framework import status
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView, Request, Response
+from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse, Response
 
-from api.domain.entities import GenerateReportEntity, ReportPutEntity
-from domain.services import ManagingReportsService, UserService
-from domain.services import (
+from kin_news_core.exceptions import KinNewsCoreException
+from kin_statistics_api.constants import DEFAULT_DATE_FORMAT
+from kin_statistics_api.containers import Container
+from kin_statistics_api.domain.entities import GenerateReportEntity, ReportPutEntity, User
+from kin_statistics_api.domain.services import ManagingReportsService, UserService
+from kin_statistics_api.domain.services.reports_generator.generate_report_usecase import (
     generate_report_use_case,
 )
-from api.exceptions import ReportAccessForbidden
-from config.constants import DEFAULT_DATE_FORMAT
-from config.containers import Container
-from kin_news_core.auth import JWTAuthentication
-from kin_news_core.exceptions import KinNewsCoreException
-from kin_news_core.utils import pydantic_errors_prettifier
+from kin_statistics_api.exceptions import ReportAccessForbidden
+from kin_statistics_api.views.helpers.auth import get_current_user
 
 _logger = logging.getLogger(__name__)
 
 
-class ReportsListView(APIView):
-    authentication_classes = [SessionAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+router = APIRouter(prefix='/reports')
 
-    @inject
-    def get(
-        self,
-        request: Request,
-        reports_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
-    ) -> Response:
-        report_identities = reports_service.get_user_reports_names(request.user)
 
-        return Response(
-            data={'reports': [report.dict(by_alias=True) for report in report_identities]}
+@router.get('')
+@inject
+def get_reports(
+    current_user: User = Depends(get_current_user),
+    reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
+):
+    report_identities = reports_service.get_user_reports_names(current_user.username)
+
+    return JSONResponse(content={'reports': [report.dict(by_alias=True) for report in report_identities]})
+
+
+@router.post('')
+@inject
+def generate_report_request(
+    generate_report_entity: GenerateReportEntity,
+    current_user: User = Depends(get_current_user),
+    max_synchronous_reports_generation: int = Depends(Provide[Container.config.max_synchronous_reports_generation]),
+    user_service: UserService = Depends(Provide[Container.services.user_service]),
+):
+    if user_service.count_user_reports_generations(current_user.username) >= max_synchronous_reports_generation:
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={
+                'errors': f'Sorry, but you can not generate more than '
+                          f'{max_synchronous_reports_generation} at the same time'
+            }
         )
 
-    @inject
-    def post(
-        self,
-        request: Request,
-        user_service: UserService = Provide[Container.services.user_service],
-    ) -> Response:
-        if user_service.count_user_reports_generations(request.user.id) >= settings.MAX_SYNCHRONOUS_REPORTS_GENERATION:
-            return Response(
-                status=status.HTTP_409_CONFLICT,
-                data={
-                    'errors': f'Sorry, but you can not generate more than '
-                              f'{settings.MAX_SYNCHRONOUS_REPORTS_GENERATION} at the same time'
-                }
-            )
+    try:
+        _logger.info('Creating Celery job for report generation...')
 
-        try:
-            generate_report = GenerateReportEntity(
-                start_date=request.data['startDate'],
-                end_date=request.data['endDate'],
-                channel_list=request.data['channels'],
-                report_type=request.data['reportType'],
-            )
+        use_case = generate_report_use_case(generate_report_entity.report_type)
 
-            _logger.info('Creating Celery job for report generation...')
+        use_case.delay(
+            start_date=generate_report_entity.start_date.strftime(DEFAULT_DATE_FORMAT),
+            end_date=generate_report_entity.end_date.strftime(DEFAULT_DATE_FORMAT),
+            channel_list=generate_report_entity.channel_list,
+            username=current_user.username,
+        )
 
-            use_case = generate_report_use_case(generate_report.report_type)
+    except KinNewsCoreException as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
-            use_case.delay(
-                start_date=generate_report.start_date.strftime(DEFAULT_DATE_FORMAT),
-                end_date=generate_report.end_date.strftime(DEFAULT_DATE_FORMAT),
-                channel_list=generate_report.channel_list,
-                user_id=request.user.id,
-            )
-        except ValidationError as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': pydantic_errors_prettifier(err.errors())})
-        except KinNewsCoreException as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': str(err)})
-
-        return Response(status=status.HTTP_202_ACCEPTED, data={'message': 'Generating report process started successfully!'})
+    return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content={'message': 'Generating report process started successfully!'})
 
 
-class ReportsSingleView(APIView):
-    authentication_classes = [SessionAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+@router.get('/{report_id}')
+@inject
+def get_report_details(
+    report_id: int,
+    current_user: User = Depends(get_current_user),
+    reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
+):
+    try:
+        report = reports_service.get_user_detailed_report(current_user.username, report_id)
+    except ReportAccessForbidden:
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={'errors': 'You do not have rights to this report!'})
+    except KinNewsCoreException as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
-    @inject
-    def get(
-        self,
-        request: Request,
-        report_id: int,
-        reports_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
-    ) -> Response:
-        try:
-            report = reports_service.get_user_detailed_report(request.user, report_id)
-        except ReportAccessForbidden:
-            return Response(status=status.HTTP_403_FORBIDDEN, data={'errors': 'You do not have rights to this report!'})
-        except KinNewsCoreException as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': str(err)})
+    return JSONResponse(content=report.dict(by_alias=True))
 
-        return Response(data=report.dict(by_alias=True))
 
-    @inject
-    def put(
-        self,
-        request: Request,
-        report_id: int,
-        reports_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
-    ) -> Response:
-        try:
-            report_put_entity = ReportPutEntity(**request.data, report_id=report_id)
-            report_identity = reports_service.set_report_name(request.user, report_put_entity)
-        except ValidationError as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': pydantic_errors_prettifier(err.errors())})
-        except ReportAccessForbidden:
-            return Response(status=status.HTTP_403_FORBIDDEN, data={'errors': 'User does not have rights to this report!'})
-        except KinNewsCoreException as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': str(err)})
+@router.put('/{report_id}')
+@inject
+def update_report(
+    report_id: int,
+    report_put_entity: ReportPutEntity,
+    current_user: User = Depends(get_current_user),
+    reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
+):
+    try:
+        report_identity = reports_service.set_report_name(current_user.username, report_put_entity.name, report_id)
+    except ReportAccessForbidden:
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={'errors': 'You do not have rights to this report!'})
+    except KinNewsCoreException as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
-        return Response(data=report_identity.dict(by_alias=True))
+    return JSONResponse(content=report_identity.dict(by_alias=True))
 
-    @inject
-    def delete(
-        self,
-        request: Request,
-        report_id: int,
-        reports_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
-    ) -> Response:
-        try:
-            reports_service.delete_report(request.user, report_id)
-        except ReportAccessForbidden:
-            return Response(status=status.HTTP_403_FORBIDDEN, data={'errors': 'User does not have rights to this report!'})
-        except KinNewsCoreException as err:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'errors': str(err)})
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+@router.delete('/{report_id}')
+@inject
+def delete_report(
+    report_id: int,
+    current_user: User = Depends(get_current_user),
+    reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
+):
+    try:
+        reports_service.delete_report(current_user.username, report_id)
+    except ReportAccessForbidden:
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={'errors': 'You do not have rights to this report!'})
+    except KinNewsCoreException as err:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

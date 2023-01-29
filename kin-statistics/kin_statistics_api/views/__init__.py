@@ -1,16 +1,10 @@
-from api import tasks
-from config import settings
-from config.containers import Container
+from fastapi import APIRouter
 
-from .healthcheck import HealthCheckView
-from .register_user import RegisterUserView
-from .report_data import GetReportDataView
-from .reports import ReportsListView, ReportsSingleView
+from kin_statistics_api.views.reports import router as reports_router
+from kin_statistics_api.views.report_data import router as reports_data_router
 
-container = Container()
-container.config.from_dict(settings.__dict__)
-container.init_resources()
-container.wire(
-    packages=[views],
-    modules=[tasks],
-)
+
+api_router = APIRouter(prefix='/api/v1')
+
+api_router.include_router(reports_router)
+api_router.include_router(reports_data_router)

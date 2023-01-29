@@ -1,7 +1,7 @@
 from typing import Callable
 
-from api.tasks import generate_statistical_report_task, generate_word_cloud_task
-from config.constants import ReportTypes
+from kin_statistics_api.tasks import generate_statistical_report_task, generate_word_cloud_task
+from kin_statistics_api.constants import ReportTypes
 
 
 def generate_report_use_case(report_type: ReportTypes) -> Callable[..., None]:

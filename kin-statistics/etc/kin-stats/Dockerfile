@@ -10,7 +10,9 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 RUN python -c "import nltk; nltk.download('punkt')"
 
-COPY ./kin_statistics_api .
-COPY ./submodules/kin-news-core .
+COPY ./etc/kin-stats/migrations/ /app/migrations
+COPY ./etc/kin-stats/alembic.ini /app/alembic.ini
+COPY ./kin_statistics_api/ /app/kin_statistics_api
+COPY ./submodules/kin-news-core/kin_news_core /app/kin_news_core
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -1,39 +1,36 @@
-from typing import Callable
+from typing import Callable, Optional
 
-from dependency_injector.wiring import Provide, inject
-from django.http import StreamingHttpResponse
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from dependency_injector.wiring import inject
+from fastapi import Depends, APIRouter, Response, status
+from fastapi.responses import StreamingResponse
 
-from domain.services import IReportFileGenerator
-from api.exceptions import ReportDataNotFound
-from config.containers import Container
+from kin_statistics_api.domain.entities.user import User
+from kin_statistics_api.domain.use_cases import file_generator_user_case
+from kin_statistics_api.exceptions import ReportDataNotFound
+from kin_statistics_api.views.helpers.auth import get_current_user
+
+router = APIRouter(prefix='/reports-data')
 
 
-class GetReportDataView(APIView):
-    @inject
-    def get(
-        self,
-        request: Request,
-        report_id: int,
-        report_data_use_case: Callable[..., IReportFileGenerator] = Provide[Container.use_cases.report_data_use_case],
-    ):
-        file_type = request.query_params.get('type')
+@router.get('/{report_id}')
+@inject
+def get_report_data(
+    report_id: int,
+    export_type: Optional[str],
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        if not export_type:
+            raise ReportDataNotFound()
 
-        try:
-            if not file_type:
-                raise ReportDataNotFound()
+        use_case = file_generator_user_case(export_type)
+        file, filename = use_case.get_file(current_user, report_id)
 
-            use_case = report_data_use_case(file_type)
-            file, filename = use_case.get_file(report_id)
-
-            return StreamingHttpResponse(
-                file,
-                headers={
-                    'Content-Disposition': f'attachment; filename="{filename}"',
-                }
-            )
-        except ReportDataNotFound:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return StreamingResponse(
+            file,
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+            }
+        )
+    except ReportDataNotFound:
+        return Response(status_code=status.HTTP_400_BAD_REQUEST)

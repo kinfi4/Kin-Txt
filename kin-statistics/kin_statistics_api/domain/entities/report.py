@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, Field, ValidationError, validator
 
-from config.constants import (
+from kin_statistics_api.constants import (
     MessageCategories,
     ReportProcessingResult,
     ReportTypes,
@@ -119,7 +119,6 @@ class WordCloudReport(BaseReport):
 
 class ReportPutEntity(BaseModel):
     name: str = Field(max_length=80)
-    report_id: int = Field(..., alias='reportId')
 
     class Config:
         allow_population_by_field_name = True

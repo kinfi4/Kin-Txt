@@ -4,15 +4,15 @@ from collections import Counter
 from itertools import chain
 from typing import Any
 
-from api.domain.entities import GenerateReportEntity, WordCloudReport
-from domain.services.reports_generator.interfaces import IGeneratingReportsService
-from domain.services import Predictor
-from domain.services import (
+from kin_statistics_api.domain.entities import GenerateReportEntity, WordCloudReport
+from kin_statistics_api.domain.services.reports_generator.interfaces import IGeneratingReportsService
+from kin_statistics_api.domain.services.reports_generator.predictor.interfaces import IPredictor
+from kin_statistics_api.domain.services.reports_generator.word_cloud.reports_builder import (
     WordCloudReportBuilder,
 )
-from api.infrastructure.interfaces import IReportRepository
-from api.infrastructure.repositories import ReportsAccessManagementRepository
-from config.constants import MessageCategories, SentimentTypes
+from kin_statistics_api.infrastructure.interfaces import IReportRepository
+from kin_statistics_api.infrastructure.repositories import ReportsAccessManagementRepository
+from kin_statistics_api.constants import MessageCategories, SentimentTypes
 from kin_news_core.telegram import IDataGetterProxy
 
 
@@ -25,7 +25,7 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
         telegram_client: IDataGetterProxy,
         reports_repository: IReportRepository,
         report_access_repository: ReportsAccessManagementRepository,
-        predictor: Predictor,
+        predictor: IPredictor,
         reports_folder_path: str,
     ) -> None:
         super().__init__(telegram_client, reports_repository, report_access_repository, predictor)

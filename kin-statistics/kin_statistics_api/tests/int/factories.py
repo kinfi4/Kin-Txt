@@ -1,9 +1,9 @@
 from faker import Faker
 
-from domain.services import (
+from kin_statistics_api.domain.services import (
     WordCloudReportBuilder,
 )
-from config.constants import ReportProcessingResult
+from kin_statistics_api.constants import ReportProcessingResult
 
 _faker = Faker()
 

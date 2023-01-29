@@ -1,147 +1,45 @@
-import os
-import datetime
-from pathlib import Path
+from pydantic import BaseSettings, Field
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = bool(int(os.environ.get('DEBUG')))
-LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
-NOSE_ARGS = ['--nocapture', '--nologcapture']
-
-ALLOWED_HOSTS = ['*']
-
-CORS_ALLOW_ALL_ORIGINS = True  # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-CORS_ALLOW_CREDENTIALS = True
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'rest_framework',
-    'drf_yasg',
-    'corsheaders',
-
-    'api',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'config.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'config.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
-        'PORT': os.getenv('DATABASE_PORT', '5432')
-    }
-}
-MIGRATION_MODULES = {'api': 'api.infrastructure.migrations'}
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media'
-
-LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-TOKEN_LIFE_MINUTES = int(os.environ.get('TOKEN_LIFE_MINUTES'))
-
-# Telegram
-TELEGRAM_API_ID = int(os.getenv('TELEGRAM_API_ID'))
-TELEGRAM_API_HASH = os.getenv('TELEGRAM_API_HASH')
-TELEGRAM_SESSION_STRING = os.getenv('TELEGRAM_SESSION_STRING')
-
-MONGO_DB_CONNECTION_STRING = os.getenv('MONGO_DB_CONNECTION_STRING')
-
-MAX_SUBSCRIPTIONS_ALLOWED = os.getenv('MAX_SUBSCRIPTIONS_ALLOWED', 12)
-
-KIN_TOKEN = os.getenv('KIN_TOKEN')
-
-USER_REPORTS_FOLDER_PATH = os.getenv("USER_REPORTS_FOLDER_PATH")
+from kin_news_core.settings import PostgresSettings
 
 
-# Celery
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+class ModelSettings(BaseSettings):
+    ml_vectorizer_path: str = Field(..., env='SKLEARN_VECTORIZER_PATH')
+    knn_model_path: str = Field(..., env='KNN_MODEL_PATH')
+    svc_model_path: str = Field(..., env='SVC_MODEL_PATH')
+    gaussian_model_path: str = Field(..., env='GAUSSIAN_MODEL_PATH')
+
+    sentiment_dict_path: str = Field(..., env='SENTIMENT_DICTIONARY_PATH')
+    stop_words_path: str = Field(..., env='STOP_WORDS_PATH')
 
 
-# ML models
-SKLEARN_VECTORIZER_PATH = BASE_DIR / os.getenv('SKLEARN_VECTORIZER_PATH')
-KERAS_TOKENIZER_PATH = BASE_DIR / os.getenv('KERAS_TOKENIZER_PATH')
-KNN_MODEL_PATH = BASE_DIR / os.getenv('KNN_MODEL_PATH')
-SVC_MODEL_PATH = BASE_DIR / os.getenv('SVC_MODEL_PATH')
-GAUSSIAN_MODEL_PATH = BASE_DIR / os.getenv('GAUSSIAN_MODEL_PATH')
-LSTM_MODEL_PATH = BASE_DIR / os.getenv('LSTM_MODEL_PATH')
+class CelerySettings(BaseSettings):
+    broker_url: str = Field(..., env='CELERY_BROKER_URL')
+    result_backend: str = Field(..., env='CELERY_RESULT_BACKEND')
+    accept_content: list[str] = Field(['application/json'], env='CELERY_ACCEPT_CONTENT')
+    task_serializer: str = Field('json', env='CELERY_TASK_SERIALIZER')
+    result_serializer: str = Field('json', env='CELERY_RESULT_SERIALIZER')
 
 
-# Sentiment
-SENTIMENT_DICTIONARY_PATH = BASE_DIR / os.getenv('SENTIMENT_DICTIONARY_PATH')
-STOP_WORDS_PATH = BASE_DIR / os.getenv('STOP_WORDS_PATH')
+class TelegramSettings(BaseSettings):
+    api_id: int = Field(..., env='TELEGRAM_API_ID')
+    api_hash: str = Field(..., env='TELEGRAM_API_HASH')
+    session_string: str = Field(..., env='TELEGRAM_SESSION_STRING')
 
-# Reports generation
-MAX_SYNCHRONOUS_REPORTS_GENERATION = int(os.getenv("MAX_SYNCHRONOUS_REPORTS_GENERATION", 3))
+
+class Settings(BaseSettings):
+    secret_key: str = Field(..., env='SECRET_KEY')
+    log_level: str = Field('INFO', env='LOG_LEVEL')
+    debug: bool = Field(False, env='DEBUG')
+    token_life_minutes: int = Field(..., env='TOKEN_LIFE_MINUTES')
+    max_synchronous_reports_generation: int = Field(3, env='MAX_SYNCHRONOUS_REPORTS_GENERATION')
+    reports_folder_path: str = Field(..., env='USER_REPORTS_FOLDER_PATH')
+    kin_token: str = Field(..., env='KIN_TOKEN')
+    max_channel_per_report_count: int = Field(12, env='MAX_SUBSCRIPTIONS_ALLOWED')
+    mongodb_connection_string: str = Field(..., env='MONGO_DB_CONNECTION_STRING')
+    allowed_hosts: list[str] = Field(..., env='ALLOWED_HOSTS')
+
+    database: PostgresSettings = PostgresSettings()
+    models: ModelSettings = ModelSettings()
+    celery: CelerySettings = CelerySettings()
+    telegram: TelegramSettings = TelegramSettings()

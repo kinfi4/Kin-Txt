@@ -6,4 +6,4 @@ from .report import (
     StatisticalReport,
     WordCloudReport,
 )
-from .user import CreateUserEntity
+from .user import User

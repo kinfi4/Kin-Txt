@@ -1,20 +1,17 @@
 import logging
 from typing import Any
 
-from django.contrib.auth.models import User
-from django.db.models import F, Max
 from pymongo import MongoClient, ReturnDocument
 
-from api.domain.entities import (
+from kin_statistics_api.domain.entities import (
     BaseReport,
     ReportIdentificationEntity,
     StatisticalReport,
     WordCloudReport,
 )
-from api.exceptions import ImpossibleToModifyProcessingReport, ReportNotFound
-from api.infrastructure.interfaces import IReportRepository
-from api.models import UserGeneratesReport, UserReport
-from config.constants import ReportProcessingResult, ReportTypes
+from kin_statistics_api.exceptions import ImpossibleToModifyProcessingReport, ReportNotFound
+from kin_statistics_api.infrastructure.interfaces import IReportRepository
+from kin_statistics_api.constants import ReportProcessingResult, ReportTypes
 
 
 class ReportsMongoRepository(IReportRepository):
@@ -72,13 +69,13 @@ class ReportsMongoRepository(IReportRepository):
         return self._map_dict_to_entity(dict_report)
 
     def delete_report(self, report_id: int) -> None:
-        # try:
-        #     report = self.get_report(report_id)
-        # except ReportNotFound:
-        #     return
-        #
-        # if report.processing_status == ReportProcessingResult.PROCESSING:
-        #     raise ImpossibleToModifyProcessingReport('You can not delete the report during processing.')
+        try:
+            report = self.get_report(report_id)
+        except ReportNotFound:
+            return
+
+        if report.processing_status == ReportProcessingResult.PROCESSING:
+            raise ImpossibleToModifyProcessingReport('You can not delete the report during processing.')
 
         self._reports_collection.delete_one({
             'report_id': report_id
@@ -99,56 +96,3 @@ class ReportsMongoRepository(IReportRepository):
             return WordCloudReport.from_dict(dict_report)
 
         return StatisticalReport.from_dict(dict_report)
-
-
-class ReportsAccessManagementRepository:
-    def __init__(self):
-        self._logger = logging.getLogger(self.__class__.__name__)
-        self._user_query = User.objects
-        self._user_reports_query = UserReport.objects
-        self._user_generating_query = UserGeneratesReport.objects
-
-    def get_user_report_ids(self, user_id: int) -> list[int]:
-        user = self._user_query.prefetch_related('reports').get(pk=user_id)
-
-        return list(report.report_id for report in user.reports.all())
-
-    def create_new_user_report(self, user_id: int) -> int:
-        """
-            Returns: int - Report ID that was created
-        """
-
-        last_report_id = (
-            self._user_reports_query
-            .aggregate(max_report_id=Max(F('report_id')))
-            .get('max_report_id', 0)
-        )
-
-        if last_report_id is None:
-            last_report_id = 0
-
-        self._logger.info(f'Setting report access rights of report_id: {last_report_id + 1} to user: {user_id}')
-        self._user_reports_query.create(user_id=user_id, report_id=last_report_id + 1)
-
-        return last_report_id + 1
-
-    def set_user_began_report_generation(self, user_id: int) -> None:
-        report_generating, _ = self._user_generating_query.get_or_create(user_id=user_id)
-        report_generating.reports_generated_count += 1
-        report_generating.save(update_fields=['reports_generated_count'])
-
-    def set_user_finished_report_generation(self, user_id: int) -> None:
-        report_generating, _ = self._user_generating_query.get_or_create(user_id=user_id)
-        report_generating.reports_generated_count -= 1
-        report_generating.save(update_fields=['reports_generated_count'])
-
-    def count_user_reports_synchronous_generations(self, user_id: int) -> int:
-        report_generating, _ = self._user_generating_query.get_or_create(user_id=user_id)
-
-        return report_generating.reports_generated_count
-
-    def delete_report(self, report_id: int) -> None:
-        try:
-            self._user_reports_query.get(report_id=report_id).delete()
-        except UserReport.DoesNotExist:
-            pass

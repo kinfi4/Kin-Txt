@@ -4,8 +4,8 @@ from typing import Optional
 
 from nltk.tokenize import word_tokenize
 
-from domain.services import ISentimentAnalyzer
-from config.constants import MessageCategories, SentimentTypes
+from kin_statistics_api.domain.services.reports_generator.predictor import ISentimentAnalyzer
+from kin_statistics_api.constants import MessageCategories, SentimentTypes
 
 Word = namedtuple('Word', 'form label value')
 
@@ -43,7 +43,6 @@ class CsvFileIndex:
 
 
 class SentimentAnalyzer(ISentimentAnalyzer):
-    _negative_marks = ('не',)
     _positive_level_threshold = 1
     _negative_level_threshold = -0.1
     _initial_sentiment_value = {
@@ -62,14 +61,9 @@ class SentimentAnalyzer(ISentimentAnalyzer):
     def define_sentiment_type(self, text: str, text_type: MessageCategories) -> SentimentTypes:
         tokens = word_tokenize(text, language='russian')
 
-        tokens_sentiment_values, negativation_coefficient = [], 1
+        tokens_sentiment_values = []
         for token in tokens:
-            if token in self._negative_marks:
-                negativation_coefficient = -1
-                continue
-
-            tokens_sentiment_values.append(self._find_word_sentiment_value(token, coefficient=negativation_coefficient))
-            negativation_coefficient = 1
+            tokens_sentiment_values.append(self._find_word_sentiment_value(token))
 
         text_sentiment_value = self._initial_sentiment_value[text_type]
         text_sentiment_value += sum(tokens_sentiment_values)
@@ -81,10 +75,7 @@ class SentimentAnalyzer(ISentimentAnalyzer):
         else:
             return SentimentTypes.NEUTRAL
 
-    def _find_word_sentiment_value(self, word: str, coefficient: int = 1) -> float:
+    def _find_word_sentiment_value(self, word: str) -> float:
         word_obj = self._word_indexator.find_word_binary(word)
 
-        if word_obj is None:
-            return 0
-
-        return word_obj.value * coefficient
+        return word_obj.value if word_obj is not None else 0

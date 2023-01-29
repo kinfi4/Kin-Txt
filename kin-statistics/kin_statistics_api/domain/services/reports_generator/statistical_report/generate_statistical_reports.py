@@ -2,18 +2,18 @@ import csv
 import os
 from typing import Any, Union
 
-from api.domain.entities import GenerateReportEntity, StatisticalReport
-from domain.services.reports_generator.interfaces import IGeneratingReportsService
-from domain.services import Predictor
-from domain.services.reports_generator.statistical_report import (
+from kin_statistics_api.domain.entities import GenerateReportEntity, StatisticalReport
+from kin_statistics_api.domain.services.reports_generator.interfaces import IGeneratingReportsService
+from kin_statistics_api.domain.services.reports_generator.predictor.interfaces import IPredictor
+from kin_statistics_api.domain.services.reports_generator.statistical_report.reports_builder import (
     ReportsBuilder,
 )
-from api.infrastructure.repositories import (
+from kin_statistics_api.infrastructure.repositories import (
     IReportRepository,
     ReportsAccessManagementRepository,
 )
-from api.type_hints import CSV_WRITER
-from config.constants import DEFAULT_DATE_FORMAT, MessageCategories, SentimentTypes
+from kin_statistics_api.domain.type_hints import CSV_WRITER
+from kin_statistics_api.constants import DEFAULT_DATE_FORMAT, MessageCategories, SentimentTypes
 from kin_news_core.telegram.interfaces import IDataGetterProxy
 
 
@@ -25,7 +25,7 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         telegram_client: IDataGetterProxy,
         reports_repository: IReportRepository,
         report_access_repository: ReportsAccessManagementRepository,
-        predictor: Predictor,
+        predictor: IPredictor,
         reports_folder_path: str,
     ) -> None:
         super().__init__(telegram_client, reports_repository, report_access_repository, predictor)
@@ -35,6 +35,7 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         self._csv_writer: CSV_WRITER = None
 
     def _build_report_entity(self, report_id: int, generate_report_entity: GenerateReportEntity) -> StatisticalReport:
+
         user_report_file = open(os.path.join(self._reports_folder_path, f'{report_id}.csv'), 'w')
         self._csv_writer = csv.writer(user_report_file)
         self._csv_writer.writerow(['date', 'channel', 'hour', 'text', 'sentiment', 'category'])

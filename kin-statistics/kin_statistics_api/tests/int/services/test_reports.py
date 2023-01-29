@@ -1,7 +1,5 @@
-from django.test import Client, TestCase
-
-from api.exceptions import ReportNotFound
-from api.models import User
+from exceptions import ReportNotFound
+from infrastructure.models.models import User
 from api.tests.int import factories as fc
 from api.tests.int.urls import APIUrls
 from views import container

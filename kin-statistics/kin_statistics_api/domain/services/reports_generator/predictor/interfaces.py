@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 
-import numpy as np
-
-from config.constants import MAX_POST_LEN_IN_WORDS, MessageCategories, SentimentTypes
+from kin_statistics_api.constants import MessageCategories, SentimentTypes
 
 
 class IPredictor(ABC):
@@ -15,7 +13,7 @@ class IPredictor(ABC):
         pass
 
     @abstractmethod
-    def get_sentiment_type(self, text: str, news_type: MessageCategories) -> SentimentTypes:
+    def get_sentiment_type(self, text: str, news_type: MessageCategories, make_preprocessing: bool = False) -> SentimentTypes:
         pass
 
     @abstractmethod
@@ -34,17 +32,6 @@ class ITextPreprocessor(ABC):
 
     @abstractmethod
     def ml_vectorizing(self, texts, make_preprocessing: bool = True):
-        pass
-
-    @abstractmethod
-    def nn_vectorizing(
-        self,
-        texts,
-        make_preprocessing: bool = True,
-        max_words_number: int = MAX_POST_LEN_IN_WORDS,
-        padding: str = 'pre',
-        truncating: str = 'pre',
-    ) -> np.ndarray:
         pass
 
 

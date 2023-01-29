@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
-from api.domain.entities import StatisticalReport
-from api.domain.entities.report import (
+from kin_statistics_api.domain.entities.report import (
     BaseReport,
     ReportIdentificationEntity,
     WordCloudReport,
+    StatisticalReport,
 )
 
 

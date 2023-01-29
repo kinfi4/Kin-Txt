@@ -5,10 +5,6 @@ class ReportAccessForbidden(AccessForbidden):
     pass
 
 
-class UsernameTaken(KinNewsCoreException):
-    pass
-
-
 class ImpossibleToModifyProcessingReport(KinNewsCoreException):
     pass
 

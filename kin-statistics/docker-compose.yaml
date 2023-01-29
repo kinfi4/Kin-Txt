@@ -7,7 +7,7 @@ services:
       dockerfile: ./etc/kin-stats/Dockerfile
     image: 'kin-statistics-api'
     container_name: 'kin-statistics-api'
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "alembic-autogen-check || alembic revision --autogenerate && alembic upgrade head && python -m kin_statistics_api run-server"
     env_file:
       - ./etc/kin-stats/env/.dev.env
     ports:
@@ -15,11 +15,9 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_statistics_api/api:/app/api
-      - ./kin_statistics_api/setup.cfg:/app/setup.cfg
-      - ./kin_statistics_api/config:/app/config
-      - ./kin_statistics_api/models:/app/models
-      - ./kin_statistics_api/data:/app/data
+      - ./etc/kin-stats/migrations:/app/migrations
+      - ./etc/kin-stats/alembic.ini:/app/alembic.ini
+      - ./kin_statistics_api:/app/kin_statistics_api
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
 
   celery_worker:
@@ -28,16 +26,15 @@ services:
       dockerfile: ./etc/kin-stats/Dockerfile
     image: 'kin-statistics-worker'
     container_name: 'kin-statistics-celery-worker'
-    command: bash -c "celery -A config worker -l INFO"
+    command: bash -c "python -m kin_statistics_api run-tasks"
     env_file:
       - ./etc/kin-stats/env/.dev.env
     networks:
       - kin-network
     volumes:
-      - ./kin_statistics_api/api:/app/api
-      - ./kin_statistics_api/config:/app/config
-      - ./kin_statistics_api/models:/app/models
-      - ./kin_statistics_api/data:/app/data
+      - ./etc/kin-stats/migrations:/app/migrations
+      - ./etc/kin-stats/alembic.ini:/app/alembic.ini
+      - ./kin_statistics_api:/app/kin_statistics_api
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
     depends_on:
       - statistics-api

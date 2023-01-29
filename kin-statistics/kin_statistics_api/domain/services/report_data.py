@@ -2,27 +2,20 @@ import csv
 import io
 import json
 import os
-from typing import IO, Optional
+from typing import IO
 
-from django.conf import settings
-
-from domain.services.interfaces import IReportFileGenerator
-from api.exceptions import ReportDataNotFound
-
-
-def file_generator_user_case(file_type: str) -> Optional[IReportFileGenerator]:
-    if file_type == 'json':
-        return JsonFileGenerator()
-    elif file_type == 'csv':
-        return CsvFileGenerator()
-
-    raise ReportDataNotFound()
+from kin_statistics_api.domain.entities import User
+from kin_statistics_api.domain.services.interfaces import IReportFileGenerator
+from kin_statistics_api.exceptions import ReportDataNotFound
+from kin_statistics_api.settings import Settings
 
 
 class JsonFileGenerator(IReportFileGenerator):
-    def get_file(self, report_id: int) -> tuple[IO, str]:
+    def get_file(self, user: User, report_id: int) -> tuple[IO, str]:
+        self._check_user_access(user, report_id)
+
         try:
-            with open(os.path.join(settings.USER_REPORTS_FOLDER_PATH, f'{report_id}.csv')) as csv_file:
+            with open(os.path.join(Settings().reports_folder_path, f'{report_id}.csv')) as csv_file:
                 return self._transform_csv_to_json(csv_file), f'report-{report_id}.json'
         except FileNotFoundError:
             raise ReportDataNotFound()
@@ -38,8 +31,10 @@ class JsonFileGenerator(IReportFileGenerator):
 
 
 class CsvFileGenerator(IReportFileGenerator):
-    def get_file(self, report_id: int) -> tuple[IO, str]:
+    def get_file(self, user: User, report_id: int) -> tuple[IO, str]:
+        self._check_user_access(user, report_id)
+
         try:
-            return open(os.path.join(settings.USER_REPORTS_FOLDER_PATH, f'{report_id}.csv')), f'report-{report_id}.csv'
+            return open(os.path.join(Settings().reports_folder_path, f'{report_id}.csv')), f'report-{report_id}.csv'
         except FileNotFoundError:
             raise ReportDataNotFound()

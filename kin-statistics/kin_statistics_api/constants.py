@@ -1,5 +1,10 @@
 import re
+import datetime
 from enum import Enum
+
+
+PROJECT_TITLE = 'Kin-Statistics'
+PROJECT_DESCRIPTION = 'Kin-Statistics is a service for storing and managing statistical reports.'
 
 
 class MessageCategories(str, Enum):
@@ -55,3 +60,6 @@ emoji_regex_compiled = re.compile(
 class ReportTypes(str, Enum):
     STATISTICAL = 'Statistical'
     WORD_CLOUD = 'WordCloud'
+
+
+LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo

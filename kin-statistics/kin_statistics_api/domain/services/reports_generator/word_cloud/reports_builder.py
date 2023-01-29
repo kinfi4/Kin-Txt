@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from api.domain.entities import WordCloudReport
-from config.constants import (
+from kin_statistics_api.domain.entities import WordCloudReport
+from kin_statistics_api.constants import (
     MessageCategories,
     ReportProcessingResult,
     ReportTypes,

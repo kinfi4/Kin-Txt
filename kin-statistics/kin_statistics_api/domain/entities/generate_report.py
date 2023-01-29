@@ -1,10 +1,10 @@
 from datetime import date, datetime
 from typing import Any, Optional, Union
 
-from django.conf import settings
 from pydantic import BaseModel, Field, ValidationError, root_validator, validator
 
-from config.constants import DEFAULT_DATE_FORMAT, ReportTypes
+from kin_statistics_api.constants import DEFAULT_DATE_FORMAT, ReportTypes
+from kin_statistics_api.settings import Settings
 
 
 def _cast_string_to_date(date_string: str) -> date:
@@ -22,7 +22,7 @@ class GenerateReportEntity(BaseModel):
 
     @validator('channel_list', pre=True, allow_reuse=True)
     def validate_channels(cls, channels: list[str]) -> list[str]:
-        if len(channels) > settings.MAX_SUBSCRIPTIONS_ALLOWED or not channels:
+        if len(channels) > Settings().max_channel_per_report_count or not channels:
             raise ValidationError('You passed invalid list of channels to process!')
 
         return channels

@@ -1,11 +1,10 @@
 from unittest import mock
 
-from django.test import TestCase
 
 from api.domain.entities import StatisticalReport
 from tests import factories
 from views import container
-from config.constants import (
+from constants import (
     DEFAULT_DATE_FORMAT,
     MessageCategories,
     ReportProcessingResult,
