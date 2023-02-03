@@ -6,3 +6,6 @@ run-silent:
 
 run:
 	docker-compose up
+
+logs:
+	docker-compose logs -f 

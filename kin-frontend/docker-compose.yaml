@@ -5,11 +5,14 @@ services:
     build:
       context: .
       dockerfile: ./etc/Dockerfile
+    image: "kin-frontend"
     container_name: "kin-frontend"
     volumes:
-      - ./kin-frontend:/app
+      - ./kin-frontend/src:/app/src
     ports:
       - "3000:3000"
+    env_file:
+      - ./etc/env/.dev.env
     command: npm start
     networks:
       - kin-network
