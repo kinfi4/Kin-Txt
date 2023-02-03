@@ -10,8 +10,6 @@ services:
       - ./kin-frontend:/app
     ports:
       - "3000:3000"
-    env_file:
-      - ./etc/env/.dev.env
     command: npm start
     networks:
       - kin-network
