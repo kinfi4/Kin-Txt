@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from kin_statistics_api.constants import MessageCategories, SentimentTypes
+from kin_reports_generation.constants import MessageCategories, SentimentTypes
 
 
 class IPredictor(ABC):

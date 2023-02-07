@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  reports-builder-consumer:
+    build:
+      context: .
+      dockerfile: ./etc/kin-stats/Dockerfile
+    image: 'kin-reports-builder-consumer'
+    container_name: 'kin-reports-builder-consumer'
+    command: bash -c "python -m kin_reports_generation consume"
+    env_file:
+      - ./etc/kin-stats/env/.dev.env
+    networks:
+      - kin-network
+    volumes:
+      - ./kin_reports_generation:/app/kin_reports_generation
+      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./etc/kin-stats/Dockerfile
+    image: 'kin-statistics-worker'
+    container_name: 'kin-statistics-celery-worker'
+    command: bash -c "python -m kin_reports_generation run-tasks"
+    env_file:
+      - ./etc/kin-stats/env/.dev.env
+    networks:
+      - kin-network
+    volumes:
+      - ./kin_reports_generation:/app/kin_reports_generation
+      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+    depends_on:
+      - reports-builder-consumer
+
+networks:
+  kin-network:
+    external:
+      name: kin-network

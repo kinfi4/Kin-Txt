@@ -1,20 +1,19 @@
 import csv
-import os
-from typing import Any, Union
+import tempfile
+from typing import Any, Union, IO
 
-from kin_statistics_api.domain.entities import GenerateReportEntity, StatisticalReport
-from kin_statistics_api.domain.services.reports_generator.interfaces import IGeneratingReportsService
-from kin_statistics_api.domain.services.reports_generator.predictor.interfaces import IPredictor
-from kin_statistics_api.domain.services.reports_generator.statistical_report.reports_builder import (
+from kin_news_core.messaging import AbstractEventProducer
+from kin_news_core.constants import DEFAULT_DATE_FORMAT
+
+from kin_reports_generation.domain.entities import GenerateReportEntity, StatisticalReport
+from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
+from kin_reports_generation.domain.services.predictor.interfaces import IPredictor
+from kin_reports_generation.domain.services.statistical_report.reports_builder import (
     ReportsBuilder,
 )
-from kin_statistics_api.infrastructure.repositories import (
-    IReportRepository,
-    ReportsAccessManagementRepository,
-)
-from kin_statistics_api.domain.type_hints import CSV_WRITER
-from kin_statistics_api.constants import DEFAULT_DATE_FORMAT, MessageCategories, SentimentTypes
+from kin_reports_generation.constants import MessageCategories, SentimentTypes
 from kin_news_core.telegram.interfaces import IDataGetterProxy
+from kin_reports_generation.infrastructure.services import StatisticsService
 
 
 class GenerateStatisticalReportService(IGeneratingReportsService):
@@ -23,27 +22,27 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
     def __init__(
         self,
         telegram_client: IDataGetterProxy,
-        reports_repository: IReportRepository,
-        report_access_repository: ReportsAccessManagementRepository,
         predictor: IPredictor,
-        reports_folder_path: str,
+        events_producer: AbstractEventProducer,
+        statistics_service: StatisticsService,
     ) -> None:
-        super().__init__(telegram_client, reports_repository, report_access_repository, predictor)
+        super().__init__(telegram_client, predictor, events_producer)
+        self._statistics_service = statistics_service
 
-        self._reports_folder_path = reports_folder_path
+        self._csv_writer = None
 
-        self._csv_writer: CSV_WRITER = None
-
-    def _build_report_entity(self, report_id: int, generate_report_entity: GenerateReportEntity) -> StatisticalReport:
-
-        user_report_file = open(os.path.join(self._reports_folder_path, f'{report_id}.csv'), 'w')
+    def _build_report_entity(self, generate_report_entity: GenerateReportEntity) -> StatisticalReport:
+        user_report_file = tempfile.TemporaryFile('w')
         self._csv_writer = csv.writer(user_report_file)
         self._csv_writer.writerow(['date', 'channel', 'hour', 'text', 'sentiment', 'category'])
 
         report_data = self.__gather_report_data(generate_report_entity)
 
+        self._save_data_to_file(generate_report_entity.report_id, user_report_file)
+        user_report_file.close()
+
         return (
-            ReportsBuilder.from_report_id(report_id)
+            ReportsBuilder.from_report_id(generate_report_entity.report_id)
             .set_total_messages_count(report_data['total_messages'])
             .set_messages_count_by_day_hour(report_data['messages_count_by_day_hour'])
             .set_messages_count_by_category(report_data['messages_count_by_category'])
@@ -125,6 +124,9 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         report_data['messages_count_by_date'] = self._reverse_dict_keys(report_data['messages_count_by_date'])
 
         return report_data
+
+    def _save_data_to_file(self, report_id: int, file: IO) -> None:
+        self._statistics_service.save_report_data(report_id=report_id, data=file, file_type='csv')
 
     @staticmethod
     def _reverse_dict_keys(dct: dict[str, Any]) -> dict[str, Any]:

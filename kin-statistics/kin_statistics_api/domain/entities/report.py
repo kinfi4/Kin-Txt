@@ -18,6 +18,9 @@ class BaseReport(BaseModel):
 
     report_failed_reason: Optional[str] = Field(None, alias='reportFailedReason')
 
+    class Config:
+        allow_population_by_field_name = True
+
 
 class StatisticalReport(BaseReport):
     total_messages_count: Optional[int] = Field(None, alias='totalMessagesCount')

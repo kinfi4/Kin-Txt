@@ -3,5 +3,6 @@ from .report_data import (
     CsvFileGenerator,
     IReportFileGenerator,
     JsonFileGenerator,
+    ReportDataSaver,
 )
 from .user import UserService

@@ -1,7 +1,7 @@
 import click
 
 from kin_statistics_api.run_server import run_app
-from kin_statistics_api.app import run_celery
+from kin_statistics_api.app import run_consumer
 
 
 @click.group()
@@ -15,8 +15,8 @@ def run_server():
 
 
 @cli.command()
-def run_tasks():
-    run_celery()
+def run_rabbitmq():
+    run_consumer()
 
 
 if __name__ == '__main__':

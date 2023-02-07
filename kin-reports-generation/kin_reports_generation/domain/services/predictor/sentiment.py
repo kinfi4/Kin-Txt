@@ -4,8 +4,8 @@ from typing import Optional
 
 from nltk.tokenize import word_tokenize
 
-from kin_statistics_api.domain.services.reports_generator.predictor import ISentimentAnalyzer
-from kin_statistics_api.constants import MessageCategories, SentimentTypes
+from kin_reports_generation.domain.services.predictor import ISentimentAnalyzer
+from kin_reports_generation.constants import MessageCategories, SentimentTypes
 
 Word = namedtuple('Word', 'form label value')
 

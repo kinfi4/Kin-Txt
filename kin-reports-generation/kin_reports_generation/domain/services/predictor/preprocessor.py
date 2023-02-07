@@ -8,8 +8,8 @@ from nltk.tokenize import word_tokenize
 from pymorphy2 import MorphAnalyzer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from kin_statistics_api.domain.services.reports_generator.predictor import ITextPreprocessor
-from kin_statistics_api.constants import MAX_POST_LEN_IN_WORDS, emoji_regex_compiled
+from kin_reports_generation.domain.services.predictor import ITextPreprocessor
+from kin_reports_generation.constants import MAX_POST_LEN_IN_WORDS, emoji_regex_compiled
 
 
 class TextPreprocessor(ITextPreprocessor):
@@ -46,11 +46,7 @@ class TextPreprocessor(ITextPreprocessor):
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 
-    def ml_vectorizing(
-        self,
-        texts,
-        make_preprocessing: bool = True,
-    ):
+    def ml_vectorizing(self, texts, make_preprocessing: bool = True):
         if make_preprocessing:
             texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
             texts = texts.apply(self.preprocess_and_lemmatize)

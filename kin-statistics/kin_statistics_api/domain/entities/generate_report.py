@@ -3,7 +3,8 @@ from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field, ValidationError, root_validator, validator
 
-from kin_statistics_api.constants import DEFAULT_DATE_FORMAT, ReportTypes
+from kin_news_core.constants import DEFAULT_DATE_FORMAT
+from kin_statistics_api.constants import ReportTypes
 from kin_statistics_api.settings import Settings
 
 

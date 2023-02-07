@@ -6,11 +6,16 @@ from kin_statistics_api.domain.entities.report import (
     WordCloudReport,
     StatisticalReport,
 )
+from kin_statistics_api.constants import ReportProcessingResult
 
 
 class IReportRepository(ABC):
     @abstractmethod
     def save_user_report(self, report: BaseReport) -> None:
+        pass
+
+    @abstractmethod
+    def update_report_status(self, report_id: int, status: ReportProcessingResult) -> None:
         pass
 
     @abstractmethod

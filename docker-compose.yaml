@@ -40,6 +40,18 @@ services:
     networks:
       - kin-network
 
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: "rabbitmq"
+    environment:
+      - RABBITMQ_DEFAULT_USER=kin-news-user
+      - RABBITMQ_DEFAULT_PASS=kin-news-password
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - kin-network
+
 networks:
   kin-network:
     external:

@@ -1,10 +1,15 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from kin_statistics_api.containers import Container
 from kin_statistics_api.settings import Settings
-from kin_statistics_api import views, domain, tasks, constants
+from kin_statistics_api import views, domain, constants, events
 from kin_statistics_api.views import api_router
+
+
+_logger = logging.getLogger(__name__)
 
 
 def init_containers(settings: Settings):
@@ -13,8 +18,7 @@ def init_containers(settings: Settings):
     container.init_resources()
 
     container.wire(
-        packages=[views, domain],
-        modules=[tasks],
+        packages=[views, domain, events],
     )
 
     return container
@@ -41,7 +45,6 @@ def create_app(*args, **kwargs):
     app.include_router(router=api_router)
 
     container = init_containers(settings)
-    container.check_dependencies()
 
     init_cors(app, settings)
 
@@ -50,12 +53,13 @@ def create_app(*args, **kwargs):
     return app
 
 
-def run_celery():
+def run_consumer():
     settings = Settings()
-    _ = init_containers(settings)
+    container = init_containers(settings)
+    container.check_dependencies()
 
-    from kin_statistics_api.tasks import celery_app
-
-    celery_app.worker_main(
-        ["worker", "-l", "info"]
-    )
+    _logger.info('Consuming started...')
+    print(container.messaging.subscriber)
+    print(container.messaging.subscriber is None)
+    print(container.messaging.subscriber())
+    container.messaging.subscriber().start_consuming()

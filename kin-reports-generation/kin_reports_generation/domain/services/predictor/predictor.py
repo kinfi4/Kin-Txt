@@ -3,14 +3,14 @@ from collections import Counter
 
 import joblib
 
-from kin_statistics_api.domain.services.reports_generator.predictor import (
+from kin_reports_generation.domain.services.predictor import (
     ISentimentAnalyzer,
     ITextPreprocessor,
     SentimentAnalyzer,
     IPredictor,
     TextPreprocessor,
 )
-from kin_statistics_api.constants import MessageCategories, SentimentTypes
+from kin_reports_generation.constants import MessageCategories, SentimentTypes
 
 
 class Predictor(IPredictor):

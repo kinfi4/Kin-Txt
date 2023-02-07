@@ -4,3 +4,6 @@
 [submodule "kin-statistics/submodules/kin-news-core"]
 	path = kin-statistics/submodules/kin-news-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
+[submodule "kin-reports-generation/submodules/kin-news-core"]
+	path = kin-reports-generation/submodules/kin-news-core
+	url = git@github.com:kinfi4/Kin-News-Core.git

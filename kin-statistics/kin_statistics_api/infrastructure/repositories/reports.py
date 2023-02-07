@@ -22,6 +22,12 @@ class ReportsMongoRepository(IReportRepository):
 
         self._logger = logging.getLogger(self.__class__.__name__)
 
+    def update_report_status(self, report_id: int, status: ReportProcessingResult) -> None:
+        self._reports_collection.find_one_and_update(
+            {'report_id': report_id},
+            {'$set': {'processing_status': status}},
+        )
+
     def get_report_names(self, report_ids: list[int]) -> list[ReportIdentificationEntity]:
         dict_reports = self._reports_collection.find(
             {
@@ -69,12 +75,14 @@ class ReportsMongoRepository(IReportRepository):
         return self._map_dict_to_entity(dict_report)
 
     def delete_report(self, report_id: int) -> None:
-        try:
-            report = self.get_report(report_id)
-        except ReportNotFound:
+        dict_report = self._reports_collection.find_one({
+            'report_id': report_id
+        })
+
+        if dict_report is None:
             return
 
-        if report.processing_status == ReportProcessingResult.PROCESSING:
+        if dict_report['processing_status'] == ReportProcessingResult.PROCESSING:
             raise ImpossibleToModifyProcessingReport('You can not delete the report during processing.')
 
         self._reports_collection.delete_one({

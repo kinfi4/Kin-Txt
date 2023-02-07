@@ -5,13 +5,9 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse, Response
 
 from kin_news_core.exceptions import KinNewsCoreException
-from kin_statistics_api.constants import DEFAULT_DATE_FORMAT
 from kin_statistics_api.containers import Container
 from kin_statistics_api.domain.entities import GenerateReportEntity, ReportPutEntity, User
 from kin_statistics_api.domain.services import ManagingReportsService, UserService
-from kin_statistics_api.domain.services.reports_generator.generate_report_usecase import (
-    generate_report_use_case,
-)
 from kin_statistics_api.exceptions import ReportAccessForbidden
 from kin_statistics_api.views.helpers.auth import get_current_user
 
@@ -39,6 +35,7 @@ def generate_report_request(
     current_user: User = Depends(get_current_user),
     max_synchronous_reports_generation: int = Depends(Provide[Container.config.max_synchronous_reports_generation]),
     user_service: UserService = Depends(Provide[Container.services.user_service]),
+    reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
 ):
     if user_service.count_user_reports_generations(current_user.username) >= max_synchronous_reports_generation:
         return JSONResponse(
@@ -51,16 +48,7 @@ def generate_report_request(
 
     try:
         _logger.info('Creating Celery job for report generation...')
-
-        use_case = generate_report_use_case(generate_report_entity.report_type)
-
-        use_case.delay(
-            start_date=generate_report_entity.start_date.strftime(DEFAULT_DATE_FORMAT),
-            end_date=generate_report_entity.end_date.strftime(DEFAULT_DATE_FORMAT),
-            channel_list=generate_report_entity.channel_list,
-            username=current_user.username,
-        )
-
+        reports_service.start_report_generation(current_user, generate_report_entity)
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
