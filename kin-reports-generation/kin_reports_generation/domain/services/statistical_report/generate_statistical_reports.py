@@ -32,14 +32,15 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         self._csv_writer = None
 
     def _build_report_entity(self, generate_report_entity: GenerateReportEntity) -> StatisticalReport:
-        user_report_file = tempfile.TemporaryFile('w')
-        self._csv_writer = csv.writer(user_report_file)
-        self._csv_writer.writerow(['date', 'channel', 'hour', 'text', 'sentiment', 'category'])
+        tmp_file = tempfile.NamedTemporaryFile()
+        with open(tmp_file.name, 'w') as user_report_file:
+            self._csv_writer = csv.writer(user_report_file)
+            self._csv_writer.writerow(['date', 'channel', 'hour', 'text', 'sentiment', 'category'])
 
-        report_data = self.__gather_report_data(generate_report_entity)
+            report_data = self.__gather_report_data(generate_report_entity)
 
-        self._save_data_to_file(generate_report_entity.report_id, user_report_file)
-        user_report_file.close()
+        with open(tmp_file.name, 'r') as user_report_file:
+            self._save_data_to_file(generate_report_entity.report_id, user_report_file)
 
         return (
             ReportsBuilder.from_report_id(generate_report_entity.report_id)

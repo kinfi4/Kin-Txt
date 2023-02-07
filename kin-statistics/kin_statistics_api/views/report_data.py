@@ -1,7 +1,7 @@
 from typing import Optional
 
 from dependency_injector.wiring import inject, Provide
-from fastapi import Depends, APIRouter, Response, status, UploadFile
+from fastapi import Depends, APIRouter, Response, status, UploadFile, File, Form
 from fastapi.responses import StreamingResponse, JSONResponse
 
 from kin_statistics_api.containers import Container
@@ -17,9 +17,9 @@ router = APIRouter(prefix='/reports-data')
 @router.post('/save')
 @inject
 def get_report_data(
-    report_id: int,
-    file_type: str,
-    report_data_file: UploadFile,
+    report_id: int = Form(...),
+    file_type: str = Form(...),
+    report_data_file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     data_saver_service: ReportDataSaver = Depends(Provide[Container.services.reports_data_saver]),
 ):

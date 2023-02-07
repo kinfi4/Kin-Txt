@@ -37,7 +37,6 @@ def on_processing_finished(
     event: WordCloudReportProcessingFinished | StatisticalReportProcessingFinished,
     report_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
 ) -> None:
-    print(event.dict())
     report = _get_report_from_event(event)
     report_service.report_processing_finished(event.username, report)
 

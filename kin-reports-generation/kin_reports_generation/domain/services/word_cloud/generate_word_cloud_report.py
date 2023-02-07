@@ -92,11 +92,14 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
         }
 
     def _save_word_cloud_data_to_file(self, report_id: int, _data: dict[str, int]) -> None:
-        with tempfile.TemporaryFile('w') as tmp_file:
-            encoded_data = json.dumps(_data)
-            tmp_file.write(encoded_data)
+        tmp_file = tempfile.NamedTemporaryFile()
 
-            self._statistics_service.save_report_data(report_id=report_id, data=tmp_file, file_type='json')
+        with open(tmp_file.name, 'w') as file:
+            encoded_data = json.dumps(_data)
+            file.write(encoded_data)
+
+        with open(tmp_file.name, 'r') as file:
+            self._statistics_service.save_report_data(report_id=report_id, data=file, file_type='json')
 
     def _truncate_only_most_popular_words(self, data: dict[str, Any]) -> dict[str, Any]:
         result_data: dict[str, Any] = {}

@@ -59,7 +59,4 @@ def run_consumer():
     container.check_dependencies()
 
     _logger.info('Consuming started...')
-    print(container.messaging.subscriber)
-    print(container.messaging.subscriber is None)
-    print(container.messaging.subscriber())
     container.messaging.subscriber().start_consuming()

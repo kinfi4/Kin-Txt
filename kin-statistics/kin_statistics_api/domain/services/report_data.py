@@ -2,7 +2,7 @@ import csv
 import io
 import json
 import os
-from typing import IO
+from typing import IO, BinaryIO
 
 from kin_statistics_api.domain.entities import User
 from kin_statistics_api.domain.services.interfaces import IReportFileGenerator
@@ -46,9 +46,9 @@ class ReportDataSaver:
     def __init__(self, reports_folder_path: str) -> None:
         self._reports_folder_path = reports_folder_path
 
-    def save_report_data(self, report_id: int, file_type: str, data_file: IO) -> None:
+    def save_report_data(self, report_id: int, file_type: str, data_file: BinaryIO) -> None:
         if file_type not in self.SUPPORTED_FILE_TYPES:
             raise ValueError(f'[ReportDataSaver] Invalid file type for report={report_id} data.')
 
-        with open(os.path.join(self._reports_folder_path, f'{report_id}.{file_type}'), 'w') as file:
+        with open(os.path.join(self._reports_folder_path, f'{report_id}.{file_type}'), 'wb') as file:
             file.write(data_file.read())
