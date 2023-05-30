@@ -2,11 +2,9 @@ from typing import Optional
 
 from dependency_injector import containers, providers, resources
 
-from kin_news_api.infrastructure.repositories import (
-    UserRepository,
-    ChannelRepository,
-    RatingsRepository,
-)
+from kin_news_api.infrastructure.repositories.channel import ChannelRepository
+from kin_news_api.infrastructure.repositories.user import UserRepository
+from kin_news_api.infrastructure.repositories.ratings import RatingsRepository
 from kin_news_api.domain.services import UserService, ChannelService, RatingsService, MessageService
 from kin_news_core.telegram.client import TelegramClientProxy
 from kin_news_core.cache import AsyncRedisCache, AbstractCache
@@ -108,8 +106,14 @@ class DomainServices(containers.DeclarativeContainer):
 class Container(containers.DeclarativeContainer):
     config = providers.Configuration()
 
+    database: providers.Container[DatabaseContainer] = providers.Container(
+        DatabaseContainer,
+        config=config,
+    )
+
     repositories: providers.Container[Repositories] = providers.Container(
-        Repositories
+        Repositories,
+        database=database,
     )
 
     clients: providers.Container[Clients] = providers.Container(

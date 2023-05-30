@@ -5,7 +5,7 @@ from datetime import datetime
 
 from kin_news_api.domain.entities import ChannelGetEntity, MessageGetEntity
 from kin_news_api.exceptions import UserAlreadyFetchingNews, UserIsNotSubscribed
-from kin_news_api.infrastructure.repositories import UserRepository
+from kin_news_api.infrastructure.repositories.user import UserRepository
 from kin_news_core.exceptions import InvalidChannelURLError
 from kin_news_core.telegram import IDataGetterProxy
 

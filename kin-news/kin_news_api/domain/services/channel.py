@@ -7,7 +7,8 @@ from kin_news_api.settings import Settings
 from kin_news_api.constants import DELETED_CHANNEL_TITLE
 from kin_news_api.domain.entities import ChannelGetEntity, ChannelPostEntity
 from kin_news_api.exceptions import UserMaxSubscriptionsExceeded
-from kin_news_api.infrastructure.repositories import ChannelRepository, UserRepository
+from kin_news_api.infrastructure.repositories.channel import ChannelRepository
+from kin_news_api.infrastructure.repositories.user import UserRepository
 from kin_news_core.cache import AsyncRedisCache
 from kin_news_core.exceptions import InvalidChannelURLError
 from kin_news_core.telegram import IDataGetterProxy

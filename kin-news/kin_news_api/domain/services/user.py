@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound
 
 from kin_news_api.domain.entities import UserEntity, UserRegistrationEntity
 from kin_news_api.exceptions import LoginFailedError
-from kin_news_api.infrastructure.repositories import UserRepository
+from kin_news_api.infrastructure.repositories.user import UserRepository
 from kin_news_api.settings import Settings
 from kin_news_core.auth import create_jwt_token
 

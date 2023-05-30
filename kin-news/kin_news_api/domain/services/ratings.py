@@ -4,7 +4,7 @@ from sqlalchemy.exc import NoResultFound
 
 from domain.entities import RatePostEntity, RatingGetEntity
 from exceptions import ChannelDoesNotExists
-from infrastructure.repositories import RatingsRepository
+from infrastructure.repositories.ratings import RatingsRepository
 
 
 class RatingsService:

@@ -20,7 +20,7 @@ async def get_messages(
     start_time: str,
     end_time: str,
     current_user: UserEntity = Depends(get_current_user),
-    messages_service: MessageService = Depends(Provide[Container.domain_services.messages_service]),
+    messages_service: MessageService = Depends(Provide[Container.domain_services.message_service]),
     channel_service: ChannelService = Depends(Provide[Container.domain_services.channel_service]),
 ):
     try:
