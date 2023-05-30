@@ -32,7 +32,7 @@ target_metadata = metadata
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
+    """Run migrations in "offline" mode.
 
     This configures the context with just a URL
     and not an Engine, though an Engine is acceptable

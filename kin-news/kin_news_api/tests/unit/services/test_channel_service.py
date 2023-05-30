@@ -13,7 +13,7 @@ class ChannelsServiceTest(TestCase):
         telegram_client_mock.get_channel.return_value = True
 
         with container.clients.telegram_client.override(telegram_client_mock):
-            result = container.domain_services.channel_service().channel_exists(ChannelPostEntity(link='something'))
+            result = container.domain_services.channel_service().channel_exists(ChannelPostEntity(link="something"))
 
         self.assertTrue(result)
 

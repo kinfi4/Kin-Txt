@@ -47,4 +47,4 @@ async def register(
 
 @api_router.get("/me")
 async def get_current_user(current_user: UserEntity = Depends(get_current_user)):
-    return JSONResponse(status_code=status.HTTP_200_OK, content={'username': current_user.username})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"username": current_user.username})
