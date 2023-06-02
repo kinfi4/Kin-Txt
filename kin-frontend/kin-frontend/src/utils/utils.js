@@ -1,5 +1,8 @@
 import {showMessage} from "./messages";
-import {ReportNotFoundError} from "../components/body/stats/ReportVisualization/helpers/Errors";
+import {
+    ReportNotFoundError,
+    SomethingWentWrongError
+} from "../components/body/stats/ReportVisualization/helpers/Errors";
 
 export function truncate(str, n){
     return (str.length > n) ? str.slice(0, n-1) + '...' : str;
@@ -15,15 +18,23 @@ export function shuffle(array) {
 }
 
 export function downloadFile(url, contentType='csv') {
+    const token = localStorage.getItem("token");
+    showMessage([{message: 'Download will start soon...', type: 'success'}])
+
     fetch(url, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/' + contentType
+            'Content-Type': 'application/' + contentType,
+            'Authorization': `Token ${token}`,
         },
     })
         .then((response) => {
             if(response.status === 404) {
                 throw new ReportNotFoundError();
+            }
+
+            if(response.status !== 200) {
+                throw new SomethingWentWrongError();
             }
 
             response.blob().then(blob => {
@@ -46,6 +57,8 @@ export function downloadFile(url, contentType='csv') {
         .catch(err => {
             if(err instanceof ReportNotFoundError) {
                 showMessage([{message: "Report data not found :(((", type: 'danger'}])
+            } else if (err instanceof SomethingWentWrongError) {
+                showMessage([{message: "Something went wrong during report download :(", type: "danger"}])
             } else {
                 showMessage([{message: "Report exporting failed(", type: 'danger'}])
             }
