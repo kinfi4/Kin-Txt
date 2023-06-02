@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, func
 from sqlalchemy.exc import IntegrityError
 
 from kin_news_api.exceptions import UsernameAlreadyTakenError
@@ -13,18 +13,17 @@ class UserRepository:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._db = db
 
-    async def get_user(self, username: str):
+    async def get_user(self, username: str) -> User | None:
         self._logger.info("[UserRepository] Get user from db by username")
 
         select_query = (
             select(User)
             .where(User.username == username)
-            .one()
         )
 
         async with self._db.session() as session:
             user = await session.execute(select_query)
-            return user
+            return user.scalars().one_or_none()
 
     async def create_user(self, username: str, password: str) -> User:
         self._logger.info("[UserRepository] Creating user")
@@ -33,7 +32,8 @@ class UserRepository:
 
         async with self._db.session() as session:
             try:
-                return await session.execute(insert_query)
+                created_user = await session.execute(insert_query)
+                return created_user.scalars()
             except IntegrityError:
                 raise UsernameAlreadyTakenError(f"User with {username=} already exists, please select another username")
 
@@ -48,23 +48,21 @@ class UserRepository:
 
         async with self._db.session() as session:
             subscriptions = await session.execute(select_query)
-            return subscriptions
+            return subscriptions.scalars().all()
 
     async def count_user_subscriptions(self, username: str) -> int:
         self._logger.info(f"[UserRepository] Counting user subscriptions for {username}")
 
         select_query = (
-            select(Channel)
+            select(func.count())
             .join(Channel.subscribers)
             .where(User.username == username)
-            .scalars()
-            .count()
         )
 
         async with self._db.session() as session:
             result = await session.execute(select_query)
 
-            return result.scalar()
+            return result.scalar_one()
 
     async def check_if_user_fetching_news(self, username: str) -> bool:
         self._logger.info(f"[UserRepository] Checking if user: {username} is already fetching news")
@@ -72,13 +70,12 @@ class UserRepository:
         select_user_query = (
             select(User)
             .where(User.username == username)
-            .one()
         )
 
         async with self._db.session() as session:
             result = await session.execute(select_user_query)
 
-            return result.is_fetching
+            return result.scalar().is_fetching
 
     async def set_user_if_fetching_news(self, username: str, is_fetching: bool) -> None:
         self._logger.info(f"[UserRepository] Setting user: {username} is fetching news to {is_fetching}")
@@ -86,9 +83,9 @@ class UserRepository:
         select_user_query = (
             select(User)
             .where(User.username == username)
-            .one()
         )
 
         async with self._db.session() as session:
             user = await session.execute(select_user_query)
+            user = user.scalar()
             user.is_fetching = is_fetching

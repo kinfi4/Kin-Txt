@@ -1,9 +1,9 @@
 import os
 import logging
+from typing import Any
 
 from sqlalchemy.exc import NoResultFound
 
-from kin_news_api.settings import Settings
 from kin_news_api.constants import DELETED_CHANNEL_TITLE
 from kin_news_api.domain.entities import ChannelGetEntity, ChannelPostEntity
 from kin_news_api.exceptions import UserMaxSubscriptionsExceeded
@@ -17,7 +17,7 @@ from kin_news_core.telegram import IDataGetterProxy
 class ChannelService:
     def __init__(
         self,
-        config: Settings,
+        config: dict[str, Any],
         channel_repository: ChannelRepository,
         user_repository: UserRepository,
         telegram_client: IDataGetterProxy,
@@ -42,8 +42,7 @@ class ChannelService:
 
         channel_entity = await self._get_channel_entity(channel_post_entity.link)
 
-        channel = await self._channel_repository.get_channel_by_link(channel_entity.link)
-        await self._channel_repository.add_channel_subscriber(channel, username)
+        await self._channel_repository.add_channel_subscriber(channel_post_entity.link, username)
 
         return channel_entity
 
@@ -81,14 +80,14 @@ class ChannelService:
     async def _get_channel_profile_photo_url(self, channel_link: str) -> str:
         photo_path = await self._cache_client.get_channel_photo_url(channel_link)
 
-        if photo_path is None or not os.path.exists(os.path.join(self._config.media_root, photo_path)):
+        if photo_path is None or not os.path.exists(os.path.join(self._config["media_root"], photo_path)):
             photo_path = os.path.join("profile_photos", f"{channel_link}.jpg")
-            photo_absolute_path = os.path.join(self._config.media_root, photo_path)
+            photo_absolute_path = os.path.join(self._config["media_root"], photo_path)
 
             await self._telegram_client.download_channel_profile_photo_async(channel_link, photo_absolute_path)
             await self._cache_client.set_channel_photo_url(channel_link, photo_path)
 
-        return f'{self._config.media_root}{photo_path}'
+        return f'{self._config["media_root"]}/{photo_path}'
 
     def _build_deleted_channel_entity(self, link: str) -> ChannelGetEntity:
         return ChannelGetEntity(
@@ -96,8 +95,8 @@ class ChannelService:
             title=DELETED_CHANNEL_TITLE,
             description='',
             participants_count='0 K',
-            profile_photo_url=f'{self._config.media_root}{os.path.join("profile_photos", "default.jpg")}',
+            profile_photo_url=f'{self._config["media_root"]}{os.path.join("profile_photos", "default.jpg")}',
         )
 
     async def _is_user_subscriptions_exceeded(self, username: str) -> bool:
-        return await self._user_repository.count_user_subscriptions(username) >= self._config.max_user_subscriptions_count
+        return await self._user_repository.count_user_subscriptions(username) >= self._config["max_user_subscriptions_count"]

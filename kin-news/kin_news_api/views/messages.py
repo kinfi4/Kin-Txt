@@ -53,10 +53,10 @@ async def get_messages(
             }
         )
 
-    messages_serialized = [message.dict(by_alias=True) for message in messages]
+    messages_serialized = [message.json(by_alias=True) for message in messages]
     return JSONResponse(content={
-        'messages': messages_serialized,
-        'messagesCount': len(messages_serialized),
+        "messages": [],
+        "messagesCount": len(messages_serialized),
     })
 
 

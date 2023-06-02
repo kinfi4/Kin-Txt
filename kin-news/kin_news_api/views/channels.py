@@ -71,7 +71,7 @@ async def unsubscribe_user(
     return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content={})
 
 
-@api_router.get("channels/exists/{channel}")
+@api_router.get("/channels/exists/{channel:path}")
 @inject
 async def check_channel_exists(
     channel: str,
@@ -80,7 +80,7 @@ async def check_channel_exists(
 ):
     try:
         channels_entity = ChannelPostEntity(link=channel)
-        channel_exists = channel_service.channel_exists(channels_entity)
+        channel_exists = await channel_service.channel_exists(channels_entity)
     except ValidationError as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": pydantic_errors_prettifier(err.errors())})
 

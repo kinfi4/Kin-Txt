@@ -1,6 +1,6 @@
 from pydantic import BaseSettings, Field
 
-from kin_news_core.settings import PostgresSettings, TelegramSettings
+from kin_news_core.settings import PostgresSettings, TelegramSettings, RedisSettings
 
 
 class Settings(BaseSettings):
@@ -17,3 +17,4 @@ class Settings(BaseSettings):
 
     database: PostgresSettings = PostgresSettings()
     telegram: TelegramSettings = TelegramSettings()
+    redis: RedisSettings = RedisSettings()

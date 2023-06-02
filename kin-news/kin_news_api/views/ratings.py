@@ -12,7 +12,7 @@ from kin_news_api.views.helpers.auth import get_current_user
 api_router = APIRouter()
 
 
-@api_router.get("/channels/rates/{channel}")
+@api_router.get("/channels/rates")
 @inject
 async def get_user_rates(
     channel: str,

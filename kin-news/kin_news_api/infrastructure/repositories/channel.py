@@ -1,9 +1,9 @@
 import logging
 
-from sqlalchemy import select, insert
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy import select, insert, delete, and_
+from sqlalchemy.exc import NoResultFound, IntegrityError
 
-from infrastructure.models import Channel, User
+from kin_news_api.infrastructure.models import Channel, User, UserChannel
 from kin_news_core.database import AsyncDatabase
 
 
@@ -18,12 +18,13 @@ class ChannelRepository:
         select_query = (
             select(Channel)
             .where(Channel.link == channel_link)
-            .one()
         )
 
         try:
             async with self._db.session() as session:
-                return await session.execute(select_query)
+                fetched_channel = await session.execute(select_query)
+
+                return fetched_channel.scalars().one()
         except NoResultFound:
             insert_query = (
                 insert(Channel)
@@ -32,36 +33,56 @@ class ChannelRepository:
             )
 
             async with self._db.session() as session:
-                return await session.execute(insert_query)
+                inserted_channel = await session.execute(insert_query)
+
+                return inserted_channel.scalars().one()
 
     async def add_channel_subscriber(self, channel_link: str, username: str) -> None:
         self._logger.info(f"[ChannelRepository] Add subscriber {username} to the channel {channel_link}")
 
         channel = await self.get_channel_by_link(channel_link)
 
-        select_user_query = (
-            select(User)
+        user_id_subquery = (
+            select(User.id)
             .where(User.username == username)
-            .one()
+            .scalar_subquery()
+        )
+
+        insert_user_subscription_query = (
+            insert(UserChannel)
+            .values(channel_id=channel.id, user_id=user_id_subquery)
         )
 
         async with self._db.session() as session:
-            user = await session.execute(select_user_query)
-
-        channel.subscribers.append(user)
+            try:
+                await session.execute(insert_user_subscription_query)
+            except IntegrityError:
+                pass
 
     async def unsubscribe_user(self, channel_link: str, username: str) -> None:
         self._logger.info(f"[ChannelRepository] Unsubscribe user {username} from the channel {channel_link}")
 
-        channel = await self.get_channel_by_link(channel_link)
-
-        select_user_query = (
-            select(User)
+        user_id_subquery = (
+            select(User.id)
             .where(User.username == username)
-            .one()
+            .scalar_subquery()
+        )
+
+        channel_id_subquery = (
+            select(Channel.id)
+            .where(Channel.link == channel_link)
+            .scalar_subquery()
+        )
+
+        delete_subscription_query = (
+            delete(UserChannel)
+            .where(
+                and_(
+                    UserChannel.user_id == user_id_subquery,
+                    UserChannel.channel_id == channel_id_subquery
+                )
+            )
         )
 
         async with self._db.session() as session:
-            user = await session.execute(select_user_query)
-
-        channel.subscribers.remove(user)
+            await session.execute(delete_subscription_query)

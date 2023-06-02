@@ -21,6 +21,8 @@ async def get_media(
     profile_pictures_path = os.path.join(config.media_root, "profile_photos")
     file_path = os.path.join(profile_pictures_path, file_name)
 
+    print(file_path)
+
     if not os.path.exists(file_path):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 

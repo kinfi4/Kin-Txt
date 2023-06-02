@@ -19,25 +19,26 @@ class RatingsRepository:
         select_channel_query = (
             select(Channel)
             .where(Channel.link == channel_link)
-            .one()
         )
 
         select_user_query = (
             select(User)
             .where(User.username == username)
-            .one()
         )
 
         async with self._db.session() as session:
             channel = await session.execute(select_channel_query)
             user = await session.execute(select_user_query)
 
+            channel = channel.scalar()
+            user = user.scalar()
+
             rating_query = select(ChannelRatings).where(
                 (ChannelRatings.user_id == user.id) &
                 (ChannelRatings.channel_id == channel.id)
             )
             rating_result = await session.execute(rating_query)
-            rating = rating_result.scalar()
+            rating = rating_result.scalar_one_or_none()
 
             if rating is None:
                 rating = ChannelRatings(user_id=user.id, channel_id=channel.id)
@@ -48,18 +49,17 @@ class RatingsRepository:
         return rating
 
     async def user_rate(self, username: str, channel_link: str) -> int:
-        select_user_query = (
-            select(User)
-            .join(ChannelRatings, ChannelRatings.user_id == User.id)
+        select_rate_query = (
+            select(ChannelRatings)
+            .join(User, ChannelRatings.user_id == User.id)
             .join(Channel, ChannelRatings.channel_id == Channel.id)
             .where(Channel.link == channel_link)
             .where(User.username == username)
-            .one()
         )
 
         async with self._db.session() as session:
-            user = await session.execute(select_user_query)
-            return user.scalar().rating
+            rating = await session.execute(select_rate_query)
+            return rating.scalar().rate
 
     async def get_channel_ratings_stats(self, channel_link: str) -> dict[str, float | int]:
         async with self._db.session() as session:

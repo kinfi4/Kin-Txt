@@ -56,17 +56,17 @@ class Clients(containers.DeclarativeContainer):
 
     cache_client: providers.Resource[AbstractCache] = providers.Resource(
         RedisResource,
-        host=config.REDIS_HOST,
-        port=config.REDIS_PORT,
-        photo_db_name=config.REDIS_PHOTO_DB_NAME,
-        channel_db_name=config.REDIS_CHANNEL_DB_NAME,
+        host=config.redis.host,
+        port=config.redis.port,
+        photo_db_name=config.redis.photo_db_name,
+        channel_db_name=config.redis.channel_db_name,
     )
 
-    telegram_client: providers.Factory[TelegramClientProxy] = providers.Factory(
+    telegram_client: providers.Factory[TelegramClientProxy] = providers.Singleton(
         TelegramClientProxy,
-        session_str=config.TELEGRAM_SESSION_STRING,
-        api_id=config.TELEGRAM_API_ID,
-        api_hash=config.TELEGRAM_API_HASH,
+        session_str=config.telegram.session_string,
+        api_id=config.telegram.api_id,
+        api_hash=config.telegram.api_hash,
     )
 
 
@@ -82,13 +82,13 @@ class DomainServices(containers.DeclarativeContainer):
         user_repository=repositories.user_repository,
     )
 
-    message_service = providers.Factory(
+    message_service = providers.Singleton(
         MessageService,
         telegram_client=clients.telegram_client,
         user_repository=repositories.user_repository,
     )
 
-    channel_service = providers.Factory(
+    channel_service = providers.Singleton(
         ChannelService,
         config=config,
         user_repository=repositories.user_repository,

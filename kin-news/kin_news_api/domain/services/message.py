@@ -23,7 +23,7 @@ class MessageService:
         start_time: datetime,
         end_time: datetime,
     ) -> list[MessageGetEntity]:
-        if self._user_repository.check_if_user_fetching_news(username):
+        if await self._user_repository.check_if_user_fetching_news(username):
             raise UserAlreadyFetchingNews(
                 "You are sending too many requests. We are preparing your news already. Please wait."
             )
