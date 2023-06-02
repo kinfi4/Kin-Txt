@@ -1,5 +1,5 @@
 import channelCss from './Channel.module.css'
-import {NEWS_SERVICE_URL} from "../../../../config";
+import {FILE_STORAGE_URL} from "../../../../config";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
 import ChannelInfo from "./ChannelInfo";
@@ -14,7 +14,7 @@ const ChannelBlock = (props) => {
             }}
         >
             {
-                props.channelsLoading ? "LOADING" : <img src={NEWS_SERVICE_URL + props.channel.profilePhotoUrl} alt={truncate(props.channel.title, 14)}/>
+                props.channelsLoading ? "LOADING" : <img src={FILE_STORAGE_URL + props.channel.profilePhotoUrl} alt={truncate(props.channel.title, 14)}/>
             }
         </div>
     );

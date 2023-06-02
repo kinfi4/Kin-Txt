@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import channelCss from './Channel.module.css'
 import {connect} from "react-redux";
-import {NEWS_SERVICE_URL} from "../../../../config";
+import {FILE_STORAGE_URL} from "../../../../config";
 import {truncate} from "../../../../utils/utils";
 import {unsubscribe} from "../../../../redux/reducers/channelsReducer";
-import {fetchChannelRating, rateChannel} from "../../../../redux/reducers/ratingReducer";
+import {fetchChannelRating} from "../../../../redux/reducers/ratingReducer";
 import EstimateGame from "./Rating/EstimateGame";
 
 
@@ -16,7 +16,7 @@ const ChannelInfo = (props) => {
     return (
         <div className={channelCss.channelInfoContainer}>
             <div className={channelCss.ratingNPhotoContainer}>
-                <img src={NEWS_SERVICE_URL + props.channel.profilePhotoUrl} alt={truncate(props.channel.title, 14)}/>
+                <img src={FILE_STORAGE_URL + props.channel.profilePhotoUrl} alt={truncate(props.channel.title, 14)}/>
                 <EstimateGame channelLink={props.channel.link} />
             </div>
             <div className={channelCss.informationContainer}>

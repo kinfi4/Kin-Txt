@@ -7,7 +7,7 @@ services:
       dockerfile: ./etc/kin-news/Dockerfile
     image: "kin-news-api"
     container_name: "kin-news-api"
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "alembic-autogen-check || alembic revision --autogenerate && alembic upgrade head && python -m kin_news_api start-app"
     env_file:
       - ./etc/kin-news/env/.dev.env
     ports:
@@ -15,11 +15,19 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_news_api/api:/app/api
-      - ./kin_news_api/config:/app/config
+      - ./kin_news_api:/app/kin_news_api
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./etc/kin-news/migrations:/app/migrations
+      - ./etc/kin-news/alembic.ini:/app/alembic.ini
       - ./media/:/media
-      - ./kin_news_api/setup.cfg:/app/setup.cfg
+
+  nginx-images-serving:
+    image: nginx:1.19.0
+    ports:
+      - "8002:80"
+    volumes:
+      - ./nginx-images-serving/nginx.conf:/etc/nginx/nginx.conf
+      - ./media/:/media
 
 networks:
   kin-network:
