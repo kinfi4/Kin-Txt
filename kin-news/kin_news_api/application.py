@@ -5,7 +5,6 @@ from kin_news_api import views, constants
 from kin_news_api.containers import Container
 from kin_news_api.settings import Settings
 from kin_news_api.views import api_router
-from kin_news_api.views.media import media_router
 
 
 def init_containers(settings: Settings) -> Container:
@@ -37,7 +36,6 @@ def create_application() -> FastAPI:
     )
 
     app.include_router(router=api_router)
-    app.include_router(router=media_router)
 
     container = init_containers(settings)
 

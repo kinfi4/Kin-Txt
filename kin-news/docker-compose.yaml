@@ -21,6 +21,14 @@ services:
       - ./etc/kin-news/alembic.ini:/app/alembic.ini
       - ./media/:/media
 
+  nginx-images-serving:
+    image: nginx:1.19.0
+    ports:
+      - "8002:80"
+    volumes:
+      - ./nginx-images-serving/nginx.conf:/etc/nginx/nginx.conf
+      - ./media/:/media
+
 networks:
   kin-network:
     external:

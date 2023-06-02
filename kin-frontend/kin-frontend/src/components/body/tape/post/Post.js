@@ -16,7 +16,7 @@ const Post = (props) => {
         script.async = true;
 
         document.querySelector(`.${postClassName}`).appendChild(script);
-    }, [props.postLink])
+    }, [postClassName, props.postLink])
 
     return (
         <div className={postClassName} style={{width: "70%", marginBottom: "15px"}}></div>
