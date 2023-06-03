@@ -37,7 +37,6 @@ async def subscribe_user(
     config: Settings = Depends(Provide[Container.config]),
 ):
     try:
-        print(channel_data.link)
         channel = await channel_service.subscribe_user(current_user.username, channel_data)
     except UserMaxSubscriptionsExceeded:
         return JSONResponse(
