@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, root_validator
 
 from domain.utils import truncate_channel_link_to_username
 
@@ -6,7 +6,10 @@ from domain.utils import truncate_channel_link_to_username
 class ChannelPostEntity(BaseModel):
     link: str
 
-    _extract_link = validator("link", pre=True, allow_reuse=True)(truncate_channel_link_to_username)
+    @validator("link", pre=True, allow_reuse=True)
+    def _extract_link(cls, link: str) -> str:
+        return truncate_channel_link_to_username(link)
+
 
 
 class ChannelGetEntity(BaseModel):

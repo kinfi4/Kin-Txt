@@ -39,7 +39,7 @@ async def get_messages(
     except InvalidURIParams as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
     except UserAlreadyFetchingNews as err:
-        return JSONResponse(status_code=status.HTTP_429_TOO_MANY_REQUESTS, content={"errors": str(err)})
+        return JSONResponse(status_code=status.HTTP_425_TOO_EARLY, content={"errors": str(err)})
     except TelegramIsUnavailable as err:
         hours_to_wait = err.seconds_to_wait // 3600
         minutes_to_wait = (err.seconds_to_wait - hours_to_wait * 3600) // 60
@@ -53,9 +53,9 @@ async def get_messages(
             }
         )
 
-    messages_serialized = [message.json(by_alias=True) for message in messages]
+    messages_serialized = [{"link": message.link} for message in messages]
     return JSONResponse(content={
-        "messages": [],
+        "messages": messages_serialized,
         "messagesCount": len(messages_serialized),
     })
 

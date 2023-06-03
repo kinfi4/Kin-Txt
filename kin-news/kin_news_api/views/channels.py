@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from dependency_injector.wiring import inject, Provide
 from pydantic import ValidationError
 
@@ -37,6 +37,7 @@ async def subscribe_user(
     config: Settings = Depends(Provide[Container.config]),
 ):
     try:
+        print(channel_data.link)
         channel = await channel_service.subscribe_user(current_user.username, channel_data)
     except UserMaxSubscriptionsExceeded:
         return JSONResponse(
@@ -68,7 +69,7 @@ async def unsubscribe_user(
     except UserIsNotSubscribed as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
-    return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content={})
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @api_router.get("/channels/exists/{channel:path}")

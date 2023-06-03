@@ -35,7 +35,7 @@ function Login(props) {
 
                     <Button
                         onClick={(event) => onLoginSubmit()}
-                        text={'Sign In'}
+                        text={'SIGN IN'}
                         styles={{
                             marginTop: "15px"
                         }}

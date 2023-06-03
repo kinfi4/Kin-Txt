@@ -9,3 +9,7 @@ export const REPORT_STATUS_PROCESSING = "Processing"
 
 export const WORD_CLOUD_REPORT = "WordCloud"
 export const STATISTICAL_REPORT = "Statistical"
+
+
+export const NOT_FOUND_STATUS_CODE = 404
+export const REQUEST_IS_TOO_EARLY_STATUS_CODE = 425

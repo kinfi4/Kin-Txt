@@ -3,6 +3,7 @@ import {
     ReportNotFoundError,
     SomethingWentWrongError
 } from "../components/body/stats/ReportVisualization/helpers/Errors";
+import {NOT_FOUND_STATUS_CODE} from "../config";
 
 export function truncate(str, n){
     return (str.length > n) ? str.slice(0, n-1) + '...' : str;
@@ -29,7 +30,7 @@ export function downloadFile(url, contentType='csv') {
         },
     })
         .then((response) => {
-            if(response.status === 404) {
+            if(response.status === NOT_FOUND_STATUS_CODE) {
                 throw new ReportNotFoundError();
             }
 

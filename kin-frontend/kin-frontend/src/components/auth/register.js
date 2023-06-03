@@ -43,7 +43,7 @@ function Register(props) {
 
                     <Button
                         onClick={(event) => onRegisterSubmit()}
-                        text={'Sign Up'}
+                        text={'SIGN UP'}
                         styles={{
                             marginTop: "15px"
                         }}

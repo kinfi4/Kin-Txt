@@ -1,5 +1,5 @@
 import axios from "axios";
-import {NEWS_SERVICE_URL, MS_IN_MINUTE} from "../../config";
+import {NEWS_SERVICE_URL, MS_IN_MINUTE, NOT_FOUND_STATUS_CODE, REQUEST_IS_TOO_EARLY_STATUS_CODE} from "../../config";
 import {FETCH_ERROR} from "./channelsReducer";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -26,6 +26,8 @@ export let fetchNextPosts = () => (dispatch, getState) => {
         return;
     }
 
+    dispatch({type: POSTS_LOADING})
+
     let endTimeTimestamp = getState().postsReducer.postsOffset;
     if(!endTimeTimestamp) {
         endTimeTimestamp = Date.parse(new Date().toString());
@@ -37,7 +39,6 @@ export let fetchNextPosts = () => (dispatch, getState) => {
     let endTime = new Date(endTimeTimestamp);
     console.log(`Getting data from ${startTime} to ${endTime}`)
 
-    dispatch({type: POSTS_LOADING})
 
     axios.get(NEWS_SERVICE_URL + `/api/v1/messages?start_time=${startTimeTimestamp}&end_time=${endTimeTimestamp}`, {
         headers: {
@@ -46,8 +47,12 @@ export let fetchNextPosts = () => (dispatch, getState) => {
     }).then(res => {
            dispatch({type: POSTS_LOADED, posts: res.data.messages, newOffset: startTimeTimestamp});
        }).catch(err => {
-            if(err.response.status === 404) {  // that means user has no subscriptions
+            if(err.response.status === NOT_FOUND_STATUS_CODE) {  // that means user has no subscriptions
                 dispatch({type: USER_HAS_NO_POSTS});
+                return;
+            }
+
+            if(err.response.status === REQUEST_IS_TOO_EARLY_STATUS_CODE) {
                 return;
             }
 

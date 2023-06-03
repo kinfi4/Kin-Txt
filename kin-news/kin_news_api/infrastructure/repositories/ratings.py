@@ -53,13 +53,15 @@ class RatingsRepository:
             select(ChannelRatings)
             .join(User, ChannelRatings.user_id == User.id)
             .join(Channel, ChannelRatings.channel_id == Channel.id)
-            .where(Channel.link == channel_link)
+            .where(Channel.link.ilike(channel_link))
             .where(User.username == username)
         )
 
         async with self._db.session() as session:
             rating = await session.execute(select_rate_query)
-            return rating.scalar().rate
+            rate = rating.first()
+
+            return rate[0].rate if rate is not None else 0
 
     async def get_channel_ratings_stats(self, channel_link: str) -> dict[str, float | int]:
         async with self._db.session() as session:

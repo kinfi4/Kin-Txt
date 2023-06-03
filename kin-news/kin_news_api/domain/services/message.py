@@ -34,8 +34,9 @@ class MessageService:
         messages = []
         try:
             await self._user_repository.set_user_if_fetching_news(username, True)
+
             for channel in user_channels:
-                self._logger.info(f"Fetching messages for {channel.link}")
+                self._logger.info(f"[MessageService] Fetching messages for {channel.link}")
 
                 try:
                     channel_messages = await self._telegram_client.fetch_posts_from_channel_async(
