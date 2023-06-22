@@ -23,6 +23,7 @@ services:
 
   nginx-images-serving:
     image: nginx:1.19.0
+    container_name: "kin-news-images-sharing-nginx"
     ports:
       - "8002:80"
     volumes:

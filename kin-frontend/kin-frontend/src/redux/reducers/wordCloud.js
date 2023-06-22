@@ -1,16 +1,21 @@
-const SET_FILTER_WORDS = "SET_FILTER_WORDS"
+const SET_FILTER_WORDS = "SET_FILTER_WORDS";
 
 
 const initialState = {
-    wordsList: []
-}
+    wordsList: [],
+};
 
 export const setFilterOutWords = (wordsList) => (dispatch) => {
-    dispatch({type: SET_FILTER_WORDS, words: wordsList})
+    dispatch({type: SET_FILTER_WORDS, words: wordsList});
 }
 
 export const loadFilteredWordsFromStorage = (dispatch) => {
     let words = JSON.parse(localStorage.getItem("wordCloudFilterWords"));
+
+    if(words === null) {
+        words = [];
+    }
+
     dispatch({type: SET_FILTER_WORDS, words: words});
 }
 

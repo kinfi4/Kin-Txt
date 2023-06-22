@@ -52,6 +52,6 @@ export let comparisonReducer = (state=initialState, action) => {
         case SET_NULL_COMPARISON_REPORTS:
             return {firstReport: null, secondReport: null, reportsAreLoading: false};
         default:
-            return state
+            return state;
     }
 }
