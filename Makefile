@@ -1,5 +1,5 @@
 run-infra:
-	docker-compose up -d
+	docker compose up -d
 
 run-services:
 	cd kin-frontend && make run-silent

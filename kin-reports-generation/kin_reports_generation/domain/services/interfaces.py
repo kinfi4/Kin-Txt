@@ -49,7 +49,7 @@ class IGeneratingReportsService(ABC):
                 f' {error.__class__.__name__} occurred during processing report for user: {username} with message: {str(error)}'
             )
 
-            raise
+            error.with_traceback(error.__traceback__)
 
             postponed_report = self._build_postponed_report(generate_report_entity.report_id, error)
             self._publish_finished_report(username, postponed_report)

@@ -1,11 +1,11 @@
 build:
-	docker-compose build
+	docker compose build
 
 run-silent:
-	docker-compose up -d
+	docker compose up -d
 
 run:
-	docker-compose up
+	docker compose up
 
 logs:
-	docker-compose logs -f 
+	docker compose logs -f 

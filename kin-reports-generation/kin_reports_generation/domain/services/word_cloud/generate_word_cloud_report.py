@@ -35,11 +35,11 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
 
         return (
             WordCloudReportBuilder.from_report_id(generate_report_entity.report_id)
-            .set_total_words_count(gathered_results['total_words'])
-            .set_data_by_category(gathered_results['data_by_category'])
-            .set_data_by_channel(gathered_results['data_by_channel'])
-            .set_total_words_frequency(gathered_results['total_words_frequency'])
-            .set_data_by_channel_by_category(gathered_results['data_by_channel_by_category'])
+            .set_total_words_count(gathered_results["total_words"])
+            .set_data_by_category(gathered_results["data_by_category"])
+            .set_data_by_channel(gathered_results["data_by_channel"])
+            .set_total_words_frequency(gathered_results["total_words_frequency"])
+            .set_data_by_channel_by_category(gathered_results["data_by_channel_by_category"])
             .build()
         )
 
@@ -99,7 +99,7 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
             file.write(encoded_data)
 
         with open(tmp_file.name, 'r') as file:
-            self._statistics_service.save_report_data(report_id=report_id, data=file, file_type='json')
+            self._statistics_service.save_report_data(report_id=report_id, data=file, file_type="json")
 
     def _truncate_only_most_popular_words(self, data: dict[str, Any]) -> dict[str, Any]:
         result_data: dict[str, Any] = {}

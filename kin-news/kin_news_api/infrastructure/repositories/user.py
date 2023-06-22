@@ -33,7 +33,7 @@ class UserRepository:
         async with self._db.session() as session:
             try:
                 created_user = await session.execute(insert_query)
-                return created_user.scalars()
+                return created_user.scalar_one()
             except IntegrityError:
                 raise UsernameAlreadyTakenError(f"User with {username=} already exists, please select another username")
 
