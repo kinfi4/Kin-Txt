@@ -24,18 +24,11 @@ const Statistics = (props) => {
     return (
         <>
             <div className={mainPageCss.container}>
-                <div className={mainPageCss.sideBar}>
-                    <div className={mainPageCss.sideBarContent}>
-                        <Switch>
-                            <Route exact path={path} render={() => <SelectReportMenu />} />
-                            <Route exact path={`${path}/generate`} render={() => <GenerateReportMenu />} />
-                        </Switch>
-                    </div>
-                </div>
-
                 <div className={statisticsCss.statsContainer}>
                     <Switch>
-                        <Route exact path={path} render={() => <ReportVisualization />} />
+                        <Route exact path={path} render={() => <SelectReportMenu />} />
+                        <Route exact path={`${path}/view`} render={() => <ReportVisualization />} />
+                        <Route exact path={`${path}/generate`} render={() => <GenerateReportMenu />} />
                     </Switch>
                 </div>
             </div>

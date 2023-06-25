@@ -10,6 +10,7 @@ import {generateReport, setChannelsListForGeneration} from "../../../../redux/re
 import {fetchChannels} from "../../../../redux/reducers/channelsReducer";
 import {IoIosArrowRoundBack} from "react-icons/io"
 import {STATISTICAL_REPORT, WORD_CLOUD_REPORT} from "../../../../config";
+import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 
 
 const GenerateReportMenu = (props) => {
@@ -24,11 +25,7 @@ const GenerateReportMenu = (props) => {
 
     return (
         <>
-            <div className={statsCss.choseReportLink}>
-                <Link to={`/statistics`}>
-                   <IoIosArrowRoundBack style={{marginRight: "5px", fontSize: "40px"}}/> <span style={{fontSize: "25px"}}>BACK</span>
-                </Link>
-            </div>
+            <BackOnStatsPageLink />
 
             <div className={statsCss.generateReportForm}>
                 <DateRangePicker

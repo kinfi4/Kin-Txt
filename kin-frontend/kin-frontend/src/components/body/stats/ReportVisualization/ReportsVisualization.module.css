@@ -56,6 +56,8 @@
     width: 100%;
     min-width: 800px;
 
+    margin-top: 45px;
+
     font-size: 35px;
 
     display: flex;
@@ -145,7 +147,7 @@
 }
 .wordCloudFilters {
     width: 800px;
-    top: 120px;
+    top: 170px;
     left: 0;
 
     position: absolute;
@@ -160,7 +162,7 @@
 .filterOutWordsButton {
     position: absolute;
     top: 0;
-    right: -15px;
+    right: -20px;
     background-color: #2c4257;
     border: solid black 1px;
     border-radius: 2px;

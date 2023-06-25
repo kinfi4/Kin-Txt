@@ -20,7 +20,13 @@ const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) =>
     }
 
     if(report === null || report === undefined) {
-        return <div></div>
+        return (
+            <div
+                style={{color: "#f3f3f3", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "30px"}}
+            >
+                NO REPORT FOUND
+            </div>
+        )
     }
 
     if (report.processingStatus === REPORT_STATUS_POSTPONED) {

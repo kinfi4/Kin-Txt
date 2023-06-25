@@ -3,31 +3,13 @@
     overflow: auto;
     padding-bottom: 50px;
 }
-.reportBlock{
-    height: fit-content;
-    border-bottom: 2px solid #7b6991;
-    transition: linear 0.2s;
-    margin: 20px 0;
-    padding: 5px;
-
-    color: #f7fdff;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 .reportLink {
+    color: #e8e8e8;
     cursor: pointer;
     transition: linear 0.1s;
 }
-.postponed {
-    color: #c43535;
-}
-.processing {
-    color: #474ece;
-}
 .reportLink:hover {
-    color: #7b6991;
+    color: #7b6991!important;
 }
 .reportControls span {
     cursor: pointer;
@@ -38,4 +20,89 @@
 }
 .reportControls span:hover {
     color: #7b6991;
+}
+.reportsFiltersBlock {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+.reportsFiltersContainer {
+    display: flex;
+    justify-content: space-between;
+}
+.generateNewReportButton {
+    background-color: #1f755c;
+    color: #e5e5e5;
+    padding: 14px 22px;
+    border: solid 1px white;
+    border-radius: 4px;
+    transition: linear 0.1s;
+    font-size: 20px;
+}
+.generateNewReportButton:hover {
+    background-color: #318c72;
+}
+.reportsListContainer {
+    flex: 1;
+    width: 60%;
+    color: #e8e8e8;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 100px;
+    overflow: auto;
+    box-shadow: 0 0 5px #e8e8e8 inset;
+}
+.reportTable {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    border-spacing: 0 1em;
+}
+.reportTable td:last-child, .reportTable th:last-child{
+    text-align: right;
+}
+.reportTable td:last-child {
+    font-size: 20px;
+}
+.reportTable th {
+    padding-bottom: 25px;
+}
+.reportTable td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.reportTable tr {
+    box-shadow: 0 1px 2px -1.5px #737373;
+}
+.circle {
+    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    background-color: #fff;
+    display: inline-block;
+    margin-right: 10px;
+}
+.statusCell {
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+}
+.statusCellFailed {
+    color: #d94646;
+}
+.statusCellFailed .circle {
+    background-color: #d94646;
+}
+.statusCellCompleted {
+    color: #7cd946;
+}
+.statusCellCompleted .circle {
+    background-color: #7cd946;
+}
+.statusCellProcessing {
+    color: #468bd9;
+}
+.statusCellProcessing .circle {
+    background-color: #468bd9;
 }

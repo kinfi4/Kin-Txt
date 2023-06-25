@@ -6,6 +6,7 @@ import {
     deleteReport,
 } from "../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";
+import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 
 const PostponedReport = (props) => {
     const onDeleteClick = () => {
@@ -16,28 +17,31 @@ const PostponedReport = (props) => {
     }
 
     return (
-        <div className={reportsVisualizationCss.postponedContainer}>
-            <div className={visualizationCss.header}>
+        <>
+            <BackOnStatsPageLink />
+            <div className={reportsVisualizationCss.postponedContainer}>
+                <div className={visualizationCss.header}>
                 <span>
                     {props.report.name}
                 </span>
 
-                <div
-                    className={visualizationCss.exportButton}
-                    style={{backgroundColor: "#dc4444"}}
-                    onClick={() => onDeleteClick()}
-                >
-                    DELETE
+                    <div
+                        className={visualizationCss.exportButton}
+                        style={{backgroundColor: "#dc4444"}}
+                        onClick={() => onDeleteClick()}
+                    >
+                        DELETE
+                    </div>
                 </div>
-            </div>
-            <div>
-                <img src={processingImageFailedIcon} alt="Processing Failed"/>
                 <div>
-                    We are sorry for this! But your report processing failed with error: <br/> <br/>
-                    {props.report.reportFailedReason}
+                    <img src={processingImageFailedIcon} alt="Processing Failed"/>
+                    <div>
+                        We are sorry for this! But your report processing failed with error: <br/> <br/>
+                        {props.report.reportFailedReason}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

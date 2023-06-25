@@ -17,12 +17,6 @@ import Input from "../../../common/input/Input";
 import Button from "../../../common/button/Button";
 import {REPORT_STATUS_POSTPONED, REPORT_STATUS_PROCESSING} from "../../../../config";
 
-const reportStatusToStatusClass = {
-    "Processing": selectReportMenuCss.statusCellProcessing,
-    "Postponed": selectReportMenuCss.statusCellFailed,
-    "Ready": selectReportMenuCss.statusCellCompleted,
-}
-
 
 const EditReportModalWindow = (props) => {
     let [data, setData] = useState({reportName: props.reportName});
@@ -64,33 +58,25 @@ const ReportBlock = (props) => {
     }
 
     return (
-        <tr className={selectReportMenuCss.reportRow}>
-            <td>
-                <Link
-                    className={`
+        <div
+            className={selectReportMenuCss.reportBlock}
+        >
+            <Link
+                className={`
                     ${selectReportMenuCss.reportLink}
                     ${props.reportStatus === REPORT_STATUS_POSTPONED ? selectReportMenuCss.postponed : ""}
                     ${props.reportStatus === REPORT_STATUS_PROCESSING ? selectReportMenuCss.processing : ""}`
-                    }
-                    onClick={() => props.fetchReportDetails(props.reportId)}
-                    to={"/statistics/view"}
-                >
-                    <span>{props.name}</span>
-                </Link>
-            </td>
-            <td className={`${selectReportMenuCss.statusCell} ${reportStatusToStatusClass[props.reportStatus]}`}>
-                <div className={selectReportMenuCss.circle}></div> {props.reportStatus}
-            </td>
-            <td>
-                {"Placeholder"}
-            </td>
-            <td>
-                <div className={selectReportMenuCss.reportControls}>
-                    <span onClick={onEditClick}><AiFillEdit /></span>
-                    <span onClick={onDeleteClick}><AiFillDelete /></span>
-                </div>
-            </td>
-        </tr>
+                }
+                onClick={() => props.fetchReportDetails(props.reportId)}
+                to={"/statistics/view"}
+            >
+                {props.name}
+            </Link>
+            <div className={selectReportMenuCss.reportControls}>
+                <span onClick={onEditClick}><AiFillEdit /></span>
+                <span onClick={onDeleteClick}><AiFillDelete /></span>
+            </div>
+        </div>
     )
 }
 
@@ -103,16 +89,16 @@ const SelectReportMenu = (props) => {
     return (
         <>
             <div className={selectReportMenuCss.reportsListContainer}>
-                <table className={selectReportMenuCss.reportTable}>
-                    <thead>
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th><h2><Link to={`${path}/generate`}><span className={selectReportMenuCss.generateNewReportButton}>Generate new</span></Link></h2></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div className={selectReportMenuCss.reportsFiltersContainer}>
+                    <div className={selectReportMenuCss.reportsFiltersBlock}>
+                        <div><input type="text"/></div>
+                        <div>Status</div>
+                        <div>Date</div>
+                    </div>
+
+                    <h2><Link to={`${path}/generate`}><span className={selectReportMenuCss.generateNewReportButton}>Generate new</span></Link></h2>
+                </div>
+                <div className={selectReportMenuCss.reportsList}>
                     {
                         props.reportNames.map((el, idx) =>
                             <ReportBlock
@@ -127,12 +113,12 @@ const SelectReportMenu = (props) => {
                             />
                         )
                     }
-                    </tbody>
-                </table>
+                </div>
             </div>
         </>
     );
 };
+
 
 let mapStateToProps = (state) => {
     return {

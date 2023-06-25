@@ -9,7 +9,6 @@
     padding: 20px 100px;
     height: 200px;
 }
-
 .controls div {
     margin: 0 5px;
 
@@ -32,7 +31,6 @@
     box-sizing: border-box;         /* Opera/IE 8+ */
 
     padding-top: 130px;
-    padding-left: 30%;
     display: flex;
     /*justify-content: center;*/
     flex-direction: column;
@@ -40,7 +38,6 @@
 
     width: 100%;
 }
-
 .generateReportForm {
     margin-top: 50px;
     display: flex;
@@ -59,8 +56,6 @@
     font-weight: bold;
 
     position: absolute;
-    left: 20px;
-    top: 125px;
 }
 .choseReportLink a {
     display: flex;

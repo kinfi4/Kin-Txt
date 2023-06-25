@@ -30,6 +30,7 @@ import {getColor} from "./helpers/Colors";
 import ChoseReportToCompare from "./Comparison/ChoseReportToCompare";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
+import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 
 
 const StatisticalReport = ({showComparisonButton=true, ...props}) => {
@@ -74,6 +75,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
 
     return (
         <div className={visualizationCss.visualizationContainer}>
+            <BackOnStatsPageLink top={"0px"} left={"10px"}/>
             <div className={visualizationCss.header}>
                 <span>
                     {props.report.name}
@@ -125,7 +127,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
                 className={visualizationCss.chartContainer}
                 style={{
                     height: "450px",
-                    width: "46%",
+                    width: "47.4%",
                     minWidth: "250px",
                 }}
             >
@@ -195,7 +197,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
                 className={visualizationCss.chartContainer}
                 style={{
                     height: "440px",
-                    width: "57%",
+                    width: "58.2%",
                     minWidth: "250px",
                 }}
             >
@@ -341,7 +343,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
                 className={visualizationCss.chartContainer}
                 style={{
                     height: "700px",
-                    width: "46%",
+                    width: "47.2%",
                 }}
             >
                 <h2>Message categories distribution by channels</h2>
