@@ -87,6 +87,7 @@
     margin-top: 3px;
     display: flex;
     align-items: center;
+    margin-right: -20px;
 }
 .statusCellFailed {
     color: #d94646;
@@ -105,4 +106,9 @@
 }
 .statusCellProcessing .circle {
     background-color: #468bd9;
+}
+.reportRowCell {
+    overflow: hidden;
+    text-overflow: ellipsis; /* this will add ... at the end of the content if it overflows */
+    white-space: nowrap; /* this will prevent the text from breaking into multiple lines */
 }
