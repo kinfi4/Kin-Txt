@@ -10,6 +10,7 @@ from kin_statistics_api.domain.entities import (
     GenerateReportEntity,
     BaseReport,
     User,
+    ReportFilters,
 )
 from kin_statistics_api.domain.events import GenerateReportRequestOccurred
 from kin_statistics_api.exceptions import ReportAccessForbidden
@@ -56,11 +57,11 @@ class ManagingReportsService:
 
         self._reports_repository.save_user_report(report)
 
-    def get_user_reports_names(self, username: str) -> list[ReportIdentificationEntity]:
+    def get_user_reports_names(self, username: str, filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
         user_reports_ids = self._iam_repository.get_user_report_ids(username)
         self._logger.info(f'[ManagingReportsService] got user_reports for user: {username}')
 
-        return self._reports_repository.get_report_names(user_reports_ids)
+        return self._reports_repository.get_report_names(user_reports_ids, apply_filters=filters)
 
     def set_report_name(self, username: str, report_name: str, report_id: int) -> ReportIdentificationEntity:
         self._check_user_access(username, report_ids=[report_id])

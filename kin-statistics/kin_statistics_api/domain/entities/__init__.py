@@ -7,3 +7,4 @@ from .report import (
     WordCloudReport,
 )
 from .user import User
+from .report_filters import ReportFilters

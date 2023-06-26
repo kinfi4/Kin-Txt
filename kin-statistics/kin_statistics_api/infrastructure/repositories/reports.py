@@ -7,7 +7,7 @@ from kin_statistics_api.domain.entities import (
     BaseReport,
     ReportIdentificationEntity,
     StatisticalReport,
-    WordCloudReport,
+    WordCloudReport, ReportFilters,
 )
 from kin_statistics_api.exceptions import ImpossibleToModifyProcessingReport, ReportNotFound
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
@@ -28,12 +28,24 @@ class ReportsMongoRepository(IReportRepository):
             {'$set': {'processing_status': status}},
         )
 
-    def get_report_names(self, report_ids: list[int]) -> list[ReportIdentificationEntity]:
-        dict_reports = self._reports_collection.find(
-            {
-                "report_id": {"$in": report_ids}
-            }
-        )
+    def get_report_names(self, report_ids: list[int], apply_filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
+        filters = {"report_id": {"$in": report_ids}}
+
+        if apply_filters is not None:
+            if apply_filters.name is not None:
+                filters["name"] = apply_filters.name
+            if apply_filters.date_from is not None:
+                if "date" not in filters:
+                    filters["date"] = {}
+                filters["date"]["$gte"] = apply_filters.date_from
+            if apply_filters.date_to is not None:
+                if "date" not in filters:
+                    filters["date"] = {}
+                filters["date"]["$lte"] = apply_filters.date_to
+            if apply_filters.processing_status is not None:
+                filters["processing_status"] = apply_filters.processing_status
+
+        dict_reports = self._reports_collection.find(filters)
 
         return [
             self._map_dict_to_identification_entity(report_dict)

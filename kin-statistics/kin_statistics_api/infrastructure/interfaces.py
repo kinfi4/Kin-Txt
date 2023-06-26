@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from kin_statistics_api.domain.entities import ReportFilters
 from kin_statistics_api.domain.entities.report import (
     BaseReport,
     ReportIdentificationEntity,
@@ -23,7 +24,7 @@ class IReportRepository(ABC):
         pass
 
     @abstractmethod
-    def get_report_names(self, report_ids: list[int]) -> list[ReportIdentificationEntity]:
+    def get_report_names(self, report_ids: list[int], apply_filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
         pass
 
     @abstractmethod
