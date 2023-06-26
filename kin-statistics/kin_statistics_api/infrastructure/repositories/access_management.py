@@ -14,12 +14,12 @@ class ReportsAccessManagementRepository:
 
     def get_user_report_ids(self, username: str) -> list[int]:
         select_query = (
-            select([user_report_table])
+            select(user_report_table)
             .where(user_report_table.c.username == username)
         )
 
         with self._db.connection() as conn:
-            reports = conn.execute(select_query).fetchall()
+            reports = conn.execute(select_query).mappings().all()
 
         return [report['report_id'] for report in reports]
 
@@ -30,9 +30,9 @@ class ReportsAccessManagementRepository:
 
         with self._db.connection() as conn:
             select_max_report_id = (
-                select([func.max(user_report_table.c.report_id).label('max_report_id')])
+                select(func.max(user_report_table.c.report_id).label('max_report_id'))
             )
-            row = conn.execute(select_max_report_id).fetchone()
+            row = conn.execute(select_max_report_id).mappings().one()
             max_report_id = row['max_report_id'] if row['max_report_id'] is not None else 0
 
             self._logger.info(f'Setting report access rights of report_id: {max_report_id + 1} to user: {username}')
@@ -68,19 +68,19 @@ class ReportsAccessManagementRepository:
 
     def count_user_reports_synchronous_generations(self, username: str) -> int:
         select_query = (
-            select(user_generate_reports_table)
+            select(user_generate_reports_table.c.reports_generated_count)
             .where(user_generate_reports_table.c.username == username)
         )
 
         with self._db.connection() as conn:
-            data = conn.execute(select_query).fetchone()
+            count_reports_generation = conn.execute(select_query).scalar()
 
-            if data is None:
+            if count_reports_generation is None:
                 insert_query = insert(user_generate_reports_table).values(username=username)
                 conn.execute(insert_query)
-                data = {'reports_generated_count': 0}
+                count_reports_generation = 0
 
-        return data['reports_generated_count']
+        return count_reports_generation
 
     def delete_report(self, report_id: int) -> None:
         delete_query = (

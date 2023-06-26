@@ -1,7 +1,9 @@
-from typing import Any, Optional
+from typing import Any
+from datetime import datetime
 
 from pydantic import BaseModel, Field, ValidationError, validator
 
+from kin_news_core.constants import DEFAULT_DATETIME_FORMAT
 from kin_statistics_api.constants import (
     MessageCategories,
     ReportProcessingResult,
@@ -15,41 +17,58 @@ class BaseReport(BaseModel):
     name: str = Field(max_length=80)
     report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias='reportType')
     processing_status: ReportProcessingResult = Field(..., alias='processingStatus')
+    generation_date: datetime = Field(..., alias='generationDate')
 
-    report_failed_reason: Optional[str] = Field(None, alias='reportFailedReason')
+    report_failed_reason: str | None = Field(None, alias='reportFailedReason')
+
+    @validator("generation_date", pre=True)
+    def parse_generation_date(cls, value: str | datetime) -> datetime:
+        if isinstance(value, str):
+            return datetime.strptime(value, DEFAULT_DATETIME_FORMAT)  # parse a string into datetime
+
+        return value
+
+    def dict(self, with_serialization=False, **kwargs: Any) -> dict[str, Any]:
+        model_dict = super().dict(**kwargs)
+
+        if with_serialization:
+            model_dict["generationDate"] = self.generation_date.strftime(DEFAULT_DATETIME_FORMAT)
+
+        return model_dict
 
     class Config:
         allow_population_by_field_name = True
+        json_encoders = {datetime: lambda v: v.strftime(DEFAULT_DATETIME_FORMAT)}
 
 
 class StatisticalReport(BaseReport):
-    total_messages_count: Optional[int] = Field(None, alias='totalMessagesCount')
+    total_messages_count: int | None = Field(None, alias='totalMessagesCount')
 
-    messages_count_by_channel: Optional[dict[str, int]] = Field(None, alias='messagesCountByChannel')
-    messages_count_by_date: Optional[dict[str, int]] = Field(None, alias='messagesCountByDate')
-    messages_count_by_day_hour: Optional[dict[str, int]] = Field(None, alias='messagesCountByDayHour')
-    messages_count_by_category: Optional[dict[MessageCategories, int]] = Field(None, alias='messagesCountByCategory')
+    messages_count_by_channel: dict[str, int] | None = Field(None, alias='messagesCountByChannel')
+    messages_count_by_date: dict[str, int] | None = Field(None, alias='messagesCountByDate')
+    messages_count_by_day_hour: dict[str, int] | None = Field(None, alias='messagesCountByDayHour')
+    messages_count_by_category: dict[MessageCategories, int] | None = Field(None, alias='messagesCountByCategory')
 
-    messages_count_by_date_by_category: Optional[dict[str, dict[MessageCategories, int]]] = Field(
+    messages_count_by_date_by_category: dict[str, dict[MessageCategories, int]] | None = Field(
         None,
         alias='messagesCountByDateByCategory',
     )
 
-    messages_count_by_channel_by_category: Optional[dict[str, dict[MessageCategories, int]]] = Field(
+    messages_count_by_channel_by_category: dict[str, dict[MessageCategories, int]] | None = Field(
         None,
         alias='messagesCountByChannelByCategory',
     )
 
-    messages_count_by_sentiment_type: Optional[dict[SentimentTypes, int]] = Field(
+    messages_count_by_sentiment_type: dict[SentimentTypes, int] | None = Field(
         None,
         alias='messagesCountBySentimentType',
     )
 
-    messages_count_by_channel_by_sentiment_type: Optional[dict[str, dict[SentimentTypes, int]]] = Field(
+    messages_count_by_channel_by_sentiment_type: dict[str, dict[SentimentTypes, int]] | None = Field(
         None,
         alias='messagesCountByChannelBySentimentType',
     )
-    messages_count_by_date_by_sentiment_type: Optional[dict[str, dict[SentimentTypes, int]]] = Field(
+    messages_count_by_date_by_sentiment_type: dict[str, dict[SentimentTypes, int]] | None = Field(
         None,
         alias='messagesCountByDateBySentimentType',
     )
@@ -74,6 +93,7 @@ class StatisticalReport(BaseReport):
             report_type=dict_report['report_type'],
             name=dict_report['name'],
             processing_status=dict_report['processing_status'],
+            generation_date=dict_report['generation_date'],
             report_failed_reason=dict_report['report_failed_reason'],
             total_messages_count=dict_report['total_messages_count'],
             messages_count_by_channel=dict_report['messages_count_by_channel'],
@@ -89,17 +109,13 @@ class StatisticalReport(BaseReport):
 
 
 class WordCloudReport(BaseReport):
-    total_words: Optional[int] = Field(None, alias='totalWords')
-    total_words_frequency: Optional[list[tuple[str, int]]] = Field(None, alias='totalWordsFrequency')
-    data_by_channel: Optional[dict[str, list[tuple[str, int]]]] = Field(None, alias='dataByChannel')
+    total_words: int | None = Field(None, alias='totalWords')
+    total_words_frequency: list[tuple[str, int]] | None = Field(None, alias='totalWordsFrequency')
+    data_by_channel: dict[str, list[tuple[str, int]]] | None = Field(None, alias='dataByChannel')
 
-    data_by_category: Optional[
-        dict[SentimentTypes | MessageCategories, list[tuple[str, int]]]
-    ] = Field(None, alias='dataByCategory')
+    data_by_category: dict[SentimentTypes | MessageCategories, list[tuple[str, int]]] | None = Field(None, alias='dataByCategory')
 
-    data_by_channel_by_category: Optional[
-        dict[str, dict[SentimentTypes | MessageCategories, list[tuple[str, int]]]]
-    ] = Field(None, alias='dataByChannelByCategory')
+    data_by_channel_by_category: dict[str, dict[SentimentTypes | MessageCategories, list[tuple[str, int]]]] | None = Field(None, alias='dataByChannelByCategory')
 
     class Config:
         allow_population_by_field_name = True
@@ -111,6 +127,7 @@ class WordCloudReport(BaseReport):
             report_type=dict_report['report_type'],
             name=dict_report['name'],
             processing_status=dict_report['processing_status'],
+            generation_date=dict_report['generation_date'],
             report_failed_reason=dict_report.get('report_failed_reason'),
             total_words=dict_report.get('total_words'),
             data_by_channel_by_category=dict_report.get('data_by_channel_by_category'),
@@ -127,11 +144,5 @@ class ReportPutEntity(BaseModel):
         allow_population_by_field_name = True
 
 
-class ReportIdentificationEntity(BaseModel):
-    processing_status: ReportProcessingResult = Field(ReportProcessingResult.READY, alias='processingStatus')
-    report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias='reportType')
-    report_id: int = Field(..., alias='reportId')
-    name: str
-
-    class Config:
-        allow_population_by_field_name = True
+class ReportIdentificationEntity(BaseReport):
+    pass

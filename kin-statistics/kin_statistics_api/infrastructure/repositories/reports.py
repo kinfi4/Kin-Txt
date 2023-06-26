@@ -66,24 +66,24 @@ class ReportsMongoRepository(IReportRepository):
 
     def get_report(self, report_id: int) -> StatisticalReport | WordCloudReport:
         dict_report = self._reports_collection.find_one({
-            'report_id': report_id
+            "report_id": report_id
         })
 
         if dict_report is None:
-            raise ReportNotFound('Report with this id was not found')
+            raise ReportNotFound("Report with this id was not found")
 
         return self._map_dict_to_entity(dict_report)
 
     def delete_report(self, report_id: int) -> None:
         dict_report = self._reports_collection.find_one({
-            'report_id': report_id
+            "report_id": report_id
         })
 
         if dict_report is None:
             return
 
         if dict_report['processing_status'] == ReportProcessingResult.PROCESSING:
-            raise ImpossibleToModifyProcessingReport('You can not delete the report during processing.')
+            raise ImpossibleToModifyProcessingReport("You can not delete the report during processing.")
 
         self._reports_collection.delete_one({
             'report_id': report_id
@@ -92,15 +92,16 @@ class ReportsMongoRepository(IReportRepository):
     @staticmethod
     def _map_dict_to_identification_entity(dict_report: dict[str, Any]) -> ReportIdentificationEntity:
         return ReportIdentificationEntity(
-            report_id=dict_report['report_id'],
-            name=dict_report['name'],
-            processing_status=dict_report['processing_status'],
-            report_type=dict_report['report_type'],
+            report_id=dict_report["report_id"],
+            name=dict_report["name"],
+            processing_status=dict_report["processing_status"],
+            report_type=dict_report["report_type"],
+            generation_date=dict_report["generation_date"],
         )
 
     @staticmethod
     def _map_dict_to_entity(dict_report: dict[str, Any]) -> StatisticalReport | WordCloudReport:
-        if dict_report.get('report_type') == ReportTypes.WORD_CLOUD:
+        if dict_report.get("report_type") == ReportTypes.WORD_CLOUD:
             return WordCloudReport.from_dict(dict_report)
 
         return StatisticalReport.from_dict(dict_report)

@@ -82,7 +82,7 @@ const ReportBlock = (props) => {
                 <div className={selectReportMenuCss.circle}></div> {props.reportStatus}
             </td>
             <td>
-                {"Placeholder"}
+                {props.reportProcessingDate}
             </td>
             <td>
                 <div className={selectReportMenuCss.reportControls}>
@@ -95,6 +95,7 @@ const ReportBlock = (props) => {
 }
 
 const SelectReportMenu = (props) => {
+    console.log(props)
     let {path, url} = useRouteMatch();
     useEffect(() => {
         props.fetchUserReports();
@@ -123,6 +124,7 @@ const SelectReportMenu = (props) => {
                                 deleteReport={props.deleteReport}
                                 fetchReportDetails={props.fetchReportDetails}
                                 showModal={props.showModal}
+                                reportProcessingDate={el.generationDate}
                                 key={idx}
                             />
                         )

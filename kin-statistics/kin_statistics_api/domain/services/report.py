@@ -76,6 +76,8 @@ class ManagingReportsService:
             report_id=new_report.report_id,
             name=new_report.name,
             report_type=new_report.report_type,
+            generation_date=new_report.generation_date,
+            processing_status=new_report.processing_status,
         )
 
     def get_user_detailed_report(self, username: str, report_id: int) -> StatisticalReport | WordCloudReport:
@@ -105,4 +107,5 @@ class ManagingReportsService:
             report_type=report_type,
             processing_status=ReportProcessingResult.NEW,
             name=f'Report: {datetime.now().strftime("%b %d, %Y %H:%M:%S")}',
+            generation_date=datetime.now(),
         )

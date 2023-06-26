@@ -1,7 +1,9 @@
 from typing import Any, Optional
+from datetime import datetime
 
 from pydantic import BaseModel, Field, ValidationError, validator
 
+from kin_news_core.constants import DEFAULT_DATETIME_FORMAT
 from kin_reports_generation.constants import (
     MessageCategories,
     ReportProcessingResult,
@@ -15,11 +17,20 @@ class BaseReport(BaseModel):
     name: str = Field(max_length=80)
     report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias='reportType')
     processing_status: ReportProcessingResult = Field(..., alias='processingStatus')
+    generation_date: datetime = Field(..., alias='generationDate')
 
     report_failed_reason: Optional[str] = Field(None, alias='reportFailedReason')
 
+    @validator("generation_date", pre=True)
+    def parse_generation_date(cls, value: str | datetime) -> datetime:
+        if isinstance(value, str):
+            return datetime.strptime(value, DEFAULT_DATETIME_FORMAT)  # parse a string into datetime
+
+        return value
+
     class Config:
         allow_population_by_field_name = True
+        json_encoders = {datetime: lambda v: v.strftime(DEFAULT_DATETIME_FORMAT)}
 
 
 class StatisticalReport(BaseReport):

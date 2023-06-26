@@ -25,7 +25,7 @@ def get_reports(
 ):
     report_identities = reports_service.get_user_reports_names(current_user.username)
 
-    return JSONResponse(content={'reports': [report.dict(by_alias=True) for report in report_identities]})
+    return JSONResponse(content={'reports': [report.dict(by_alias=True, with_serialization=True) for report in report_identities]})
 
 
 @router.post('')
@@ -69,7 +69,7 @@ def get_report_details(
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
-    return JSONResponse(content=report.dict(by_alias=True))
+    return JSONResponse(content=report.dict(by_alias=True, with_serialization=True))
 
 
 @router.put('/{report_id}')
@@ -87,7 +87,7 @@ def update_report(
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': str(err)})
 
-    return JSONResponse(content=report_identity.dict(by_alias=True))
+    return JSONResponse(content=report_identity.dict(by_alias=True, with_serialization=True))
 
 
 @router.delete('/{report_id}')

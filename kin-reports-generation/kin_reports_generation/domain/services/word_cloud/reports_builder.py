@@ -18,6 +18,7 @@ class WordCloudReportBuilder:
         self._report_type = ReportTypes.WORD_CLOUD
         self._status = ReportProcessingResult.READY
         self._failed_reason: Optional[str] = None
+        self._report_generation_date = datetime.now()
 
         self._data_by_channel_by_category: Optional[dict] = None
         self._data_by_channel: Optional[dict] = None
@@ -65,6 +66,7 @@ class WordCloudReportBuilder:
             report_id=self._report_id,
             report_type=self._report_type,
             name=self._report_name,
+            generation_date=self._report_generation_date,
             processing_status=self._status,
             report_failed_reason=self._failed_reason,
             total_words=self._total_words_count,
