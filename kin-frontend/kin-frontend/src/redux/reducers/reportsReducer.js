@@ -7,12 +7,21 @@ import {translateDateToString} from "../../utils/utils";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
+
+let reportsFilters = {
+    name: "",
+    dateFrom: null,
+    dateTo: null,
+    processingStatus: null,
+};
+
 let initialState = {
     reports: [],
     loading: false,
     detailedReport: null,
     channelListForGeneration: [],
-}
+    reportsFilters: reportsFilters,
+};
 
 const REPORTS_LOADED = "REPORTS_LOADED";
 const REPORTS_LOADING = "REPORTS_LOADING";
@@ -20,12 +29,46 @@ const REPORTS_STOP_LOADING = "REPORTS_STOP_LOADING";
 const REPORT_DETAILS_LOADED = "REPORT_DETAILS_LOADED";
 const SET_CHANNELS = "SET_CHANNELS";
 const SET_NULL_DETAILED_REPORT = "SET_NULL_DETAILED_REPORT";
+const UPDATE_FILTERS = "UPDATE_FILTERS";
 
 
-export let fetchUserReports = () => (dispatch) => {
+const reportFiltersToQueryParams = (filters) => {
+    if(!filters) {
+        return "";
+    }
+
+    let queryParams = "";
+
+    if (filters.name) {
+        queryParams += `&name=${filters.name}`
+    }
+    if (filters.dateFrom) {
+        queryParams += `&dateFrom=${filters.dateFrom}`
+    }
+    if (filters.dateTo) {
+        queryParams += `&dateTo=${filters.dateTo}`
+    }
+    if (filters.processingStatus) {
+        queryParams += `&processingStatus=${filters.processingStatus}`
+    }
+
+    return queryParams;
+}
+
+
+export const updateFilters = (name, dateFrom, dateTo, processingStatus) => (dispatch, getState) => {
+    dispatch({type: UPDATE_FILTERS, name, dateFrom, dateTo, processingStatus});
+
+    fetchUserReports()(dispatch, getState);
+};
+
+export let fetchUserReports = () => (dispatch, getState) => {
     const token = localStorage.getItem("token");
+    const filters = getState().reportsReducer.reportsFilters;
+    let queryParams = reportFiltersToQueryParams(filters);
+    queryParams = queryParams ? `?${queryParams.substring(1)}` : "";
 
-    axios.get(STATISTICS_SERVICE_URL + `/api/v1/reports`, {
+    axios.get(STATISTICS_SERVICE_URL + `/api/v1/reports` + queryParams, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -133,13 +176,24 @@ export let reportsReducer = (state=initialState, action) => {
         case SET_CHANNELS:
             return {...state, channelListForGeneration: action.channels}
         case REPORTS_LOADED:
-            return {reports: action.reports}
+            return {...state, reports: action.reports}
         case REPORTS_LOADING:
             return {...state, loading: true}
         case REPORTS_STOP_LOADING:
             return {...state, loading: false}
         case SET_NULL_DETAILED_REPORT:
             return {...state, detailedReport: null, loading: false}
+        case UPDATE_FILTERS:
+            return {
+                ...state,
+                reportsFilters: {
+                    ...state.reportsFilters,
+                    name: action.name,
+                    dateFrom: action.dateFrom,
+                    dateTo: action.dateTo,
+                    processingStatus: action.processingStatus,
+                }
+            }
         default:
             return state
     }

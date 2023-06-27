@@ -1,0 +1,7 @@
+.reportFiltersContainer th:first-child{
+    padding-top: 12px;
+}
+.reportFiltersContainer th div:first-child {
+    width: 80%;
+}
+

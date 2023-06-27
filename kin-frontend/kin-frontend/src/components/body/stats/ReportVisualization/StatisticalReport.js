@@ -240,7 +240,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
 
                             {
                                 messagesCountBySentimentType.map((entry, index) => {
-                                    return <Cell fill={getColor(entry.sentiment)} name={entry.sentiment} />
+                                    return <Cell fill={getColor(entry.sentiment)} name={entry.sentiment} key={index} />
                                 })
                             }
                         </Pie>
@@ -403,7 +403,7 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
 
                             {
                                 messagesCountByCategory.map((entry, index) => {
-                                    return <Cell fill={getColor(entry.category)} name={entry.category} />
+                                    return <Cell fill={getColor(entry.category)} name={entry.category} key={index} />
                                 })
                             }
                         </Pie>

@@ -33,7 +33,7 @@ class ReportsMongoRepository(IReportRepository):
 
         if apply_filters is not None:
             if apply_filters.name is not None:
-                filters["name"] = apply_filters.name
+                filters["name"] = {"$regex": f".*{apply_filters.name}.*", "$options": "i"}
             if apply_filters.date_from is not None:
                 if "date" not in filters:
                     filters["date"] = {}

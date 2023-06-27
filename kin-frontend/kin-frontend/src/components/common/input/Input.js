@@ -1,19 +1,19 @@
 import inputCss from './Input.module.css'
 
 
-function Input(props) {
+function Input({type = "text", onChange, value, id, placeholder}) {
     return (
         <>
             <div className={inputCss['input-container']}>
                 <input
-                    type={props.type ? props.type : "text"}
-                    onChange={(e => props.onChange(e))}
-                    value={props.value}
-                    id={props.id}
+                    type={type ? type : "text"}
+                    onChange={(e => onChange(e))}
+                    value={value}
+                    id={id}
 
                     required
                 />
-                <label>{props.placeholder}</label>
+                <label>{placeholder}</label>
             </div>
         </>
     )

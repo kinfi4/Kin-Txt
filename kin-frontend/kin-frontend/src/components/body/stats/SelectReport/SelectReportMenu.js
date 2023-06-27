@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 
 import selectReportMenuCss from "./SelectReportMenu.module.css"
@@ -8,17 +8,12 @@ import {
     fetchUserReports,
     updateReportName
 } from "../../../../redux/reducers/reportsReducer";
-import {Link} from "react-router-dom";
-import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
-
-
+import ReportFilters from "./ReportFilters/ReportFilters";
 
 
 const SelectReportMenu = (props) => {
-    console.log(props)
-    let {path, url} = useRouteMatch();
     useEffect(() => {
         props.fetchUserReports();
     }, []);
@@ -28,12 +23,7 @@ const SelectReportMenu = (props) => {
             <div className={selectReportMenuCss.reportsListContainer}>
                 <table className={selectReportMenuCss.reportTable}>
                     <thead>
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th><h2><Link to={`${path}/generate`}><span className={selectReportMenuCss.generateNewReportButton}>Generate new</span></Link></h2></th>
-                        </tr>
+                        <ReportFilters />
                     </thead>
                     <tbody>
                     {
@@ -63,7 +53,6 @@ let mapStateToProps = (state) => {
         reportNames: state.reportsReducer.reports,
     }
 }
-
 let mapDispatchToProps = (dispatch) => {
     return {
         fetchUserReports: () => dispatch(fetchUserReports()),
