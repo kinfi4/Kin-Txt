@@ -9,6 +9,10 @@ services:
     container_name: "kin-frontend"
     volumes:
       - ./kin-frontend/src:/app/src
+      - ./kin-frontend/public:/app/public
+      - ./kin-frontend/package.json:/app/package.json
+      - ./kin-frontend/package-lock.json:/app/package-lock.json
+      - ./kin-frontend/node_modules:/app/node_modules
     ports:
       - "3000:3000"
     env_file:

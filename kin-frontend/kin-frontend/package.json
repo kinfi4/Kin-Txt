@@ -19,6 +19,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.7.3",
     "recharts": "^2.1.16",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.2",
