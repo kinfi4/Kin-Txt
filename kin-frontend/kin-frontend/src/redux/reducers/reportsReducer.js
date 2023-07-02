@@ -68,7 +68,7 @@ export let fetchUserReports = () => (dispatch, getState) => {
     let queryParams = reportFiltersToQueryParams(filters);
     queryParams = queryParams ? `?${queryParams.substring(1)}` : "";
 
-    axios.get(STATISTICS_SERVICE_URL + `/api/v1/reports` + queryParams, {
+    axios.get(STATISTICS_SERVICE_URL + `/reports` + queryParams, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -85,7 +85,7 @@ export let fetchReportDetails = (reportId) => (dispatch) => {
 
     dispatch({type: REPORTS_LOADING})
 
-    axios.get(STATISTICS_SERVICE_URL + `/api/v1/reports/${reportId}`, {
+    axios.get(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -117,7 +117,7 @@ export let generateReport = (startDate, endDate, channels, reportType) => (dispa
         reportType: reportType,
     }
 
-    axios.post(STATISTICS_SERVICE_URL + `/api/v1/reports`, body, {
+    axios.post(STATISTICS_SERVICE_URL + `/reports`, body, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -132,7 +132,7 @@ export let updateReportName = (reportId, reportName) => (dispatch) => {
     const token = localStorage.getItem("token");
     const body = {name: reportName}
 
-    axios.put(STATISTICS_SERVICE_URL + `/api/v1/reports/${reportId}`, body, {
+    axios.put(STATISTICS_SERVICE_URL + `/reports/${reportId}`, body, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -148,7 +148,7 @@ export let updateReportName = (reportId, reportName) => (dispatch) => {
 export let deleteReport = (reportId) => (dispatch) => {
     const token = localStorage.getItem("token");
 
-    axios.delete(STATISTICS_SERVICE_URL + `/api/v1/reports/${reportId}`, {
+    axios.delete(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
             'Authorization': `Token ${token}`,
         }

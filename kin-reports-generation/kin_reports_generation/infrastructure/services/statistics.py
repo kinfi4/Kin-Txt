@@ -13,7 +13,7 @@ class StatisticsService(ServiceProxy):
     def save_report_data(self, report_id: int, file_type: str, data: TextIO) -> None:
         self._logger.info(f'Saving data for processed report={report_id} in statistics service...')
 
-        target_url = f'{self._base_url}/api/v1/reports-data/save'
+        target_url = f'{self._base_url}/reports-data/save'
         response = self._session.post(
             url=target_url,
             files={'report_data_file': data},

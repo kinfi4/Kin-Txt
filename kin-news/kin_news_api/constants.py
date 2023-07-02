@@ -5,6 +5,9 @@ PROJECT_DESCRIPTION = 'Kin-News is a service for storing user subscriptions, ret
 
 DELETED_CHANNEL_TITLE = 'This Channel was deleted, or channel link has changed'
 
+API_ROUTE_PATH = "/api/news/v1"
+
+
 class PossibleRating(int, Enum):
     ZERO = 0
     ONE = 1

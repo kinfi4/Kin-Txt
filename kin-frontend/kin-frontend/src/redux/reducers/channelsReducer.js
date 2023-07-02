@@ -22,7 +22,7 @@ export const FETCH_ERROR = 'FETCH_ERROR'
 export let addChannel = (link) => (dispatch) => {
     const token = localStorage.getItem("token")
 
-    axios.post(NEWS_SERVICE_URL + '/api/v1/channels', {link: link}, {
+    axios.post(NEWS_SERVICE_URL + '/channels', {link: link}, {
         headers: {
             'Authorization': `Token ${token}`,
             'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export let addChannel = (link) => (dispatch) => {
 export let fetchChannels = () => (dispatch) => {
     const token = localStorage.getItem("token")
 
-    axios.get(NEWS_SERVICE_URL + '/api/v1/channels', {
+    axios.get(NEWS_SERVICE_URL + '/channels', {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -52,7 +52,7 @@ export let fetchChannels = () => (dispatch) => {
 export let unsubscribe = (channelLink) => (dispatch) => {
     const token = localStorage.getItem("token")
 
-    axios.delete(NEWS_SERVICE_URL + '/api/v1/channels/' + channelLink, {
+    axios.delete(NEWS_SERVICE_URL + '/channels/' + channelLink, {
         headers: {
             'Authorization': `Token ${token}`,
         }

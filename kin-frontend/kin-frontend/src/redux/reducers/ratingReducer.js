@@ -23,7 +23,7 @@ export let fetchChannelRating = (channelLink) => (dispatch) => {
     const token = localStorage.getItem("token")
 
     dispatch({type: START_LOADING_RATING})
-    axios.get(NEWS_SERVICE_URL + `/api/v1/channels/rates?channel=${channelLink}`, {
+    axios.get(NEWS_SERVICE_URL + `/channels/rates?channel=${channelLink}`, {
         headers: {
             'Authorization': `Token ${token}`,
         }
@@ -53,7 +53,7 @@ export let rateChannel = (channelLink, rate) => (dispatch) => {
 
     dispatch({type: START_LOADING_RATING})
 
-    axios.post(NEWS_SERVICE_URL + '/api/v1/channels/rates', body, {
+    axios.post(NEWS_SERVICE_URL + '/channels/rates', body, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

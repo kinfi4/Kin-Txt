@@ -44,14 +44,14 @@ const StatisticalReport = ({showComparisonButton=true, ...props}) => {
                 >
                     <div
                         onClick={() => {
-                            downloadFile(STATISTICS_SERVICE_URL + `/api/v1/reports-data/${props.report.reportId}?export_type=csv`, 'csv')
+                            downloadFile(STATISTICS_SERVICE_URL + `/reports-data/${props.report.reportId}?export_type=csv`, 'csv')
                         }}
                     >
                        <FaFileCsv style={{marginRight: "5px"}}/> CSV
                     </div>
                     <div
                         onClick={() => {
-                            downloadFile(STATISTICS_SERVICE_URL + `/api/v1/reports-data/${props.report.reportId}?export_type=json`, 'json')
+                            downloadFile(STATISTICS_SERVICE_URL + `/reports-data/${props.report.reportId}?export_type=json`, 'json')
                         }}
                     >
                        <VscJson style={{marginRight: "5px"}} /> <span style={{fontSize: "15px"}}>JSON</span>

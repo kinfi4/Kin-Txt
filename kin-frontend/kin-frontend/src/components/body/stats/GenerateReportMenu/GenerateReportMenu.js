@@ -50,7 +50,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
         }
 
         const token = localStorage.getItem("token");
-        axios.get(NEWS_SERVICE_URL + `/api/v1/channels/exists/${channelLink}`, {
+        axios.get(NEWS_SERVICE_URL + `/channels/exists/${channelLink}`, {
             headers: {
                 'Authorization': `Token ${token}`,
             }

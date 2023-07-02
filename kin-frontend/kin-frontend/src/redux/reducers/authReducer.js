@@ -32,7 +32,7 @@ export const loadUser = () => (dispatch, getState) => {
         headers['Authorization'] = `Token ${token}`
     }
 
-    axios.get(NEWS_SERVICE_URL + '/api/v1/me', {
+    axios.get(NEWS_SERVICE_URL + '/me', {
         headers: headers
     }).then(res => {
         if(res.status !== 200) {
@@ -60,7 +60,7 @@ export const login = (username, password) => (dispatch) => {
         password,
     })
 
-    axios.post(NEWS_SERVICE_URL + '/api/v1/login', body, {
+    axios.post(NEWS_SERVICE_URL + '/login', body, {
         headers: headers,
     }).then(res => {
         dispatch({ type: LOGIN_SUCCESS, token: res.data.token })
@@ -82,7 +82,7 @@ export const register = (username, password1, password2) => (dispatch) => {
         passwordRepeated: password2
     }
 
-    axios.post(NEWS_SERVICE_URL + '/api/v1/register', JSON.stringify(body), {
+    axios.post(NEWS_SERVICE_URL + '/register', JSON.stringify(body), {
         headers: {
             'Content-Type': 'application/json',
         }

@@ -40,7 +40,7 @@ export let fetchNextPosts = () => (dispatch, getState) => {
     console.log(`Getting data from ${startTime} to ${endTime}`)
 
 
-    axios.get(NEWS_SERVICE_URL + `/api/v1/messages?start_time=${startTimeTimestamp}&end_time=${endTimeTimestamp}`, {
+    axios.get(NEWS_SERVICE_URL + `/messages?start_time=${startTimeTimestamp}&end_time=${endTimeTimestamp}`, {
         headers: {
             'Authorization': `Token ${token}`,
         }

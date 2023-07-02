@@ -15,7 +15,7 @@ const SET_LOADING_REPORTS = "SET_LOADING_REPORTS";
 const fetchReport = (reportId) => {
     const token = localStorage.getItem("token");
 
-    return axios.get(STATISTICS_SERVICE_URL + `/api/v1/reports/${reportId}`, {
+    return axios.get(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
             'Authorization': `Token ${token}`
         }
