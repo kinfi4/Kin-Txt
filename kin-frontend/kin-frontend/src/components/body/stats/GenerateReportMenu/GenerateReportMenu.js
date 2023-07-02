@@ -97,7 +97,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                             id="channels"
                             className={statsCss.generateReportFormLabel}
                         >
-                            Channel list:
+                            Channel List:
                         </label>
 
                         <Creatable
