@@ -16,6 +16,11 @@ import Creatable from 'react-select/creatable';
 
 const ACTION_CREATE_OPTION = "create-option";
 const ACTION_REMOVE_OPTION = "remove-value";
+const initialGenerateReportState = {
+    startDate: new Date(),
+    endDate: new Date(),
+    reportType: STATISTICAL_REPORT,
+}
 
 const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerationRequest, ...props}) => {
     useEffect(() => {
@@ -25,11 +30,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
         setChannels(initialChannels.map(el => el.link));
     }, [initialChannels]);
 
-    const [data, setData] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
-        reportType: STATISTICAL_REPORT,
-    });
+    const [data, setData] = useState(initialGenerateReportState);
 
     const handleChannelsListChange = (selectedOptions, action) => {
         if(action.action === ACTION_CREATE_OPTION) {
@@ -162,6 +163,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                             defaultValue={{value: STATISTICAL_REPORT, label: "Statistical report"}}
                             isSearchable={true}
                             name="reportType"
+                            value={{value: data.reportType, label: data.reportType}}
                             onChange={newValue => setData({...data, reportType: newValue.value})}
                             options={[
                                 {value: STATISTICAL_REPORT, label: "Statistical report"},
@@ -186,7 +188,10 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                     <div className={statsCss.generateReportsControlsContainer}>
                         <div
                             className={mainPageCss.controlButton}
-                            onClick={() => sendGenerationRequest(data.startDate, data.endDate, channels, data.reportType)}
+                            onClick={() => {
+                                sendGenerationRequest(data.startDate, data.endDate, channels, data.reportType);
+                                setData(initialGenerateReportState);
+                            }}
                             style={{backgroundColor: "#2CA884", fontSize: "22px", width: "310px"}}
                         >
                             GENERATE REPORT
