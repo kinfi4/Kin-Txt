@@ -1,6 +1,10 @@
-export const NEWS_SERVICE_URL = 'http://localhost:8000/api/news/v1'
-export const STATISTICS_SERVICE_URL = 'http://localhost:8001/api/statistics/v1'
-export const FILE_STORAGE_URL = 'http://localhost:8002'
+export const NEWS_SERVICE_URL = 'http://localhost:8080/api/news/v1'
+export const STATISTICS_SERVICE_URL = 'http://localhost:8080/api/statistics/v1'
+export const FILE_STORAGE_URL = 'http://localhost:8080/api/news/v1'
+
+// export const NEWS_SERVICE_URL = 'http://kin-api-gateway:8080/api/news/v1'
+// export const STATISTICS_SERVICE_URL = 'http://kin-api-gateway:8080/api/statistics/v1'
+// export const FILE_STORAGE_URL = 'http://kin-api-gateway:8080'
 
 export const MS_IN_MINUTE = 60000
 

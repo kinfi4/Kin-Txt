@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./etc/kin-api-gateway/Dockerfile
+    container_name: kin-api-gateway
+    env_file:
+      - ./etc/kin-api-gateway/env/.dev.env
+    restart: 'no'
+    networks:
+      - kin-network
+    ports:
+      - "8080:80"
+
+networks:
+  kin-network:
+    external:
+      name: kin-network
