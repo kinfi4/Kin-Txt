@@ -1,3 +1,4 @@
+import React from "react";
 import channelCss from './Channel.module.css'
 import {FILE_STORAGE_URL} from "../../../../config";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";

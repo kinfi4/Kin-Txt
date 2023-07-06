@@ -1,3 +1,4 @@
+import React from "react";
 import statsCss from "../Statistics.module.css";
 import {IoIosArrowRoundBack} from "react-icons/io"
 import {Link} from "react-router-dom";

@@ -1,3 +1,4 @@
+import React from "react";
 import {shuffle} from "../../../../../utils/utils";
 
 export const transformObjectToArray = (data, xName, yName) => {
