@@ -6,3 +6,4 @@ from .report_data import (
     ReportDataSaver,
 )
 from .user import UserService
+from .template import GenerationTemplateService

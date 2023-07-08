@@ -8,3 +8,4 @@ from .report import (
 )
 from .user import User
 from .report_filters import ReportFilters
+from .generation_template import GenerationTemplate

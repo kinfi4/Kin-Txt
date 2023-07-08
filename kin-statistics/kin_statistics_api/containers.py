@@ -6,12 +6,14 @@ from kin_statistics_api.infrastructure.repositories import (
     ReportsMongoRepository,
     IReportRepository,
     ReportsAccessManagementRepository,
+    TemplatesRepository,
 )
 from kin_statistics_api.domain.services import (
     ManagingReportsService,
     UserService,
     CsvFileGenerator,
     JsonFileGenerator,
+    GenerationTemplateService,
 )
 from kin_statistics_api.constants import REPORTS_STORING_EXCHANGE
 from kin_news_core.database import Database
@@ -105,6 +107,11 @@ class Repositories(containers.DeclarativeContainer):
         db=database.database_driver,
     )
 
+    templates_repository: providers.Resource[TemplatesRepository] = providers.Resource(
+        MongodbRepositoryResource,
+        connection_string=config.mongodb_connection_string,
+    )
+
 
 class Services(containers.DeclarativeContainer):
     config = providers.Configuration()
@@ -136,6 +143,11 @@ class Services(containers.DeclarativeContainer):
     reports_data_saver: providers.Singleton[ReportDataSaver] = providers.Singleton(
         ReportDataSaver,
         reports_folder_path=config.reports_folder_path,
+    )
+
+    templates_service: providers.Singleton[GenerationTemplateService] = providers.Singleton(
+        GenerationTemplateService,
+        templates_repository=repositories.templates_repository,
     )
 
 

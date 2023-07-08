@@ -1,0 +1,57 @@
+import logging
+from typing import Mapping
+from datetime import datetime
+
+from pymongo import MongoClient
+
+from kin_statistics_api.domain.entities.generation_template import GenerationTemplate
+from kin_statistics_api.exceptions import GenerationTemplateNotFound
+
+
+class TemplatesRepository:
+    def __init__(self, mongo_client: MongoClient):
+        self._mongo_client = mongo_client
+        self._templates_db = mongo_client["statistics_service"]
+        self._templates_collection = self._templates_db["templates"]
+
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def get_user_template_names(self, username: str) -> list[str]:
+        user_templates_list = self._templates_collection.find({"owner_username": username}, {"name": 1, "_id": 0})
+
+        return list(user_templates_list)
+
+    def load_user_template(self, username: str, template_id: str) -> GenerationTemplate:
+        template_dict = self._templates_collection.find_one(
+            {"owner_username": username, "_id": template_id}
+        )
+
+        if template_dict is None:
+            raise GenerationTemplateNotFound(f"Template with id: {template_id} not found.")
+
+        return self._map_dict_to_template_entity(template_dict)
+
+    def save_user_template(self, template: GenerationTemplate) -> None:
+        self._logger.info(f"[TemplatesMongoRepository] Saving user template with name: {template.name}")
+
+        template_dict = template.dict()
+
+        self._templates_collection.replace_one(
+            {"_id": template.id},
+            template_dict,
+            upsert=True,
+        )
+
+    def delete_template(self, username: str, template_id: str) -> None:
+        self._templates_collection.delete_one({"owner_username": username, "_id": template_id})
+
+    def _map_dict_to_template_entity(self, template_dict: Mapping[str, str | list[str] | datetime]) -> GenerationTemplate:
+        return GenerationTemplate(
+            id=template_dict["_id"],
+            name=template_dict["name"],
+            owner_username=template_dict["owner_username"],
+            channel_list=template_dict["channel_list"],
+            from_date=template_dict["from_date"],
+            to_date=template_dict["to_date"],
+            report_type=template_dict["report_type"],
+        )

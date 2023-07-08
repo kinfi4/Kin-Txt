@@ -15,3 +15,7 @@ class ReportNotFound(KinNewsCoreException):
 
 class ReportDataNotFound(KinNewsCoreException):
     pass
+
+
+class GenerationTemplateNotFound(KinNewsCoreException):
+    pass
