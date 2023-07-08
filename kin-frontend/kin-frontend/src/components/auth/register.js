@@ -1,3 +1,4 @@
+import React from "react";
 import Input from "../common/input/Input";
 import {NavLink} from "react-router-dom";
 import authCss from "./auth.module.css";

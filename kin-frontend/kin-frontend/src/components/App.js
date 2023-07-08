@@ -9,7 +9,7 @@ import Tape from "./body/tape/Tape";
 import {useEffect} from "react";
 import store from "../redux/store";
 import {loadUser} from "../redux/reducers/authReducer";
-import ReactNotifications from "react-notifications-component";
+import {ReactNotifications} from "react-notifications-component";
 import 'react-notifications-component/dist/theme.css'
 import ComparisonWindow from "./body/comparison/ComparisonWindow";
 

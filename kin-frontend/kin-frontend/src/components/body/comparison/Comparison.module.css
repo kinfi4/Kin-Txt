@@ -16,4 +16,6 @@
     box-shadow: 0 0 20px #7744bb;
     overflow-y: hidden;
     overflow-x: auto;
+
+    padding-top: 30px;
 }

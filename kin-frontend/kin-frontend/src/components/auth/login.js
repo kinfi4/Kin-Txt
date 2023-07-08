@@ -1,3 +1,4 @@
+import React from "react";
 import authCss from './auth.module.css'
 import {connect} from "react-redux";
 import {login} from "../../redux/reducers/authReducer";
