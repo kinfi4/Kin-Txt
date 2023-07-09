@@ -1,37 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import TapeCss from "./Tape.module.css"
 import mainPageCss from "../MainPage.module.css"
 import {connect} from "react-redux";
 import {showModalWindow} from "../../../redux/reducers/modalWindowReducer";
-import Input from "../../common/input/Input";
-import Button from "../../common/button/Button";
 import {addChannel, fetchChannels} from "../../../redux/reducers/channelsReducer";
 import ChannelBlock from "./channel/ChannelBlock";
 import {fetchNextPosts} from "../../../redux/reducers/postsReducer";
 import PostsTape from "./PostsTape";
+import InputModalWindow from "../../common/inputModalWindow/InputModalWindow";
 
-
-const EnterLink = (props) => {
-    const [link, setLink] = useState({link: ''})
-
-    return (
-        <div className={TapeCss.enterLinkContainer}>
-            <h4>
-                PROVIDE A LINK TO THE CHANNEL
-            </h4>
-            <Input
-                value={link.link}
-                onChange={(event) => setLink({link: event.target.value})}
-                placeholder={"Channel link"}
-            />
-
-            <Button
-                text={"Subscribe"}
-                onClick={(event) => props.addChannel(link.link)}
-            />
-        </div>
-    )
-}
 
 
 const Tape = (props) => {
@@ -46,7 +23,16 @@ const Tape = (props) => {
                 <div className={mainPageCss.sideBarContent}>
                     <div
                         className={mainPageCss.controlButton}
-                        onClick={() => props.showModal(<EnterLink addChannel={props.addChannel} />, 400, 300)}
+                        onClick={() => props.showModal(
+                            <InputModalWindow
+                                actionCallback={props.addChannel}
+                                title={"PROVIDE A LINK TO THE CHANNEL"}
+                                inputPlaceholder={"Channel link"}
+                                submitPlaceholder={"Subscribe"}
+                            />,
+                            400,
+                            300,
+                        )}
                     >
                         SUBSCRIBE
                     </div>

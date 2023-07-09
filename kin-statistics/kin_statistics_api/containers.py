@@ -1,3 +1,5 @@
+from typing import Type
+
 from dependency_injector import containers, providers, resources
 from pymongo import MongoClient
 
@@ -47,10 +49,10 @@ class SubscriberResource(resources.Resource):
 
 
 class MongodbRepositoryResource(resources.Resource):
-    def init(self, connection_string: str) -> ReportsMongoRepository:
+    def init(self, repository_class: Type[TemplatesRepository | ReportsMongoRepository], connection_string: str) -> ReportsMongoRepository:
         client = MongoClient(connection_string)
 
-        return ReportsMongoRepository(mongo_client=client)
+        return repository_class(mongo_client=client)
 
 
 class DatabaseResource(resources.Resource):
@@ -99,6 +101,7 @@ class Repositories(containers.DeclarativeContainer):
 
     reports_repository: providers.Resource[IReportRepository] = providers.Resource(
         MongodbRepositoryResource,
+        repository_class=ReportsMongoRepository,
         connection_string=config.mongodb_connection_string,
     )
 
@@ -109,6 +112,7 @@ class Repositories(containers.DeclarativeContainer):
 
     templates_repository: providers.Resource[TemplatesRepository] = providers.Resource(
         MongodbRepositoryResource,
+        repository_class=TemplatesRepository,
         connection_string=config.mongodb_connection_string,
     )
 

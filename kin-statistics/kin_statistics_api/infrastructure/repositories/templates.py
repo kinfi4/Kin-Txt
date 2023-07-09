@@ -31,10 +31,11 @@ class TemplatesRepository:
 
         return self._map_dict_to_template_entity(template_dict)
 
-    def save_user_template(self, template: GenerationTemplate) -> None:
+    def save_user_template(self, username: str, template: GenerationTemplate) -> None:
         self._logger.info(f"[TemplatesMongoRepository] Saving user template with name: {template.name}")
 
         template_dict = template.dict()
+        template_dict["owner_username"] = username
 
         self._templates_collection.replace_one(
             {"_id": template.id},
@@ -49,7 +50,6 @@ class TemplatesRepository:
         return GenerationTemplate(
             id=template_dict["_id"],
             name=template_dict["name"],
-            owner_username=template_dict["owner_username"],
             channel_list=template_dict["channel_list"],
             from_date=template_dict["from_date"],
             to_date=template_dict["to_date"],

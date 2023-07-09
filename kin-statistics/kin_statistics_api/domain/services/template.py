@@ -12,8 +12,8 @@ class GenerationTemplateService:
     def load_user_template(self, username: str, template_id: str) -> GenerationTemplate:
         return self._templates_repository.load_user_template(username, template_id)
 
-    def save_user_template(self, template: GenerationTemplate) -> None:
-        self._templates_repository.save_user_template(template)
+    def save_user_template(self, username: str, template: GenerationTemplate) -> None:
+        self._templates_repository.save_user_template(username, template)
 
     def delete_user_template(self, username: str, template_id: str) -> None:
         self._templates_repository.delete_template(username, template_id)

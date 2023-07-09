@@ -24,7 +24,6 @@ def get_user_templates(
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
 ):
     templates_names = templates_service.get_user_template_names(current_user.username)
-    print(templates_names)
     return JSONResponse(content={
         "templates": templates_names
     })
@@ -34,10 +33,10 @@ def get_user_templates(
 @inject
 def generate_report_request(
     generation_template: GenerationTemplate,
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
 ):
-    templates_service.save_user_template(generation_template)
+    templates_service.save_user_template(current_user.username, generation_template)
     return Response(status_code=status.HTTP_201_CREATED)
 
 

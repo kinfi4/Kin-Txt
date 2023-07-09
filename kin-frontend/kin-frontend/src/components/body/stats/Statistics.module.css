@@ -78,3 +78,31 @@
     align-items: flex-start;
     gap: 10px;
 }
+.templateButtonsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    width: 360px;
+}
+.templateButtonsContainer div {
+    background-color: #3a749a;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: linear 0.1s;
+}
+.templateButtonsContainer div:hover {
+    background-color: #337acb;
+}
+.templateButtonsContainer div:first-child {
+    width: 48%;
+}
+.templateButtonsContainer div:last-child {
+    width: 42%;
+}

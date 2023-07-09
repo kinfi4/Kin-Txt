@@ -3,15 +3,16 @@ import statsCss from "../Statistics.module.css";
 import mainPageCss from "../../MainPage.module.css";
 import {DateRangePicker} from "react-date-range";
 import {connect} from "react-redux";
-import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
+import {hideModalWindow, showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import {generateReport, setChannelsListForGeneration} from "../../../../redux/reducers/reportsReducer";
 import {fetchChannels} from "../../../../redux/reducers/channelsReducer";
-import {NEWS_SERVICE_URL, STATISTICAL_REPORT, WORD_CLOUD_REPORT} from "../../../../config";
+import {NEWS_SERVICE_URL, STATISTICAL_REPORT, STATISTICS_SERVICE_URL, WORD_CLOUD_REPORT} from "../../../../config";
 import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 import Select from "react-select";
 import {showMessage} from "../../../../utils/messages";
 import axios from "axios";
 import Creatable from 'react-select/creatable';
+import InputModalWindow from "../../../common/inputModalWindow/InputModalWindow";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -22,7 +23,7 @@ const initialGenerateReportState = {
     reportType: STATISTICAL_REPORT,
 }
 
-const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerationRequest, ...props}) => {
+const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerationRequest, showModalWindow, hideModalWindow, ...props}) => {
     useEffect(() => {
         props.fetchChannels();
     }, []);
@@ -69,6 +70,40 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
         const newList = channels.filter(link => link !== channelLink);
         setChannels(newList);
     }
+    const saveTemplate = (templateName) => {
+        if (!templateName) {
+            showMessage([{message: "You have to specify the template name.", type: "danger"}]);
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+
+        const postData = {
+            name: templateName,
+            reportType: data.reportType,
+            channelList: channels,
+            fromDate: data.startDate.toISOString(),
+            toDate: data.endDate.toISOString(),
+        };
+        axios.post(STATISTICS_SERVICE_URL + "/templates", postData, {
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json',
+            }
+        }).then(res => {
+            if(res.status === 201) {
+                showMessage([{message: "Template has been saved successfully", type: "success"}]);
+                hideModalWindow();
+            } else {
+                showMessage([{message: "Something went wrong during template saving.", type: "danger"}]);
+            }
+        }).catch(err => {
+            showMessage([{message: "Something went wrong during template saving.", type: "danger"}]);
+        })
+    }
+    const loadTemplate = (templateName) => {
+
+    }
 
     return (
         <>
@@ -92,6 +127,42 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                 />
 
                 <div className={statsCss.controls}>
+                    <div className={statsCss.generateReportFormFieldContainer}>
+                        <label
+                            id="reportType"
+                            className={statsCss.generateReportFormLabel}
+                        >
+                            Report Type:
+                        </label>
+
+                        <Select
+                            defaultValue={{value: STATISTICAL_REPORT, label: "Statistical report"}}
+                            isSearchable={true}
+                            name="reportType"
+                            value={{value: data.reportType, label: data.reportType}}
+                            onChange={newValue => setData({...data, reportType: newValue.value})}
+                            options={[
+                                {value: STATISTICAL_REPORT, label: "Statistical report"},
+                                {value: WORD_CLOUD_REPORT, label: "Word cloud"},
+                            ]}
+                            styles={{
+                                control: (styles) => ({
+                                    ...styles,
+                                    backgroundColor: "#1d2c3b",
+                                    border: '1px solid #2CA884',
+                                    '&:hover': {
+                                        border: '1px solid #2CA884',
+                                    },
+                                    minWidth: "360px",
+                                    maxWidth: "360px",
+                                    cursor: "pointer"
+                                }),
+                                singleValue: (styles) => ({ ...styles, color: "#cecece" }),
+                                option: (styles) => ({ ...styles, cursor: "pointer" }),
+                            }}
+                        />
+                    </div>
+
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label
                             id="channels"
@@ -152,37 +223,23 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                     </div>
 
                     <div className={statsCss.generateReportFormFieldContainer}>
-                        <label
-                            id="reportType"
-                            className={statsCss.generateReportFormLabel}
-                        >
-                            Report Type:
-                        </label>
-
-                        <Select
-                            defaultValue={{value: STATISTICAL_REPORT, label: "Statistical report"}}
-                            isSearchable={true}
-                            name="reportType"
-                            value={{value: data.reportType, label: data.reportType}}
-                            onChange={newValue => setData({...data, reportType: newValue.value})}
-                            options={[
-                                {value: STATISTICAL_REPORT, label: "Statistical report"},
-                                {value: WORD_CLOUD_REPORT, label: "Word cloud"},
-                            ]}
-                            styles={{
-                                control: (styles) => ({
-                                    ...styles,
-                                    backgroundColor: "#1d2c3b",
-                                    border: '1px solid #2CA884',
-                                    '&:hover': {
-                                        border: '1px solid #2CA884',
-                                    },
-                                    minWidth: "360px",
-                                    maxWidth: "360px",
-                                }),
-                                singleValue: (styles) => ({ ...styles, color: "#cecece" }),
-                            }}
-                        />
+                        <div className={statsCss.templateButtonsContainer}>
+                            <div onClick={() => showModalWindow(
+                                <InputModalWindow
+                                    actionCallback={saveTemplate}
+                                    title={"NAME YOUR TEMPLATE"}
+                                    inputPlaceholder={"Template name"}
+                                    submitPlaceholder={"SAVE"}
+                                />,
+                                450,
+                                300,
+                            )}>
+                                SAVE AS TEMPLATE
+                            </div>
+                            <div>
+                                LOAD TEMPLATE
+                            </div>
+                        </div>
                     </div>
 
                     <div className={statsCss.generateReportsControlsContainer}>
@@ -211,10 +268,11 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
         sendGenerationRequest: (startDate, endDate, channels, reportType) => dispatch(generateReport(startDate, endDate, channels, reportType)),
         setChannels: (channels) => dispatch(setChannelsListForGeneration(channels)),
         fetchChannels: () => dispatch(fetchChannels()),
+        showModalWindow: (content, width, height) => dispatch(showModalWindow(content, width, height)),
+        hideModalWindow: () => dispatch(hideModalWindow),
     }
 }
 

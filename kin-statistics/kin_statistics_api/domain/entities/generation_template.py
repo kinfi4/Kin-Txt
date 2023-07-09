@@ -6,9 +6,8 @@ from kin_statistics_api.constants import ReportTypes
 
 
 class GenerationTemplate(BaseModel):
-    id: str
+    id: str | None
     name: str
-    owner_username: str = Field(..., alias="ownerUsername")
 
     channel_list: list[str] = Field(..., alias="channelList")
     from_date: datetime = Field(..., alias="fromDate")
