@@ -4,18 +4,16 @@ import {STATISTICS_SERVICE_URL} from "../../../../../config";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
 import TapeCss from "../../../tape/Tape.module.css";
-import {NavLink} from "react-router-dom";
-import ComparisonCss from "../../ReportVisualization/Comparison/ChoseComparisonReport.module.css";
+import GenerateReportCss from "../GenerateReport.module.css";
 import {showMessage} from "../../../../../utils/messages";
+import {AiFillDelete} from "react-icons/ai";
 
 const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) => {
     const [templates, setTemplates] = useState([]);
-
     const onChoseTemplate = (templateId) => {
         choseTemplate(templateId);
         hideModalWindow();
     }
-
     const loadTemplates = () => {
         const token = localStorage.getItem("token");
         axios.get(STATISTICS_SERVICE_URL + "/templates", {headers: {"Authorization": `Token ${token}`}})
@@ -28,10 +26,22 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
             showMessage([{message: "Something went wrong during templates loading.", type: "danger"}]);
         });
     }
+    const onDeleteClick = (templateId) => {
+        const token = localStorage.getItem("token");
+        axios.delete(STATISTICS_SERVICE_URL + "/templates/" + templateId, {headers: {"Authorization": `Token ${token}`}})
+        .then(res => {
+            showMessage([{message: "Template deleted.", type: "success"}]);
+            loadTemplates();
+        })
+        .catch(err => {
+            showMessage([{message: "Something went wrong during template deleting.", type: "danger"}]);
+        })
+    }
 
     useEffect(() => {
         loadTemplates();
     }, []);
+
 
     return (
         <div className={TapeCss.enterLinkContainer}>
@@ -39,13 +49,10 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
             <>
                 {
                     templates.map((template, idx) => (
-                            <div
-                                key={idx}
-                                className={`${ComparisonCss.comparisonReportBlock}`}
-                                onClick={() => onChoseTemplate(template.id)}
-                            >
-                                {template.name}
-                            </div>
+                        <div className={GenerateReportCss.choseTemplateBlock} key={idx}>
+                            <span onClick={() => onChoseTemplate(template.id)}>{template.name}</span>
+                            <span onClick={() => onDeleteClick(template.id)}><AiFillDelete /></span>
+                        </div>
                         )
                     )
                 }
@@ -58,7 +65,6 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
 let mapStateToProps = (state) => {
     return {}
 }
-
 let mapDispatchToProps = (dispatch) => {
     return {
         hideModalWindow: () => dispatch(hideModalWindow),

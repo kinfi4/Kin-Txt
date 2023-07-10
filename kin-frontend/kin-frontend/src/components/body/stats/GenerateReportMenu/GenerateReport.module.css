@@ -23,3 +23,27 @@
 .reportBlock span:hover {
     color: #7309ff;
 }
+.choseTemplateBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 2px solid #7b6991;
+
+    transition: linear 0.2s;
+}
+.choseTemplateBlock span {
+    width: auto;
+
+    cursor: pointer;
+    margin-bottom: 7px;
+}
+.choseTemplateBlock span:last-child {
+    font-size: 20px;
+}
+.choseTemplateBlock span:last-child svg{
+    margin-bottom: 0;
+}
+.choseTemplateBlock span:hover {
+    color: #a8a7a9;
+}

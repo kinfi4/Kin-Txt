@@ -49,7 +49,7 @@ class TemplatesRepository:
         self._templates_collection.insert_one(template_dict)
 
     def delete_template(self, username: str, template_id: str) -> None:
-        self._templates_collection.delete_one({"owner_username": username, "_id": template_id})
+        self._templates_collection.delete_one({"owner_username": username, "_id": ObjectId(template_id)})
 
     def _map_dict_to_template_entity(self, template_dict: Mapping[str, str | list[str] | datetime]) -> GenerationTemplate:
         return GenerationTemplate(
