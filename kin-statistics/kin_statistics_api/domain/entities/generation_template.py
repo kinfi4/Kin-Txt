@@ -13,3 +13,9 @@ class GenerationTemplate(BaseModel):
     from_date: datetime = Field(..., alias="fromDate")
     to_date: datetime = Field(..., alias="toDate")
     report_type: ReportTypes = Field(..., alias="reportType")
+
+    class Config:
+        allow_population_by_field_name = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+        }

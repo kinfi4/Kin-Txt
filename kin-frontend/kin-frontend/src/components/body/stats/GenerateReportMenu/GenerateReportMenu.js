@@ -13,6 +13,7 @@ import {showMessage} from "../../../../utils/messages";
 import axios from "axios";
 import Creatable from 'react-select/creatable';
 import InputModalWindow from "../../../common/inputModalWindow/InputModalWindow";
+import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -101,8 +102,21 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
             showMessage([{message: "Something went wrong during template saving.", type: "danger"}]);
         })
     }
-    const loadTemplate = (templateName) => {
+    const loadTemplate = (templateId) => {
+        const token = localStorage.getItem("token");
+        axios.get(STATISTICS_SERVICE_URL + `/templates/${templateId}`, {headers: {'Authorization': `Token ${token}`}})
+        .then(res => {
+            setData({
+                startDate: new Date(res.data.fromDate),
+                endDate: new Date(res.data.toDate),
+                reportType: res.data.reportType,
+            });
 
+            setChannels(res.data.channelList);
+        })
+        .catch(err => {
+            showMessage([{message: "Something went wrong during template loading.", type: "danger"}]);
+        });
     }
 
     return (
@@ -236,7 +250,13 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                             )}>
                                 SAVE AS TEMPLATE
                             </div>
-                            <div>
+                            <div onClick={() => showModalWindow(
+                                <SelectTemplateModalWindow
+                                    choseTemplate={loadTemplate}
+                                />,
+                                450,
+                                800,
+                            )}>
                                 LOAD TEMPLATE
                             </div>
                         </div>

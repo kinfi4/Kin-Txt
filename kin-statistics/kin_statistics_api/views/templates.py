@@ -1,7 +1,7 @@
 import logging
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse, Response
 
 from kin_news_core.exceptions import KinNewsCoreException
@@ -24,9 +24,7 @@ def get_user_templates(
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
 ):
     templates_names = templates_service.get_user_template_names(current_user.username)
-    return JSONResponse(content={
-        "templates": templates_names
-    })
+    return JSONResponse(content={"templates": templates_names})
 
 
 @router.post('')
@@ -40,7 +38,7 @@ def generate_report_request(
     return Response(status_code=status.HTTP_201_CREATED)
 
 
-@router.get('/{template_id}')
+@router.get('/{template_id}', response_model=GenerationTemplate, status_code=status.HTTP_200_OK)
 @inject
 def get_report_details(
     template_id: str,
@@ -50,9 +48,9 @@ def get_report_details(
     try:
         template = templates_service.load_user_template(current_user.username, template_id)
     except GenerationTemplateNotFound:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=404, detail="Generation Template not found.")
 
-    return JSONResponse(content=template.dict(by_alias=True, with_serialization=True))
+    return template
 
 
 @router.delete('/{template_id}')
