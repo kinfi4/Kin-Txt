@@ -9,8 +9,8 @@ def cli() -> None:
 
 
 @cli.command()
-@cli.command("--file-path", "-f", help="Path to file with posts")
-@cli.command("--correct-label", "-c", help="Correct label")
+@click.option("--file-path", "-f", help="Path to file with posts")
+@click.option("--correct-label", "-c", help="Correct label")
 def validate_posts(file_path: str, correct_label: str) -> None:
     validator = Validator(file_path, correct_label)
 

@@ -1,13 +1,12 @@
-import os
 from datetime import datetime
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 
 
 class LoadPostsConfig(BaseModel):
-    start_date: datetime
-    end_date: datetime
-    channels: list[str]
+    start_date: datetime = Field(default_factory=datetime.now)
+    end_date: datetime = Field(default_factory=datetime.now)
+    channels: list[str] = Field(default_factory=list)
     output_file_path: str
 
     @validator("output_file_path")

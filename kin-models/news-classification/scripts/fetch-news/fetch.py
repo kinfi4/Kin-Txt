@@ -5,14 +5,14 @@ from telethon import TelegramClient
 from telethon.tl.custom.message import Message
 from telethon.tl.types import Channel
 
-from utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
-from fetch_config import LoadPostsConfig
+from .utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
+from .fetch_config import LoadPostsConfig
 
 
-client = TelegramClient('session-1', api_id=int(os.getenv("API_ID")), api_hash=os.getenv("API_ID"))
+client = TelegramClient('session-1', api_id=int(os.getenv("API_ID")), api_hash=os.getenv("API_HASH"))
 
 
-def fetch_posts(config: LoadPostsConfig) -> None:
+def fetch(config: LoadPostsConfig) -> None:
     with client:
         client.loop.run_until_complete(collect_posts(config))
 
@@ -27,13 +27,14 @@ async def collect_posts(config: LoadPostsConfig) -> None:
 
         with get_or_create_channel_file(config.output_file_path) as destination_file_obj:
             csv_writer = csv.writer(destination_file_obj)
+            csv_writer.writerow(["channel_name", "text", "date"])
 
             message: Message
-            async for message in client.iter_messages(entity, offset_date=config.start_date):
+            async for message in client.iter_messages(entity, offset_date=config.start_date, reverse=True):
                 if not message.text or len(message.text) < 10:
                     continue
 
-                if message.date.date() < config.end_date.date():
+                if message.date.date() > config.end_date.date():
                     break
 
                 export_post_to_csv(csv_writer, message)
