@@ -1,6 +1,5 @@
 import os
 import typing
-from datetime import date
 
 from emoji import EMOJI_DATA
 from telethon.tl.custom.message import Message
@@ -20,6 +19,7 @@ def chat_name_standardizer(chat_name: str) -> str:
 
         Example: 24/7 - Новини України🇺🇦 -> 24/7_Новини_України
     """
+
     symbols_to_remove = ('|', '"', '\'', '-', ',', '.')
     new_chat_name = chat_name.translate({ord(c): '' for c in symbols_to_remove})
     new_chat_name = ''.join([c for c in new_chat_name if c not in EMOJI_DATA and ord(c) < 1200])
@@ -29,7 +29,7 @@ def chat_name_standardizer(chat_name: str) -> str:
     return new_chat_name
 
 
-def export_post_to_csv(csv_writer, message: Message, post_date: date):
+def export_post_to_csv(csv_writer, message: Message) -> None:
     """
         Exports specified message's text into a file using specified csv_writer.
 
@@ -41,13 +41,11 @@ def export_post_to_csv(csv_writer, message: Message, post_date: date):
     csv_writer.writerow([
         channel_name,
         message.text,
-        post_date,
+        message.date.date().isoformat(),
     ])
 
 
-def get_or_create_channel_file(channel_cut_name: str) -> typing.TextIO:
-    file_path = os.path.join(NEWS_DATA_FOLDER_PATH, channel_cut_name + '.csv')
-
+def get_or_create_channel_file(file_path: str) -> typing.TextIO:
     if os.path.exists(file_path):
         return open(file_path, 'a')
 

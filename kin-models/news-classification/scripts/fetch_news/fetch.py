@@ -1,60 +1,39 @@
 import os
 import csv
-from glob import glob
-from datetime import datetime
 
 from telethon import TelegramClient
 from telethon.tl.custom.message import Message
 from telethon.tl.types import Channel
 
 from utils import cut_channel_link, export_post_to_csv, get_or_create_channel_file
+from fetch_config import LoadPostsConfig
 
 
 client = TelegramClient('session-1', api_id=int(os.getenv("API_ID")), api_hash=os.getenv("API_ID"))
 
 
-def fetch_and_preprocess_news():
+def fetch_posts(config: LoadPostsConfig) -> None:
     with client:
-        client.loop.run_until_complete(collect_posts())
+        client.loop.run_until_complete(collect_posts(config))
 
 
-async def collect_posts():
-    channels_to_export_raw = conf.CHANNEL_REGISTRY['CHANNEL_LIST']
-    channels_to_export_cut = map(cut_channel_link, channels_to_export_raw)
+async def collect_posts(config: LoadPostsConfig) -> None:
+    channels_to_export_cut = map(cut_channel_link, config.channels)
 
-    conf_reader = ConfigReader('./config/.config')
-    last_post_to_fetch_date = datetime.strptime(conf_reader.get(conf.LAST_POST_PUBLISH_DATE), conf.DATE_FORMAT)
+    for channel_name in channels_to_export_cut:
+        print(f"Starting collecting data from {channel_name}...")
 
-    offset_date_string = conf_reader.get(conf.FIRST_POST_PUBLISH_DATE)
-    offset_date = datetime.strptime(offset_date_string, conf.DATE_FORMAT) if offset_date_string else datetime.now().astimezone(tz=conf.LOCAL_TIMEZONE)
+        entity: Channel = await client.get_entity(channel_name)
 
-    last_post_parsed_date = offset_date
+        with get_or_create_channel_file(config.output_file_path) as destination_file_obj:
+            csv_writer = csv.writer(destination_file_obj)
 
-    processor = TextPreprocessor()
+            message: Message
+            async for message in client.iter_messages(entity, offset_date=config.start_date):
+                if not message.text or len(message.text) < 10:
+                    continue
 
-    try:
-        for channel_name in channels_to_export_cut:
-            print(f'Starting collecting data from {channel_name}: ')
+                if message.date.date() < config.end_date.date():
+                    break
 
-            entity: Channel = await client.get_entity(channel_name)
-
-            with get_or_create_channel_file(channel_name) as destination_file_obj:
-                csv_writer = csv.writer(destination_file_obj)
-
-                message: Message
-                async for message in client.iter_messages(entity, limit=conf.MESSAGES_MAX_NUMBER_LIMIT, offset_date=offset_date):
-                    if not message.text or len(message.text) < 20:
-                        continue
-
-                    post_date = message.date.astimezone(tz=conf.LOCAL_TIMEZONE)
-
-                    if post_date < last_post_parsed_date:
-                        last_post_parsed_date = post_date
-
-                    if last_post_to_fetch_date and post_date < last_post_to_fetch_date:
-                        break
-
-                    export_post_to_csv(csv_writer, processor, message, post_date.date())
-
-    finally:
-        conf_reader.set(conf.FIRST_POST_PUBLISH_DATE, last_post_parsed_date.strftime(conf.DATE_FORMAT))
+                export_post_to_csv(csv_writer, message)
