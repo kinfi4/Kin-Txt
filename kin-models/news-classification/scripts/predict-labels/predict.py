@@ -25,7 +25,12 @@ def _preprocess_texts(texts: pd.Series) -> pd.Series:
     return texts
 
 
-def _predict_texts(texts: pd.Series, model: TFBertForSequenceClassification, tokenizer: PreTrainedTokenizerBase, label_encoder: LabelEncoder) -> tuple[list[str], pd.Series]:
+def _predict_texts(
+    texts: pd.Series,
+    model: TFBertForSequenceClassification,
+    tokenizer: PreTrainedTokenizerBase,
+    label_encoder: LabelEncoder,
+) -> tuple[list[str], pd.Series]:
     texts = _preprocess_texts(texts)
     encodings = tokenizer(texts.tolist(), truncation=True, padding="max_length", max_length=512)
 
