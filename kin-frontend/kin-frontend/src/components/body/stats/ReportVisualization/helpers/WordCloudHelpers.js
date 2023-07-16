@@ -1,16 +1,8 @@
 export function calcFontSize(word, allWords, theBiggestWordValue, theSmallestWordValue) {
-    const maxSize = 200;
-    const minSize = 7;
+    const maxSize = 140;
+    const minSize = 12;
 
-    let size = ((word.value - theSmallestWordValue) / theBiggestWordValue) * maxSize + minSize;
-    let lastQuater = (theBiggestWordValue - theSmallestWordValue) * 0.75;
-    let firstQuater = (theBiggestWordValue - theSmallestWordValue) * 0.25;
-
-    if(word.value > lastQuater) {
-        return size - minSize;
-    }
-
-    return size;
+    return ((word.value - theSmallestWordValue) / theBiggestWordValue) * maxSize + minSize;
 }
 
 export function calcPadding (allWords) {

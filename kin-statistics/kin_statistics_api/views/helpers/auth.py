@@ -8,7 +8,7 @@ from kin_statistics_api.settings import Settings
 
 
 INTERNAL_URLS = [
-    "/api/v1/reports-data/save",
+    "/api/statistics/v1/reports-data/save",
 ]
 
 

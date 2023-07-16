@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {REPORT_STATUS_POSTPONED, REPORT_STATUS_PROCESSING, WORD_CLOUD_REPORT} from "../../../../config";
 import PostponedReport from "./PostponedReport";
@@ -7,6 +7,7 @@ import ProcessingReport from "./ProcessingReport";
 import WordCloudReport from "./WordCloudReport";
 import {removeCurrentReportFromState} from "../../../../redux/reducers/reportsReducer";
 import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
+import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 
 const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) => {
     useEffect(() => {
@@ -16,7 +17,7 @@ const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) =>
     }, []);
 
     if(reportIsLoading === true) {
-        return <LoadingSpinner width={100} height={100} marginTop={"25%"} />
+        return <LoadingSpinner width={100} height={100} marginTop={"15%"} />
     }
 
     if(report === null || report === undefined) {
@@ -24,6 +25,7 @@ const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) =>
             <div
                 style={{color: "#f3f3f3", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "30px"}}
             >
+                <BackOnStatsPageLink />
                 NO REPORT FOUND
             </div>
         )
