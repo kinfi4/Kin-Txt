@@ -8,27 +8,27 @@ MAX_POST_LEN_IN_WORDS = 20
 
 
 class MessageCategories(str, Enum):
-    POLITICAL = 'Political'
-    SHELLING = 'Shelling'
-    HUMANITARIAN = 'Humanitarian'
-    ECONOMICAL = 'Economical'
+    POLITICAL = "Political"
+    SHELLING = "Shelling"
+    HUMANITARIAN = "Humanitarian"
+    ECONOMICAL = "Economical"
 
 
 class SentimentTypes(str, Enum):
-    POSITIVE = 'positive'
-    NEGATIVE = 'negative'
-    NEUTRAL = 'neutral'
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
 
 
 class ReportTypes(str, Enum):
-    STATISTICAL = 'Statistical'
-    WORD_CLOUD = 'WordCloud'
+    STATISTICAL = "Statistical"
+    WORD_CLOUD = "WordCloud"
 
 
 class ReportProcessingResult(str, Enum):
-    POSTPONED = 'Postponed'
-    READY = 'Ready'
-    PROCESSING = 'Processing'
+    POSTPONED = "Postponed"
+    READY = "Ready"
+    PROCESSING = "Processing"
 
 
 emoji_regex_compiled = re.compile(
@@ -54,3 +54,13 @@ emoji_regex_compiled = re.compile(
     "]+",
     re.UNICODE
 )
+
+
+class VisualizationDiagrams(str, Enum):
+    BY_DATE_BY_CATEGORY = "ByDateByCategory"
+    BY_CHANNEL_BY_CATEGORY = "ByChannelByCategory"
+    BY_CATEGORY = "ByCategory"
+    BY_CHANNEL = "ByChannel"
+    BY_DATE = "ByDate"
+    BY_DAY_HOUR = "ByDayHour"
+    BY_DATE_BY_CHANNEL = "ByDateByChannel"

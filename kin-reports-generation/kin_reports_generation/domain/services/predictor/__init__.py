@@ -1,3 +1,3 @@
-from .interfaces import IPredictor, ISentimentAnalyzer, ITextPreprocessor
+from .interfaces import IPredictor, ITextPreprocessor
 from .preprocessor import TextPreprocessor
-from .sentiment import SentimentAnalyzer
+from .sentiment import SentimentPredictor

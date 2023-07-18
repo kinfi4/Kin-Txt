@@ -5,8 +5,8 @@ from kin_news_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitS
 from kin_news_core.telegram import TelegramClientProxy
 from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
 from kin_reports_generation.domain.services.predictor import IPredictor
-from kin_reports_generation.domain.services.predictor.predictor import Predictor
-from kin_reports_generation.domain.services.statistical_report.generate_statistical_reports import (
+from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
+from kin_reports_generation.domain.services.statistical_report.generate_statistical_report import (
     GenerateStatisticalReportService
 )
 from kin_reports_generation.domain.services.word_cloud.generate_word_cloud_report import GenerateWordCloudReportService
@@ -31,19 +31,13 @@ class SubscriberResource(resources.Resource):
 class PredictorResource(resources.Resource):
     def init(
         self,
-        sentiment_dictionary_path: str,
         stop_words_file_path: str,
         sklearn_vectorizer_path: str,
-        knn_model_path: str,
         svc_model_path: str,
-        gaussian_model_path: str,
     ) -> IPredictor:
-        return Predictor.create_from_files(
-            sentiment_dictionary_path=sentiment_dictionary_path,
+        return NewsCategoryPredictor.create_from_files(
             stop_words_file_path=stop_words_file_path,
             sklearn_vectorizer_path=sklearn_vectorizer_path,
-            knn_model_path=knn_model_path,
-            gaussian_model_path=gaussian_model_path,
             svc_model_path=svc_model_path,
         )
 
@@ -72,10 +66,7 @@ class Predicting(containers.DeclarativeContainer):
 
     predictor: providers.Resource[PredictorResource] = providers.Resource(
         PredictorResource,
-        sentiment_dictionary_path=config.models.sentiment_dict_path,
         sklearn_vectorizer_path=config.models.ml_vectorizer_path,
-        knn_model_path=config.models.knn_model_path,
-        gaussian_model_path=config.models.gaussian_model_path,
         svc_model_path=config.models.svc_model_path,
         stop_words_file_path=config.models.stop_words_path,
     )

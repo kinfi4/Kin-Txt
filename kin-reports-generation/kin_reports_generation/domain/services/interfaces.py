@@ -11,7 +11,7 @@ from kin_reports_generation.domain.events import (
     WordCloudReportProcessingFinished,
     StatisticalReportProcessingFinished,
 )
-from kin_reports_generation.domain.services.predictor.interfaces import IPredictor
+from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_reports_generation.domain.services.word_cloud.reports_builder import WordCloudReportBuilder
 from kin_reports_generation.constants import ReportProcessingResult, REPORTS_STORING_EXCHANGE
@@ -28,7 +28,7 @@ class IGeneratingReportsService(ABC):
     def __init__(
         self,
         telegram_client: IDataGetterProxy,
-        predictor: IPredictor,
+        predictor: NewsCategoryPredictor,
         events_producer: AbstractEventProducer,
     ) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)

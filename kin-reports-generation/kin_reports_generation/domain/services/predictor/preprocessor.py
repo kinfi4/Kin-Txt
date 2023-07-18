@@ -1,7 +1,7 @@
 import json
 import re
 from string import punctuation
-from typing import Optional
+from typing import Optional, Iterable
 
 import pandas as pd
 from nltk.tokenize import word_tokenize
@@ -10,9 +10,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from kin_reports_generation.domain.services.predictor import ITextPreprocessor
 from kin_reports_generation.constants import MAX_POST_LEN_IN_WORDS, emoji_regex_compiled
+from kin_reports_generation.domain.services.predictor.interfaces import ITextVectorizer
 
 
-class TextPreprocessor(ITextPreprocessor):
+class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
     def __init__(
         self,
         stop_words_path: str,
@@ -46,7 +47,7 @@ class TextPreprocessor(ITextPreprocessor):
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 
-    def ml_vectorizing(self, texts, make_preprocessing: bool = True):
+    def ml_vectorizing(self, texts: Iterable[str], make_preprocessing: bool = True):
         if make_preprocessing:
             texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
             texts = texts.apply(self.preprocess_and_lemmatize)

@@ -7,7 +7,7 @@ from typing import Any
 from kin_news_core.messaging import AbstractEventProducer
 from kin_reports_generation.domain.entities import GenerateReportEntity, WordCloudReport
 from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
-from kin_reports_generation.domain.services.predictor.interfaces import IPredictor
+from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
 from kin_reports_generation.domain.services.word_cloud.reports_builder import (
     WordCloudReportBuilder,
 )
@@ -23,7 +23,7 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
     def __init__(
         self,
         telegram_client: IDataGetterProxy,
-        predictor: IPredictor,
+        predictor: NewsCategoryPredictor,
         events_producer: AbstractEventProducer,
         statistics_service: StatisticsService,
     ) -> None:
@@ -59,12 +59,7 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
             for message in telegram_messages:
                 message_text_preprocessed = self._predictor.preprocess_and_lemmatize(message.text)
 
-                news_category = self._predictor.get_news_type(message.text)
-                sentiment_type = self._predictor.get_sentiment_type(
-                    message_text_preprocessed,
-                    news_category,
-                    make_preprocessing=False,
-                )
+                news_category = self._predictor.get_category(message.text)
 
                 message_words = message_text_preprocessed.split()
                 words_counted = Counter(message_words)
@@ -76,10 +71,8 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
                 _data['data_by_channel'][channel_name].update(words_counted)
 
                 _data['data_by_category'][news_category].update(words_counted)
-                _data['data_by_category'][sentiment_type].update(words_counted)
 
                 _data['data_by_channel_by_category'][channel_name][news_category].update(words_counted)
-                _data['data_by_channel_by_category'][channel_name][sentiment_type].update(words_counted)
 
         self._save_word_cloud_data_to_file(report_id, _data)
 

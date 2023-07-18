@@ -3,15 +3,15 @@ from typing import Optional
 
 from kin_reports_generation.domain.entities import StatisticalReport
 from kin_reports_generation.constants import (
-    MessageCategories,
     ReportProcessingResult,
     ReportTypes,
-    SentimentTypes,
+    VisualizationDiagrams,
 )
+from kin_reports_generation.domain.entities.reports import DataByCategory, DataByDateChannelCategory
 
 
 class ReportsBuilder:
-    def __init__(self, report_id: int) -> None:
+    def __init__(self, report_id: int, set_of_diagrams_to_visualize: set[VisualizationDiagrams], posts_categories: list[str]) -> None:
         self._report_name = self._default_report_name_generator()
         self._report_id = report_id
         self._total_messages_count = 0
@@ -19,20 +19,10 @@ class ReportsBuilder:
         self._failed_reason: Optional[str] = None
         self._report_type = ReportTypes.STATISTICAL
         self._report_generation_date = datetime.now()
+        self._set_of_diagrams_to_visualize = set_of_diagrams_to_visualize
+        self._posts_categories = posts_categories
 
-        self._messages_count_by_category = {category: 0 for category in MessageCategories}
-        self._messages_count_by_sentiment_type = {sentiment_type: 0 for sentiment_type in SentimentTypes}
-        self._messages_count_by_day_hour = {str(hour): 0 for hour in range(24)}
-        self._messages_count_by_date: dict = {}
-        self._messages_count_by_channel: dict = {}
-        self._messages_count_by_date_by_category: dict = {}
-        self._messages_count_by_channel_by_category: dict = {}
-        self._messages_count_by_channel_by_sentiment_type: dict = {}
-        self._messages_count_by_date_by_sentiment_type: dict = {}
-
-    @classmethod
-    def from_report_id(cls, report_id: int) -> "ReportsBuilder":
-        return cls(report_id=report_id)
+        self._report_data: dict[VisualizationDiagrams, DataByCategory | DataByDateChannelCategory] = {}
 
     def set_report_name(self, name: str) -> "ReportsBuilder":
         self._report_name = name
@@ -42,40 +32,8 @@ class ReportsBuilder:
         self._total_messages_count = total_messages
         return self
 
-    def set_messages_count_by_channel(self, messages_by_channel: dict[str, int]) -> "ReportsBuilder":
-        self._messages_count_by_channel = messages_by_channel
-        return self
-
-    def set_messages_count_by_date(self, messages_by_date: dict[str, int]) -> "ReportsBuilder":
-        self._messages_count_by_date = messages_by_date
-        return self
-
-    def set_messages_count_by_date_by_category(self, messages_count: dict[str, dict[MessageCategories, int]]) -> "ReportsBuilder":
-        self._messages_count_by_date_by_category = messages_count
-        return self
-
-    def set_messages_count_by_channel_by_category(self, messages_count: dict[str, dict[MessageCategories, int]]) -> "ReportsBuilder":
-        self._messages_count_by_channel_by_category = messages_count
-        return self
-
-    def set_messages_count_by_sentiment_type(self, messages_count: dict[SentimentTypes, int]) -> "ReportsBuilder":
-        self._messages_count_by_sentiment_type = messages_count
-        return self
-
-    def set_messages_count_by_channel_by_sentiment_type(self, messages_count: dict[str, dict[SentimentTypes, int]]) -> "ReportsBuilder":
-        self._messages_count_by_channel_by_sentiment_type = messages_count
-        return self
-
-    def set_messages_count_by_date_by_sentiment_type(self, messages_count: dict[str, dict[SentimentTypes, int]]) -> "ReportsBuilder":
-        self._messages_count_by_date_by_sentiment_type = messages_count
-        return self
-
-    def set_messages_count_by_day_hour(self, messages_by_hour: dict[str, int]) -> "ReportsBuilder":
-        self._messages_count_by_day_hour = messages_by_hour
-        return self
-
-    def set_messages_count_by_category(self, messages_by_category: dict[MessageCategories, int]) -> "ReportsBuilder":
-        self._messages_count_by_category = messages_by_category
+    def set_data(self, data: dict[VisualizationDiagrams, DataByCategory | DataByDateChannelCategory]) -> "ReportsBuilder":
+        self._report_data = data
         return self
 
     def set_status(self, result_status: ReportProcessingResult) -> "ReportsBuilder":
@@ -94,16 +52,10 @@ class ReportsBuilder:
             report_type=self._report_type,
             processing_status=self._status,
             report_failed_reason=self._failed_reason,
+            posts_categories=self._posts_categories,
             total_messages_count=self._total_messages_count,
-            messages_count_by_category=self._messages_count_by_category,
-            messages_count_by_day_hour=self._messages_count_by_day_hour,
-            messages_count_by_date=self._messages_count_by_date,
-            messages_count_by_channel=self._messages_count_by_channel,
-            messages_count_by_date_by_category=self._messages_count_by_date_by_category,
-            messages_count_by_channel_by_category=self._messages_count_by_channel_by_category,
-            messages_count_by_sentiment_type=self._messages_count_by_sentiment_type,
-            messages_count_by_channel_by_sentiment_type=self._messages_count_by_channel_by_sentiment_type,
-            messages_count_by_date_by_sentiment_type=self._messages_count_by_date_by_sentiment_type,
+            set_of_diagrams_to_visualize=self._set_of_diagrams_to_visualize,
+            data=self._report_data,
         )
 
     @staticmethod
