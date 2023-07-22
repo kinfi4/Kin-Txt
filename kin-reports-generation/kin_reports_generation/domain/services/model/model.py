@@ -2,7 +2,7 @@ import os
 import logging
 
 from kin_reports_generation.constants import ModelTypes
-from kin_reports_generation.domain.entities import ModelValidationEntity, CreateModelEntity
+from kin_reports_generation.domain.entities import ModelValidationEntity, CreateModelEntity, UpdateModelEntity
 from kin_reports_generation.domain.services.model.validation import ModelValidationService
 from kin_reports_generation.exceptions import BaseValidationError
 from kin_reports_generation.infrastructure.repositories import ModelRepository
@@ -22,13 +22,30 @@ class ModelService:
 
     def validate_and_save(self, username: str, model: ModelValidationEntity) -> None:
         create_model_entity = self._prepare_model_for_validation(username, model)
-        validation_result, validation_message = self._validation_service.validate_model(create_model_entity)
-
-        if not validation_result:
-            self._logger.error(f"Model validation failed: {validation_message}")
-            raise BaseValidationError(validation_message)
+        self._validate_model(create_model_entity)
 
         self._models_repository.save_model(create_model_entity)
+
+    def update_model(self, username: str, model_id: str, model: UpdateModelEntity) -> None:
+        if model.models_has_changed:
+            created_model_entity = self._prepare_model_for_validation(username, model)
+            self._validate_model(created_model_entity)
+
+        custom_fields_to_update = CreateModelEntity(
+            name=model.name,
+            model_type=model.model_type,
+            category_list=model.category_list,
+            owner_username=username,
+        )
+
+        self._models_repository.update_model(model_id, username, custom_fields_to_update)
+
+    def _validate_model(self, model: CreateModelEntity) -> None:
+        validation_result, validation_message = self._validation_service.validate_model(model)
+
+        if not validation_result:
+            self._logger.error(f"[ModelService] Model validation failed: {validation_message}")
+            raise BaseValidationError(validation_message)
 
     def _prepare_model_for_validation(self, username: str, model: ModelValidationEntity) -> CreateModelEntity:
         if model.model_type == ModelTypes.SKLEARN:

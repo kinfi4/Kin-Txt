@@ -56,7 +56,7 @@ class SkLearnModelValidator:
 
     def _validate_predictions(
         self,
-        model: sk.svm.SVC,
+        model: svm.SVC,
         tokenizer: CountVectorizer | TfidfVectorizer | HashingVectorizer,
         category_list: list[CategoryMapping],
     ) -> None:

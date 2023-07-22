@@ -45,7 +45,7 @@ class ModelRepository:
     def update_model(self, model_id: str, username: str, model: CreateModelEntity) -> None:
         self._models_collection.find_one_and_update(
             {"_id": model_id, "owner_username": username},
-            {"$set": model.dict()},
+            {"$set": model.dict(exclude_none=True)},
         )
 
     def _map_dict_to_model_entity(self, model_dict: Mapping[str, str | list[CategoryMapping]]) -> ModelEntity:
