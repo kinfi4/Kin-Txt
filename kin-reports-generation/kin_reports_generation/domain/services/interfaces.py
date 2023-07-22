@@ -15,6 +15,7 @@ from kin_reports_generation.domain.services.predictor.news_category import NewsC
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_reports_generation.domain.services.word_cloud.reports_builder import WordCloudReportBuilder
 from kin_reports_generation.constants import ReportProcessingResult, REPORTS_STORING_EXCHANGE
+from kin_reports_generation.infrastructure.repositories import ModelRepository
 
 
 class IGeneratingReportsService(ABC):
@@ -28,19 +29,21 @@ class IGeneratingReportsService(ABC):
     def __init__(
         self,
         telegram_client: IDataGetterProxy,
-        predictor: NewsCategoryPredictor,
         events_producer: AbstractEventProducer,
+        models_repository: ModelRepository,
     ) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._telegram = telegram_client
-        self._predictor = predictor
         self._events_producer = events_producer
+        self._models_repository = models_repository
 
     def generate_report(self, generate_report_entity: GenerateReportEntity, username: str) -> None:
         self._logger.info(f'[{self.__class__.__name__}] Starting generating report for user: {username}')
         self._publish_report_processing_started(generate_report_entity.report_id)
 
         try:
+            predictor = self._initialize_predictor(generate_report_entity.model_id, username)
+
             report_entity = self._build_report_entity(generate_report_entity)
             self._publish_finished_report(username, report_entity)
         except Exception as error:
@@ -58,10 +61,6 @@ class IGeneratingReportsService(ABC):
     def _build_report_entity(self, generate_report_entity: GenerateReportEntity):
         pass
 
-    @staticmethod
-    def _datetime_from_date(dt: date, end_of_day: bool = False) -> datetime:
-        return datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(days=int(end_of_day))
-
     @classmethod
     def _build_empty_report(cls, report_id: int) -> StatisticalReport | WordCloudReport:
         return (
@@ -78,6 +77,13 @@ class IGeneratingReportsService(ABC):
             .set_failed_reason(str(error))
             .build()
         )
+
+    def _datetime_from_date(self, dt: date, end_of_day: bool = False) -> datetime:
+        return datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(days=int(end_of_day))
+
+    def _initialize_predictor(self, model_id: str, username: str) -> NewsCategoryPredictor:
+        model = self._models_repository.get_model(model_id, username)
+        return NewsCategoryPredictor(model)
 
     def _publish_report_processing_started(self, report_id: int) -> None:
         event = ReportProcessingStarted(report_id=report_id)

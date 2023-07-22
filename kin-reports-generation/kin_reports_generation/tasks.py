@@ -24,8 +24,7 @@ def generate_statistical_report_task(
     channel_list: list[str],
     username: str,
     report_id: int,
-    posts_categories: dict[int, str],
-    set_of_visualization_diagrams=set[VisualizationDiagrams],
+    model_id: str,
     generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generating_reports_service],
     **kwargs,
 ) -> None:
@@ -36,8 +35,7 @@ def generate_statistical_report_task(
         end_date=end_date,
         channel_list=channel_list,
         report_id=report_id,
-        posts_categories=posts_categories,
-        set_of_visualization_diagrams=set_of_visualization_diagrams,
+        model_id=model_id,
     )
 
     generating_reports_service.generate_report(generate_report_entity, username)
@@ -51,7 +49,7 @@ def generate_word_cloud_task(
     channel_list: list[str],
     username: str,
     report_id: int,
-    posts_categories: dict[int, str],
+    model_id: str,
     generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generating_word_cloud_service],
     **kwargs,
 ) -> None:
@@ -62,7 +60,7 @@ def generate_word_cloud_task(
         end_date=end_date,
         channel_list=channel_list,
         report_id=report_id,
-        posts_categories=posts_categories,
+        model_id=model_id,
     )
 
     generating_word_cloud_service.generate_report(generate_report_entity, username)

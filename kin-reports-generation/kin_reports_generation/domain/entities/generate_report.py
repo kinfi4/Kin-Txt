@@ -1,11 +1,10 @@
 from datetime import date, datetime
-from typing import Optional, Union
+from typing import Union
 
-from pydantic import BaseModel, validator, Field
+from pydantic import BaseModel, validator
 
-from kin_reports_generation.constants import ReportTypes, VisualizationDiagrams
+from kin_reports_generation.constants import ReportTypes
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
-from kin_reports_generation.domain.entities.reports import TPostsCategories
 
 
 def _cast_string_to_date(date_string: str) -> date:
@@ -17,12 +16,12 @@ def _cast_string_to_date(date_string: str) -> date:
 
 class GenerateReportEntity(BaseModel):
     report_id: int
+    model_id: str
+    template_id: str | None
     start_date: date
     end_date: date
     channel_list: list[str]
     report_type: ReportTypes | None = None
-    posts_categories: TPostsCategories = Field(..., alias="postsCategories")
-    set_of_visualization_diagrams: set[VisualizationDiagrams] | None = Field(None, alias="setOfVisualizationDiagrams")
 
     @validator('start_date', pre=True)
     def validate_and_cast_start_date(cls, value: Union[str, date]):
