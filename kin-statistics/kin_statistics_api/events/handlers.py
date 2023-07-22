@@ -31,7 +31,7 @@ def on_processing_failed(
     event: ReportProcessingFailed,
     report_service: ManagingReportsService = Provide[Container.services.managing_reports_service],
 ) -> None:
-    report = BaseReport(**event.dict(exclude={'username'}))
+    report = BaseReport(**event.dict(exclude={"username"}))
     report_service.report_processing_finished(event.username, report)
 
 
@@ -52,7 +52,7 @@ def _get_report_from_event(
     elif isinstance(event, StatisticalReportProcessingFinished):
         return StatisticalReport(**event.dict(exclude={"username"}))
 
-    raise RuntimeError('Unknown event occurred for processing finished.')
+    raise RuntimeError("Unknown event occurred for processing finished.")
 
 
 def _generate_current_date() -> str:

@@ -17,15 +17,15 @@ from kin_statistics_api.constants import ReportProcessingResult, ReportTypes
 class ReportsMongoRepository(IReportRepository):
     def __init__(self, mongo_client: MongoClient):
         self._mongo_client = mongo_client
-        self._reports_db = mongo_client['statistics_service']
-        self._reports_collection = self._reports_db['reports']
+        self._reports_db = mongo_client["statistics_service"]
+        self._reports_collection = self._reports_db["reports"]
 
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def update_report_status(self, report_id: int, status: ReportProcessingResult) -> None:
         self._reports_collection.find_one_and_update(
-            {'report_id': report_id},
-            {'$set': {'processing_status': status}},
+            {"report_id": report_id},
+            {"$set": {"processing_status": status}},
         )
 
     def get_report_names(self, report_ids: list[int], apply_filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
@@ -53,11 +53,11 @@ class ReportsMongoRepository(IReportRepository):
         ]
 
     def save_user_report(self, report: BaseReport) -> None:
-        self._logger.info(f'[ReportsMongoRepository] Saving user report with id: {report.report_id} and status: {report.processing_status}')
+        self._logger.info(f"[ReportsMongoRepository] Saving user report with id: {report.report_id} and status: {report.processing_status}")
 
         report_dict = report.dict()
         self._reports_collection.replace_one(
-            {'report_id': report.report_id},
+            {"report_id": report.report_id},
             report_dict,
             upsert=True,
         )
@@ -66,11 +66,11 @@ class ReportsMongoRepository(IReportRepository):
         report = self.get_report(report_id)
 
         if report.processing_status == ReportProcessingResult.PROCESSING:
-            raise ImpossibleToModifyProcessingReport('You can not change the report during processing.')
+            raise ImpossibleToModifyProcessingReport("You can not change the report during processing.")
 
         updated_report = self._reports_collection.find_one_and_update(
-            {'report_id': report_id},
-            {'$set': {'name': report_name}},
+            {"report_id": report_id},
+            {"$set": {"name": report_name}},
             return_document=ReturnDocument.AFTER,
         )
 
@@ -94,11 +94,11 @@ class ReportsMongoRepository(IReportRepository):
         if dict_report is None:
             return
 
-        if dict_report['processing_status'] == ReportProcessingResult.PROCESSING:
+        if dict_report["processing_status"] == ReportProcessingResult.PROCESSING:
             raise ImpossibleToModifyProcessingReport("You can not delete the report during processing.")
 
         self._reports_collection.delete_one({
-            'report_id': report_id
+            "report_id": report_id
         })
 
     @staticmethod

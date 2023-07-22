@@ -21,7 +21,7 @@ class ReportsAccessManagementRepository:
         with self._db.connection() as conn:
             reports = conn.execute(select_query).mappings().all()
 
-        return [report['report_id'] for report in reports]
+        return [report["report_id"] for report in reports]
 
     def create_new_user_report(self, username: str) -> int:
         """
@@ -30,12 +30,12 @@ class ReportsAccessManagementRepository:
 
         with self._db.connection() as conn:
             select_max_report_id = (
-                select(func.max(user_report_table.c.report_id).label('max_report_id'))
+                select(func.max(user_report_table.c.report_id).label("max_report_id"))
             )
             row = conn.execute(select_max_report_id).mappings().one()
-            max_report_id = row['max_report_id'] if row['max_report_id'] is not None else 0
+            max_report_id = row["max_report_id"] if row["max_report_id"] is not None else 0
 
-            self._logger.info(f'Setting report access rights of report_id: {max_report_id + 1} to user: {username}')
+            self._logger.info(f"Setting report access rights of report_id: {max_report_id + 1} to user: {username}")
 
             insert_new_report = (
                 insert(user_report_table)

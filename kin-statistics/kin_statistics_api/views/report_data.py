@@ -11,10 +11,10 @@ from kin_statistics_api.exceptions import ReportDataNotFound
 from kin_statistics_api.views.helpers.auth import get_current_user
 from kin_statistics_api.domain.services import ReportDataSaver
 
-router = APIRouter(prefix='/reports-data')
+router = APIRouter(prefix="/reports-data")
 
 
-@router.post('/save')
+@router.post("/save")
 @inject
 def get_report_data(
     report_id: int = Form(...),
@@ -29,12 +29,12 @@ def get_report_data(
     try:
         data_saver_service.save_report_data(report_id, file_type, report_data_file.file)
     except ValueError:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'errors': ['Invalid document type.']})
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": ["Invalid document type."]})
     except ReportDataNotFound:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
 
-@router.get('/{report_id}')
+@router.get("/{report_id}")
 @inject
 def get_report_data(
     report_id: int,
@@ -51,7 +51,7 @@ def get_report_data(
         return StreamingResponse(
             file,
             headers={
-                'Content-Disposition': f'attachment; filename="{filename}"',
+                "Content-Disposition": f'attachment; filename="{filename}"',
             }
         )
     except ReportDataNotFound:

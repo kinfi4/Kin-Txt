@@ -3,8 +3,8 @@ from kin_news_core.database import metadata
 
 
 user_generate_reports_table = Table(
-    'user_generate_reports',
+    "user_generate_reports",
     metadata,
-    Column('username', String),
-    Column('reports_generated_count', Integer, default=0),
+    Column("username", String),
+    Column("reports_generated_count", Integer, default=0),
 )

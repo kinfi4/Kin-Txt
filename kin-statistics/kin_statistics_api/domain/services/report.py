@@ -49,17 +49,17 @@ class ManagingReportsService:
         )
 
     def update_report_status(self, report_id: int, new_status: ReportProcessingResult) -> None:
-        self._logger.info(f'Updating status for report {report_id} to: {new_status}')
+        self._logger.info(f"Updating status for report {report_id} to: {new_status}")
         self._reports_repository.update_report_status(report_id, new_status)
 
     def save_report(self, report: BaseReport) -> None:
-        self._logger.info(f'Saving report {report.report_id} with status: {report.processing_status}')
+        self._logger.info(f"Saving report {report.report_id} with status: {report.processing_status}")
 
         self._reports_repository.save_user_report(report)
 
     def get_user_reports_names(self, username: str, filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
         user_reports_ids = self._iam_repository.get_user_report_ids(username)
-        self._logger.info(f'[ManagingReportsService] got user_reports for user: {username}')
+        self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
 
         return self._reports_repository.get_report_names(user_reports_ids, apply_filters=filters)
 
@@ -67,8 +67,8 @@ class ManagingReportsService:
         self._check_user_access(username, report_ids=[report_id])
 
         self._logger.info(
-            f'[ManagingReportsService] '
-            f'updating report {report_id} with new name: {report_name}'
+            f"[ManagingReportsService] "
+            f"updating report {report_id} with new name: {report_name}"
         )
 
         new_report = self._reports_repository.update_report_name(report_id, report_name)
@@ -99,7 +99,7 @@ class ManagingReportsService:
         user_reports = self._iam_repository.get_user_report_ids(username=username)
 
         if not all([report_id in user_reports for report_id in report_ids]):
-            raise ReportAccessForbidden('You do not have permission for this report!')
+            raise ReportAccessForbidden("You do not have permission for this report!")
 
     @staticmethod
     def _build_empty_report(report_id: int, report_type: ReportTypes) -> BaseReport:

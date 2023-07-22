@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/templates")
 
 
-@router.get('')
+@router.get("")
 @inject
 def get_user_templates(
     current_user: User = Depends(get_current_user),
@@ -27,7 +27,7 @@ def get_user_templates(
     return JSONResponse(content={"templates": templates_names})
 
 
-@router.post('')
+@router.post("")
 @inject
 def generate_report_request(
     generation_template: GenerationTemplate,
@@ -38,7 +38,7 @@ def generate_report_request(
     return Response(status_code=status.HTTP_201_CREATED)
 
 
-@router.get('/{template_id}', response_model=GenerationTemplate, status_code=status.HTTP_200_OK)
+@router.get("/{template_id}", response_model=GenerationTemplate, status_code=status.HTTP_200_OK)
 @inject
 def get_report_details(
     template_id: str,
@@ -53,7 +53,7 @@ def get_report_details(
     return template
 
 
-@router.delete('/{template_id}')
+@router.delete("/{template_id}")
 @inject
 def delete_report(
     template_id: str,

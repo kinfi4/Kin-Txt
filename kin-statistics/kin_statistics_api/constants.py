@@ -19,20 +19,20 @@ class ReportTypes(str, Enum):
 
 
 class ReportProcessingResult(str, Enum):
-    POSTPONED = 'Postponed'
-    READY = 'Ready'
-    PROCESSING = 'Processing'
-    NEW = 'New'
+    POSTPONED = "Postponed"
+    READY = "Ready"
+    PROCESSING = "Processing"
+    NEW = "New"
 
 
 class MessageCategories(str, Enum):
-    POLITICAL = 'Political'
-    SHELLING = 'Shelling'
-    HUMANITARIAN = 'Humanitarian'
-    ECONOMICAL = 'Economical'
+    POLITICAL = "Political"
+    SHELLING = "Shelling"
+    HUMANITARIAN = "Humanitarian"
+    ECONOMICAL = "Economical"
 
 
 class SentimentTypes(str, Enum):
-    POSITIVE = 'positive'
-    NEGATIVE = 'negative'
-    NEUTRAL = 'neutral'
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"

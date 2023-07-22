@@ -15,8 +15,8 @@ class JsonFileGenerator(IReportFileGenerator):
         self._check_user_access(user, report_id)
 
         try:
-            with open(os.path.join(Settings().reports_folder_path, f'{report_id}.csv')) as csv_file:
-                return self._transform_csv_to_json(csv_file), f'report-{report_id}.json'
+            with open(os.path.join(Settings().reports_folder_path, f"{report_id}.csv")) as csv_file:
+                return self._transform_csv_to_json(csv_file), f"report-{report_id}.json"
         except FileNotFoundError:
             raise ReportDataNotFound()
 
@@ -35,20 +35,20 @@ class CsvFileGenerator(IReportFileGenerator):
         self._check_user_access(user, report_id)
 
         try:
-            return open(os.path.join(Settings().reports_folder_path, f'{report_id}.csv')), f'report-{report_id}.csv'
+            return open(os.path.join(Settings().reports_folder_path, f"{report_id}.csv")), f"report-{report_id}.csv"
         except FileNotFoundError:
             raise ReportDataNotFound()
 
 
 class ReportDataSaver:
-    SUPPORTED_FILE_TYPES = ('csv', 'json')
+    SUPPORTED_FILE_TYPES = ("csv", "json")
 
     def __init__(self, reports_folder_path: str) -> None:
         self._reports_folder_path = reports_folder_path
 
     def save_report_data(self, report_id: int, file_type: str, data_file: BinaryIO) -> None:
         if file_type not in self.SUPPORTED_FILE_TYPES:
-            raise ValueError(f'[ReportDataSaver] Invalid file type for report={report_id} data.')
+            raise ValueError(f"[ReportDataSaver] Invalid file type for report={report_id} data.")
 
-        with open(os.path.join(self._reports_folder_path, f'{report_id}.{file_type}'), 'wb') as file:
+        with open(os.path.join(self._reports_folder_path, f"{report_id}.{file_type}"), "wb") as file:
             file.write(data_file.read())
