@@ -20,7 +20,7 @@ class GenerateReportEntity(BaseModel):
     start_date: date
     end_date: date
     channel_list: list[str]
-    report_type: Optional[ReportTypes] = None
+    report_type: ReportTypes | None = None
     posts_categories: TPostsCategories = Field(..., alias="postsCategories")
     set_of_visualization_diagrams: set[VisualizationDiagrams] | None = Field(None, alias="setOfVisualizationDiagrams")
 

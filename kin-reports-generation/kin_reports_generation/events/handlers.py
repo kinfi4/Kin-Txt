@@ -17,8 +17,10 @@ def on_report_processing_request(
         start_date=event.start_date.strftime(DEFAULT_DATE_FORMAT),
         end_date=event.end_date.strftime(DEFAULT_DATE_FORMAT),
         channel_list=event.channel_list,
+        posts_categories=event.posts_categories,
         username=event.username,
         report_id=event.report_id,
+        set_of_visualization_diagrams=event.set_of_visualization_diagrams,
     )
 
 

@@ -1,13 +1,17 @@
 import logging
 
-from kin_reports_generation import Settings
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from kin_reports_generation import Settings, constants
 from kin_reports_generation.containers import Container
 from kin_reports_generation import events, domain, tasks
+from kin_reports_generation.views import api_router
 
 _logger = logging.getLogger(__name__)
 
 
-def init_containers(settings: Settings):
+def init_containers(settings: Settings) -> Container:
     container = Container()
     container.config.from_pydantic(settings)
     container.init_resources()
@@ -20,7 +24,17 @@ def init_containers(settings: Settings):
     return container
 
 
-def run_celery():
+def init_cors(app: FastAPI, settings: Settings):
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_headers=["*"],
+        allow_methods=["*"],
+        allow_credentials=True
+    )
+
+
+def run_celery() -> None:
     settings = Settings()
     _ = init_containers(settings)
 
@@ -31,10 +45,29 @@ def run_celery():
     )
 
 
-def run_consumer():
+def run_consumer() -> None:
     settings = Settings()
     container = init_containers(settings)
     container.check_dependencies()
 
     _logger.info('Consuming started...')
     container.messaging.subscriber().start_consuming()
+
+
+def create_app(*args, **kwargs) -> FastAPI:
+    settings = Settings()
+    app = FastAPI(
+        title=constants.PROJECT_TITLE,
+        description=constants.PROJECT_DESCRIPTION,
+        debug=settings.debug,
+    )
+
+    app.include_router(router=api_router)
+
+    container = init_containers(settings)
+
+    init_cors(app, settings)
+
+    app.container = container
+
+    return app

@@ -10,7 +10,7 @@ from kin_reports_generation.constants import (
     VisualizationDiagrams,
 )
 
-TPostsCategories = TypeVar("TPostsCategories", bound=list[str])
+TPostsCategories = TypeVar("TPostsCategories", bound=dict[int, str])
 
 DataByCategory: TypeAlias = dict[TPostsCategories, int]
 DataByDateChannelCategory: TypeAlias = dict[str, DataByCategory]

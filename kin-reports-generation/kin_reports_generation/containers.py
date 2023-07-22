@@ -1,18 +1,20 @@
+from typing import Type, TypeAlias, TypeVar
+
 from dependency_injector import providers, containers, resources
+from pymongo import MongoClient
 
 from kin_news_core.messaging import AbstractEventSubscriber, AbstractEventProducer
 from kin_news_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
 from kin_news_core.telegram import TelegramClientProxy
-from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
-from kin_reports_generation.domain.services.predictor import IPredictor
-from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
-from kin_reports_generation.domain.services.statistical_report.generate_statistical_report import (
-    GenerateStatisticalReportService
-)
-from kin_reports_generation.domain.services.word_cloud.generate_word_cloud_report import GenerateWordCloudReportService
+from kin_reports_generation.infrastructure.repositories import VisualizationTemplateRepository, ModelRepository
 from kin_reports_generation.infrastructure.services import StatisticsService
 from kin_reports_generation.constants import REPORTS_GENERATION_EXCHANGE
 from kin_reports_generation.domain.events import GenerateReportRequestOccurred
+from kin_reports_generation.domain.services.model import ModelService, ModelValidationService
+
+
+MongoRepositories: TypeAlias = VisualizationTemplateRepository | ModelRepository
+TMongoRepository = TypeVar("TMongoRepository", bound=MongoRepositories)
 
 
 class SubscriberResource(resources.Resource):
@@ -28,18 +30,11 @@ class SubscriberResource(resources.Resource):
         return subscriber
 
 
-class PredictorResource(resources.Resource):
-    def init(
-        self,
-        stop_words_file_path: str,
-        sklearn_vectorizer_path: str,
-        svc_model_path: str,
-    ) -> IPredictor:
-        return NewsCategoryPredictor.create_from_files(
-            stop_words_file_path=stop_words_file_path,
-            sklearn_vectorizer_path=sklearn_vectorizer_path,
-            svc_model_path=svc_model_path,
-        )
+class MongodbRepositoryResource(resources.Resource):
+    def init(self, repository_class: Type[TMongoRepository], connection_string: str) -> TMongoRepository:
+        client = MongoClient(connection_string)
+
+        return repository_class(mongo_client=client)
 
 
 class Messaging(containers.DeclarativeContainer):
@@ -61,17 +56,6 @@ class Messaging(containers.DeclarativeContainer):
     )
 
 
-class Predicting(containers.DeclarativeContainer):
-    config = providers.Configuration()
-
-    predictor: providers.Resource[PredictorResource] = providers.Resource(
-        PredictorResource,
-        sklearn_vectorizer_path=config.models.ml_vectorizer_path,
-        svc_model_path=config.models.svc_model_path,
-        stop_words_file_path=config.models.stop_words_path,
-    )
-
-
 class Clients(containers.DeclarativeContainer):
     config = providers.Configuration()
 
@@ -80,6 +64,22 @@ class Clients(containers.DeclarativeContainer):
         session_str=config.telegram.session_string,
         api_id=config.telegram.api_id,
         api_hash=config.telegram.api_hash,
+    )
+
+
+class Repositories(containers.DeclarativeContainer):
+    config = providers.Configuration()
+
+    visualization_template_repository: providers.Resource[MongodbRepositoryResource] = providers.Resource(
+        MongodbRepositoryResource,
+        repository_class=VisualizationTemplateRepository,
+        connection_string=config.mongodb_connection_string,
+    )
+
+    model_repository: providers.Resource[MongodbRepositoryResource] = providers.Resource(
+        MongodbRepositoryResource,
+        repository_class=ModelRepository,
+        connection_string=config.mongodb_connection_string,
     )
 
 
@@ -96,24 +96,19 @@ class Services(containers.DeclarativeContainer):
 class DomainServices(containers.DeclarativeContainer):
     config = providers.Configuration()
     clients = providers.DependenciesContainer()
-    predicting = providers.DependenciesContainer()
     services = providers.DependenciesContainer()
     messaging = providers.DependenciesContainer()
+    repositories = providers.DependenciesContainer()
 
-    generating_reports_service: providers.Factory[IGeneratingReportsService] = providers.Factory(
-        GenerateStatisticalReportService,
-        telegram_client=clients.telegram_client,
-        predictor=predicting.predictor,
-        statistics_service=services.statistics_service,
-        events_producer=messaging.producer,
+    model_validation_service: providers.Singleton[ModelValidationService] = providers.Singleton(
+        ModelValidationService,
     )
 
-    generating_word_cloud_service: providers.Factory[IGeneratingReportsService] = providers.Factory(
-        GenerateWordCloudReportService,
-        telegram_client=clients.telegram_client,
-        predictor=predicting.predictor,
-        statistics_service=services.statistics_service,
-        events_producer=messaging.producer,
+    models_service: providers.Singleton[ModelService] = providers.Singleton(
+        ModelService,
+        models_storing_path=config.models_storage_path,
+        model_repository=repositories.model_repository,
+        validation_service=model_validation_service,
     )
 
 
@@ -125,13 +120,13 @@ class Container(containers.DeclarativeContainer):
         config=config,
     )
 
-    predicting: providers.Container[Predicting] = providers.Container(
-        Predicting,
+    clients: providers.Container[Clients] = providers.Container(
+        Clients,
         config=config,
     )
 
-    clients: providers.Container[Clients] = providers.Container(
-        Clients,
+    repositories: providers.Container[Repositories] = providers.Container(
+        Repositories,
         config=config,
     )
 
@@ -143,7 +138,6 @@ class Container(containers.DeclarativeContainer):
     domain_services: providers.Container[DomainServices] = providers.Container(
         DomainServices,
         config=config,
-        predicting=predicting,
         clients=clients,
         services=services,
         messaging=messaging,

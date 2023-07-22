@@ -1,6 +1,8 @@
 import re
 from enum import Enum
 
+PROJECT_TITLE = "Kin-Reports-Generation"
+PROJECT_DESCRIPTION = "Kin-Reports-Generation is a service for storing, managing user models, templates and for generating user reports using these models."
 
 REPORTS_GENERATION_EXCHANGE = "ReportsGeneration"
 REPORTS_STORING_EXCHANGE = "ReportsStoring"
@@ -64,3 +66,8 @@ class VisualizationDiagrams(str, Enum):
     BY_DATE = "ByDate"
     BY_DAY_HOUR = "ByDayHour"
     BY_DATE_BY_CHANNEL = "ByDateByChannel"
+
+
+class ModelTypes(str, Enum):
+    SKLEARN = "Sklearn"
+    TENSORFLOW_BERT = "TensorflowBert"
