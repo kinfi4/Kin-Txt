@@ -34,7 +34,7 @@ class ModelService:
         custom_fields_to_update = CreateModelEntity(
             name=model.name,
             model_type=model.model_type,
-            category_list=model.category_list,
+            category_mapping=model.category_mapping,
             owner_username=username,
         )
 
@@ -70,5 +70,5 @@ class ModelService:
             owner_username=username,
             model_path=model_file_path,
             tokenizer_path=tokenizer_file_path,
-            category_list=model.category_list,
+            category_mapping=model.category_mapping,
         )

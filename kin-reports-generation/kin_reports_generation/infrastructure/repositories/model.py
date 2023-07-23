@@ -54,5 +54,5 @@ class ModelRepository:
             owner_username=model_dict["owner_username"],
             model_path=model_dict["model_path"],
             tokenizer_path=model_dict["tokenizer_path"],
-            category_list=model_dict["category_list"],
+            category_mapping=model_dict["category_mapping"],
         )

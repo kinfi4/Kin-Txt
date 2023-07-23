@@ -7,7 +7,7 @@ from kin_news_core.constants import DEFAULT_DATE_FORMAT
 
 from kin_reports_generation.domain.entities import GenerateReportEntity, StatisticalReport
 from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
-from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
+from kin_reports_generation.domain.services.predicting.predictor.news_category import NewsCategoryPredictor
 from kin_reports_generation.domain.services.statistical_report.reports_builder import (
     ReportsBuilder,
 )

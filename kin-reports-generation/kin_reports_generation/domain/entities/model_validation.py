@@ -10,7 +10,7 @@ class ModelValidationEntity(BaseModel):
     model_type: ModelTypes = Field(..., alias="modelType")
     model_data: UploadFile | None = Field(None, alias="modelData")
     tokenizer_data: UploadFile | None = Field(None, alias="tokenizerData")
-    category_list: list[CategoryMapping] = Field(..., alias="categoryList")
+    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
 
     class Config:
         allow_population_by_field_name = True
@@ -20,14 +20,14 @@ class ModelValidationEntity(BaseModel):
         cls,
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
-        category_list: list[CategoryMapping] = Form(..., alias="categoryList"),
+        category_mapping: CategoryMapping = Form(..., alias="categoryMapping"),
         model_data: UploadFile = File(None, alias="modelData"),
         tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
     ):
         return cls(
             name=name,
             model_type=model_type,
-            category_list=category_list,
+            category_mapping=category_mapping,
             model_data=model_data,
             tokenizer_data=tokenizer_data
         )
@@ -41,7 +41,7 @@ class UpdateModelEntity(ModelValidationEntity):
         cls,
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
-        category_list: list[CategoryMapping] = Form(..., alias="categoryList"),
+        category_mapping: CategoryMapping = Form(..., alias="categoryMapping"),
         model_data: UploadFile = File(None, alias="modelData"),
         tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
         models_has_changed: bool = Form(False, alias="modelsHasChanged"),
@@ -49,7 +49,7 @@ class UpdateModelEntity(ModelValidationEntity):
         return cls(
             name=name,
             model_type=model_type,
-            category_list=category_list,
+            category_mapping=category_mapping,
             model_data=model_data,
             tokenizer_data=tokenizer_data,
             models_has_changed=models_has_changed

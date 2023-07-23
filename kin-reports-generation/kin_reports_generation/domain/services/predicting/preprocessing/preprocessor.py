@@ -1,34 +1,29 @@
 import json
 import re
 from string import punctuation
-from typing import Optional, Iterable
+from typing import Iterable, Any
 
 import pandas as pd
 from nltk.tokenize import word_tokenize
 from pymorphy2 import MorphAnalyzer
-from sklearn.feature_extraction.text import TfidfVectorizer
+from scipy.sparse.csr import csr_matrix
 
-from kin_reports_generation.domain.services.predictor import ITextPreprocessor
+from kin_reports_generation.domain.services.predicting import ITextPreprocessor
 from kin_reports_generation.constants import MAX_POST_LEN_IN_WORDS, emoji_regex_compiled
-from kin_reports_generation.domain.services.predictor.interfaces import ITextVectorizer
+from kin_reports_generation.domain.services.predicting.vectorizer.interface import ITextVectorizer
 
 
 class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
     def __init__(
         self,
         stop_words_path: str,
-        morph: Optional[MorphAnalyzer] = None,
-        sklearn_vectorizer: Optional[TfidfVectorizer] = None,
+        vectorizer: ITextVectorizer,
+        morph: MorphAnalyzer | None = None,
     ) -> None:
         self._morph = morph if morph else MorphAnalyzer()
-        self._vectorizer = sklearn_vectorizer if sklearn_vectorizer else TfidfVectorizer()
+        self._vectorizer = vectorizer
 
-        self._russian_stop_words = self._initialize_russian_stop_words(stop_words_path)
-
-    @staticmethod
-    def _initialize_russian_stop_words(stop_words_file_path: str) -> list[str]:
-        with open(stop_words_file_path) as stop_words_file:
-            return json.load(stop_words_file)
+        self._russian_stop_words = self._init_stop_words(stop_words_path)
 
     def preprocess_text(self, text: str) -> str:
         text = text.lower()
@@ -47,12 +42,11 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 
-    def ml_vectorizing(self, texts: Iterable[str], make_preprocessing: bool = True):
-        if make_preprocessing:
-            texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
-            texts = texts.apply(self.preprocess_and_lemmatize)
+    def vectorize(self, texts: Iterable[str]) -> csr_matrix:
+        texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
+        texts = texts.apply(self.preprocess_and_lemmatize)
 
-        return self._vectorizer.transform(texts)
+        return self._vectorizer.vectorize(texts)
 
     @staticmethod
     def remove_html_tags(text: str) -> str:
@@ -81,3 +75,7 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
     @staticmethod
     def remove_extra_spaces(text: str) -> str:
         return re.sub(r' +', ' ', text)
+
+    def _init_stop_words(self, stop_words_file_path: str) -> list[str]:
+        with open(stop_words_file_path) as stop_words_file:
+            return json.load(stop_words_file)

@@ -11,7 +11,7 @@ from kin_reports_generation.domain.events import (
     WordCloudReportProcessingFinished,
     StatisticalReportProcessingFinished,
 )
-from kin_reports_generation.domain.services.predictor.news_category import NewsCategoryPredictor
+from kin_reports_generation.domain.services.predicting.predictor.news_category import NewsCategoryPredictor
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_reports_generation.domain.services.word_cloud.reports_builder import WordCloudReportBuilder
 from kin_reports_generation.constants import ReportProcessingResult, REPORTS_STORING_EXCHANGE

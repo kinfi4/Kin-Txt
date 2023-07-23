@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     rabbitmq_connection_string: str = Field(..., env="RABBITMQ_CONNECTION_STRING")
     mongodb_connection_string: str = Field(..., env="MONGO_DB_CONNECTION_STRING")
     models_storage_path: str = Field(..., env="MODELS_STORAGE_PATH")
+    default_stop_words_path: str = Field(..., env="DEFAULT_STOP_WORDS_PATH")
 
     celery: CelerySettings = CelerySettings()
     telegram: TelegramSettings = TelegramSettings()

@@ -52,13 +52,13 @@ class SkLearnModelValidator:
         if tokenizer_name not in SK_SUPPORTED_TOKENIZERS_LIST:
             raise UnsupportedTokenizerException(f"Tokenizer of type {tokenizer_name} is not supported", tokenizer_type=tokenizer_name)
 
-        self._validate_predictions(model, tokenizer, create_model_entity.category_list)
+        self._validate_predictions(model, tokenizer, create_model_entity.category_mapping)
 
     def _validate_predictions(
         self,
         model: svm.SVC,
         tokenizer: CountVectorizer | TfidfVectorizer | HashingVectorizer,
-        category_list: list[CategoryMapping],
+        category_mapping: CategoryMapping,
     ) -> None:
         vocab = tokenizer.get_feature_names_out()
         random_sentence = " ".join(random.choices(vocab, k=10))
@@ -70,5 +70,5 @@ class SkLearnModelValidator:
         except Exception as error:
             raise ModelPredictionError(f"Unable to predict with message: {error}")
 
-        if result not in category_list:
+        if result not in category_mapping:
             raise ModelUnsupportedPredictionError(prediction_type=result)
