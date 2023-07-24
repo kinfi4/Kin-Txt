@@ -5,13 +5,14 @@ from typing import Any, TextIO
 from kin_news_core.messaging import AbstractEventProducer
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
 
-from kin_reports_generation.domain.entities import GenerateReportEntity, StatisticalReport, GenerationTemplateWrapper
-from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
-from kin_reports_generation.domain.services.predicting import IPredictor
-
-from kin_reports_generation.domain.services.statistical_report.reports_builder import (
-    ReportsBuilder,
+from kin_reports_generation.domain.entities import (
+    GenerateReportEntity,
+    StatisticalReport,
+    GenerationTemplateWrapper,
+    ModelEntity,
 )
+from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
+from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_reports_generation.constants import RawContentTypes
 from kin_news_core.telegram.interfaces import IDataGetterProxy
 from kin_reports_generation.infrastructure.repositories import ModelRepository, VisualizationTemplateRepository
@@ -63,7 +64,7 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         predictor = generate_report_wrapper.predictor
         posts_category_list = list(generate_report_wrapper.model_metadata.category_mapping.keys())
 
-        report_data = self._initialize_report_data_dict(generate_report_meta)
+        report_data = self._initialize_report_data_dict(generate_report_wrapper)
 
         for channel in generate_report_meta.channel_list:
             telegram_messages = self._telegram.fetch_posts_from_channel(
@@ -141,28 +142,37 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
             key: dct[key] for key in dct_reverted_keys
         }
 
-    def _initialize_report_data_dict(self, generate_report_meta: GenerateReportEntity) -> dict[str | RawContentTypes, Any]:
+    def _initialize_report_data_dict(self, generate_report_wrapper: GenerationTemplateWrapper) -> dict[str | RawContentTypes, Any]:
         _report_data = {}
 
-        for diagram_type in generate_report_meta.set_of_visualization_diagrams:
-            _report_data[diagram_type] = self._initialize_diagram_type(diagram_type, generate_report_meta)
+        for diagram_type in generate_report_wrapper.visualization_template.visualization_diagram_types:
+            _report_data[diagram_type] = self._initialize_diagram_type(
+                diagram_type=diagram_type,
+                generate_report_meta=generate_report_wrapper.generate_report_metadata,
+                model_metadata=generate_report_wrapper.model_metadata
+            )
 
         return {
             "total_messages": 0,
             **_report_data,
         }
 
-    def _initialize_diagram_type(self, diagram_type: RawContentTypes, generation_entity: GenerateReportEntity) -> dict[str, Any]:
+    def _initialize_diagram_type(
+        self,
+        diagram_type: RawContentTypes,
+        generate_report_meta: GenerateReportEntity,
+        model_metadata: ModelEntity,
+    ) -> dict[str, Any]:
         if diagram_type == RawContentTypes.BY_CHANNEL:
-            return {channel: 0 for channel in generation_entity.channel_list}
+            return {channel: 0 for channel in generate_report_meta.channel_list}
         if diagram_type == RawContentTypes.BY_CATEGORY:
-            return {category: 0 for category in generation_entity.posts_categories}
+            return {category: 0 for category in model_metadata.category_mapping.values()}
         if diagram_type == RawContentTypes.BY_CHANNEL_BY_CATEGORY:
             return {
                 channel: {
-                    category: 0 for category in generation_entity.posts_categories
+                    category: 0 for category in model_metadata.category_mapping.values()
                 }
-                for channel in generation_entity.channel_list
+                for channel in generate_report_meta.channel_list
             }
         if diagram_type == RawContentTypes.BY_DAY_HOUR:
             return {str(hour): 0 for hour in range(24)}

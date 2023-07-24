@@ -1,5 +1,6 @@
 import re
-from enum import Enum
+from enum import Enum, EnumMeta
+from typing import Type
 
 PROJECT_TITLE = "Kin-Reports-Generation"
 PROJECT_DESCRIPTION = "Kin-Reports-Generation is a service for storing, managing user models, templates and for generating user reports using these models."
@@ -77,14 +78,17 @@ class DiagramTypes(str, Enum):
     HEATMAP = "Heatmap"
 
 
-def generate_visualization_diagram_types() -> "VisualizationDiagramTypes":
-    enum_dict = {}
+def generate_visualization_diagram_types() -> Type[Enum]:
+    enum_dict = {f'{rc}__{dt}': f'{rc}__{dt}' for rc in RawContentTypes for dt in DiagramTypes}
 
-    for rc in RawContentTypes:
-        for dt in DiagramTypes:
-            enum_dict[f'{rc}__{dt}'] = f'{rc}__{dt}'
+    _VisualizationDiagramTypes = Enum("VisualizationDiagramTypes", enum_dict)
 
-    return type("VisualizationDiagramTypes", (str, Enum), enum_dict)
+    # Add a __str__ method to the Enum
+    def enum_str(self):
+        return self.value
+
+    _VisualizationDiagramTypes.__str__ = enum_str
+    return _VisualizationDiagramTypes
 
 
 VisualizationDiagramTypes = generate_visualization_diagram_types()

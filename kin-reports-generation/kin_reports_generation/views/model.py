@@ -16,7 +16,7 @@ router = APIRouter(prefix="/models")
 @inject
 def get_user_models(
     current_user: User = Depends(get_current_user),
-    models_repository: ModelRepository = Depends(Provide[Container.services.templates_service]),
+    models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
     return models_repository.get_user_models(current_user.username)
 
@@ -26,7 +26,7 @@ def get_user_models(
 def validate_and_save_model(
     model: ModelValidationEntity = Depends(ModelValidationEntity.as_form),
     current_user: User = Depends(get_current_user),
-    models_service: ModelService = Depends(Provide[Container.services.domain_services.models_service]),
+    models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
     try:
         models_service.validate_and_save(current_user.username, model)
@@ -42,7 +42,7 @@ def update_model(
     model_id: str,
     model: UpdateModelEntity = Depends(UpdateModelEntity.as_form),
     current_user: User = Depends(get_current_user),
-    models_service: ModelService = Depends(Provide[Container.services.domain_services.models_service]),
+    models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
     try:
         models_service.update_model(current_user.username, model_id, model)
@@ -57,7 +57,7 @@ def update_model(
 def get_model(
     model_id: str,
     current_user: User = Depends(get_current_user),
-    models_repository: ModelRepository = Depends(Provide[Container.services.templates_service]),
+    models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
     try:
         return models_repository.get_model(model_id, username=current_user.username)
@@ -70,7 +70,7 @@ def get_model(
 def delete_model(
     model_id: str,
     current_user: User = Depends(get_current_user),
-    models_repository: ModelRepository = Depends(Provide[Container.services.templates_service]),
+    models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
     models_repository.delete_model(model_id, username=current_user.username)
 

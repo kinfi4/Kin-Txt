@@ -15,3 +15,6 @@ class GenerationTemplateWrapper(BaseModel):
     model_metadata: ModelEntity
     visualization_template: VisualizationTemplate
     predictor: IPredictor
+
+    class Config:
+        arbitrary_types_allowed = True

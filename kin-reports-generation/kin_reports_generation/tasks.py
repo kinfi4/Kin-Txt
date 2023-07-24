@@ -25,7 +25,7 @@ def generate_statistical_report_task(
     report_id: int,
     model_id: str,
     template_id: str,
-    generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generating_reports_service],
+    generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generate_statistics_report_service],
     **kwargs,
 ) -> None:
     _logger.info('Instantiating generate report entity and running the processing...')
@@ -52,7 +52,7 @@ def generate_word_cloud_task(
     report_id: int,
     model_id: str,
     template_id: str,
-    generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generating_word_cloud_service],
+    generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generate_word_cloud_report_service],
     **kwargs,
 ) -> None:
     _logger.info('Instantiating generate report entity and running the processing...')
