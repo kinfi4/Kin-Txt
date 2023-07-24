@@ -4,6 +4,7 @@ from typing import Any, TextIO
 
 from kin_news_core.messaging import AbstractEventProducer
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
+from kin_news_core.types.reports import RawContentTypes
 
 from kin_reports_generation.domain.entities import (
     GenerateReportEntity,
@@ -13,7 +14,6 @@ from kin_reports_generation.domain.entities import (
 )
 from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
-from kin_reports_generation.constants import RawContentTypes
 from kin_news_core.telegram.interfaces import IDataGetterProxy
 from kin_reports_generation.infrastructure.repositories import ModelRepository, VisualizationTemplateRepository
 from kin_reports_generation.infrastructure.services import StatisticsService

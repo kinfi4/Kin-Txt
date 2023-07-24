@@ -1,11 +1,10 @@
 from datetime import datetime
-from typing import Optional
 
+from kin_news_core.types.reports import RawContentTypes, VisualizationDiagramTypes
 from kin_reports_generation.domain.entities import StatisticalReport
 from kin_reports_generation.constants import (
     ReportProcessingResult,
     ReportTypes,
-    RawContentTypes, VisualizationDiagramTypes,
 )
 from kin_reports_generation.domain.entities.reports import DataByCategory, DataByDateChannelCategory
 
