@@ -11,6 +11,8 @@ from kin_reports_generation.infrastructure.services import StatisticsService
 from kin_reports_generation.constants import REPORTS_GENERATION_EXCHANGE
 from kin_reports_generation.domain.events import GenerateReportRequestOccurred
 from kin_reports_generation.domain.services.model import ModelService, ModelValidationService
+from kin_reports_generation.domain.services.statistical_report.generate_statistical_report import GenerateStatisticalReportService
+from kin_reports_generation.domain.services.word_cloud.generate_word_cloud_report import GenerateWordCloudReportService
 
 
 MongoRepositories: TypeAlias = VisualizationTemplateRepository | ModelRepository
@@ -109,6 +111,24 @@ class DomainServices(containers.DeclarativeContainer):
         models_storing_path=config.models_storage_path,
         model_repository=repositories.model_repository,
         validation_service=model_validation_service,
+    )
+
+    generate_statistics_report_service: providers.Singleton[GenerateStatisticalReportService] = providers.Singleton(
+        GenerateStatisticalReportService,
+        telegram_client=clients.telegram_client,
+        events_producer=messaging.producer,
+        models_repository=repositories.model_repository,
+        statistics_service=services.statistics_service,
+        visualization_template_repository=repositories.visualization_template_repository,
+    )
+
+    generate_word_cloud_report_service: providers.Singleton[GenerateWordCloudReportService] = providers.Singleton(
+        GenerateWordCloudReportService,
+        telegram_client=clients.telegram_client,
+        events_producer=messaging.producer,
+        models_repository=repositories.model_repository,
+        statistics_service=services.statistics_service,
+        visualization_template_repository=repositories.visualization_template_repository,
     )
 
 

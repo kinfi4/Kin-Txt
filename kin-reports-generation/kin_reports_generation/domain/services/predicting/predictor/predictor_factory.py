@@ -20,7 +20,7 @@ class PredictorFactory:
 
         if self._model_entity.model_type == ModelTypes.SKLEARN:
             return self._create_sk_learn_predictor(self._model_entity, text_preprocessor)
-        
+
         raise NotImplementedError(f"Model type {self._model_entity.model_type} is not supported")
 
     def create_text_preprocessor(self) -> TextPreprocessor:

@@ -58,7 +58,7 @@ emoji_regex_compiled = re.compile(
 )
 
 
-class VisualizationDiagrams(str, Enum):
+class RawContentTypes(str, Enum):
     BY_DATE_BY_CATEGORY = "ByDateByCategory"
     BY_CHANNEL_BY_CATEGORY = "ByChannelByCategory"
     BY_CATEGORY = "ByCategory"
@@ -68,6 +68,28 @@ class VisualizationDiagrams(str, Enum):
     BY_DATE_BY_CHANNEL = "ByDateByChannel"
 
 
+class DiagramTypes(str, Enum):
+    PIE = "Pie"
+    BAR = "Bar"
+    LINE = "Line"
+    HISTOGRAM = "Histogram"
+    SCATTER = "Scatter"
+    HEATMAP = "Heatmap"
+
+
+def generate_visualization_diagram_types() -> "VisualizationDiagramTypes":
+    enum_dict = {}
+
+    for rc in RawContentTypes:
+        for dt in DiagramTypes:
+            enum_dict[f'{rc}__{dt}'] = f'{rc}__{dt}'
+
+    return type("VisualizationDiagramTypes", (str, Enum), enum_dict)
+
+
+VisualizationDiagramTypes = generate_visualization_diagram_types()
+
+
 class ModelTypes(str, Enum):
     SKLEARN = "Sklearn"
-    TENSORFLOW_BERT = "TensorflowBert"
+    TENSORFLOW_BERT = "Tensorflow Bert"

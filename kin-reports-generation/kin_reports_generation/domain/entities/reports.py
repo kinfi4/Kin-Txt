@@ -1,4 +1,4 @@
-from typing import Any, Optional, Generic, TypeVar, TypeAlias
+from typing import Any, Optional, TypeAlias
 from datetime import datetime
 
 from pydantic import BaseModel, Field, validator
@@ -7,29 +7,28 @@ from kin_news_core.constants import DEFAULT_DATETIME_FORMAT
 from kin_reports_generation.constants import (
     ReportProcessingResult,
     ReportTypes,
-    VisualizationDiagrams,
+    RawContentTypes,
+    VisualizationDiagramTypes,
 )
 
-TPostsCategories = TypeVar("TPostsCategories", bound=dict[int, str])
-
-DataByCategory: TypeAlias = dict[TPostsCategories, int]
+DataByCategory: TypeAlias = dict[str, int]
 DataByDateChannelCategory: TypeAlias = dict[str, DataByCategory]
 
 
-class BaseReport(BaseModel, Generic[TPostsCategories]):
+class BaseReport(BaseModel):
     report_id: int = Field(..., alias="reportId")
-    name: str = Field(max_length=80)
+    name: str = Field(max_length=80, alias="name")
     report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias="reportType")
     processing_status: ReportProcessingResult = Field(..., alias="processingStatus")
     generation_date: datetime = Field(..., alias="generationDate")
-    posts_categories: TPostsCategories = Field(..., alias="postsCategories")
+    posts_categories: list[str] = Field(..., alias="postsCategories")
 
     report_failed_reason: str | None = Field(None, alias="reportFailedReason")
 
     @validator("generation_date", pre=True)
     def parse_generation_date(cls, value: str | datetime) -> datetime:
-        if isinstance(value, str):
-            return datetime.strptime(value, DEFAULT_DATETIME_FORMAT)  # parse a string into datetime
+        if isinstance(value, str):  # in case if passed value was string case to datetime
+            return datetime.strptime(value, DEFAULT_DATETIME_FORMAT)
 
         return value
 
@@ -40,9 +39,9 @@ class BaseReport(BaseModel, Generic[TPostsCategories]):
 
 class StatisticalReport(BaseReport):
     total_messages_count: int | None = Field(None, alias="totalMessagesCount")
+    visualization_diagrams_list: list[VisualizationDiagramTypes] = Field(..., alias="visualizationDiagramsList")
 
-    set_of_visualization_diagrams: set[VisualizationDiagrams] | None = Field(None, alias="setOfVisualizationDiagrams")
-    data: dict[VisualizationDiagrams, DataByCategory | DataByDateChannelCategory] | None = Field(None, alias="data")
+    data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] | None = Field(None, alias="data")
 
     class Config:
         allow_population_by_field_name = True
@@ -67,11 +66,11 @@ class WordCloudReport(BaseReport):
     data_by_channel: dict[str, list[tuple[str, int]]] | None = Field(None, alias="dataByChannel")
 
     data_by_category: Optional[
-        dict[TPostsCategories, list[tuple[str, int]]]
+        dict[str, list[tuple[str, int]]]
     ] = Field(None, alias="dataByCategory")
 
     data_by_channel_by_category: Optional[
-        dict[str, dict[TPostsCategories, list[tuple[str, int]]]]
+        dict[str, dict[str, list[tuple[str, int]]]]
     ] = Field(None, alias="dataByChannelByCategory")
 
     class Config:

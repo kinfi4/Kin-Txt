@@ -4,3 +4,7 @@ class EntityNotFoundException(Exception):
 
 class UserModelNotFoundException(EntityNotFoundException):
     pass
+
+
+class UserTemplateNotFoundException(EntityNotFoundException):
+    pass

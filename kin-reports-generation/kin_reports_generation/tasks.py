@@ -7,7 +7,6 @@ from kin_reports_generation.settings import CelerySettings
 from kin_reports_generation.domain.entities import GenerateReportEntity
 from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
 from kin_reports_generation.containers import Container
-from kin_reports_generation.constants import VisualizationDiagrams
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +24,7 @@ def generate_statistical_report_task(
     username: str,
     report_id: int,
     model_id: str,
+    template_id: str,
     generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generating_reports_service],
     **kwargs,
 ) -> None:
@@ -36,6 +36,7 @@ def generate_statistical_report_task(
         channel_list=channel_list,
         report_id=report_id,
         model_id=model_id,
+        template_id=template_id,
     )
 
     generating_reports_service.generate_report(generate_report_entity, username)
@@ -50,6 +51,7 @@ def generate_word_cloud_task(
     username: str,
     report_id: int,
     model_id: str,
+    template_id: str,
     generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generating_word_cloud_service],
     **kwargs,
 ) -> None:
@@ -61,6 +63,7 @@ def generate_word_cloud_task(
         channel_list=channel_list,
         report_id=report_id,
         model_id=model_id,
+        template_id=template_id,
     )
 
     generating_word_cloud_service.generate_report(generate_report_entity, username)

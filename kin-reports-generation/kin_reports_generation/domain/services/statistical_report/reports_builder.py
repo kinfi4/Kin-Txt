@@ -5,24 +5,31 @@ from kin_reports_generation.domain.entities import StatisticalReport
 from kin_reports_generation.constants import (
     ReportProcessingResult,
     ReportTypes,
-    VisualizationDiagrams,
+    RawContentTypes, VisualizationDiagramTypes,
 )
 from kin_reports_generation.domain.entities.reports import DataByCategory, DataByDateChannelCategory
 
 
 class ReportsBuilder:
-    def __init__(self, report_id: int, set_of_diagrams_to_visualize: set[VisualizationDiagrams], posts_categories: list[str]) -> None:
-        self._report_name = self._default_report_name_generator()
+    def __init__(
+        self,
+        report_id: int,
+        visualization_diagrams_list: list[VisualizationDiagramTypes],
+        posts_categories: list[str],
+    ) -> None:
         self._report_id = report_id
-        self._total_messages_count = 0
-        self._status = ReportProcessingResult.READY
-        self._failed_reason: Optional[str] = None
-        self._report_type = ReportTypes.STATISTICAL
-        self._report_generation_date = datetime.now()
-        self._set_of_diagrams_to_visualize = set_of_diagrams_to_visualize
+        self._visualization_diagrams_list = visualization_diagrams_list
         self._posts_categories = posts_categories
 
-        self._report_data: dict[VisualizationDiagrams, DataByCategory | DataByDateChannelCategory] = {}
+        self._report_name = self._default_report_name_generator()
+
+        self._total_messages_count = 0
+        self._status = ReportProcessingResult.READY
+        self._failed_reason: str | None = None
+        self._report_type = ReportTypes.STATISTICAL
+        self._report_generation_date = datetime.now()
+
+        self._report_data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] = {}
 
     def set_report_name(self, name: str) -> "ReportsBuilder":
         self._report_name = name
@@ -32,7 +39,7 @@ class ReportsBuilder:
         self._total_messages_count = total_messages
         return self
 
-    def set_data(self, data: dict[VisualizationDiagrams, DataByCategory | DataByDateChannelCategory]) -> "ReportsBuilder":
+    def set_data(self, data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory]) -> "ReportsBuilder":
         self._report_data = data
         return self
 
@@ -54,7 +61,7 @@ class ReportsBuilder:
             report_failed_reason=self._failed_reason,
             posts_categories=self._posts_categories,
             total_messages_count=self._total_messages_count,
-            set_of_diagrams_to_visualize=self._set_of_diagrams_to_visualize,
+            visualization_diagrams_list=self._visualization_diagrams_list,
             data=self._report_data,
         )
 

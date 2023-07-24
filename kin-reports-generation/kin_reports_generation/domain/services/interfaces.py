@@ -5,17 +5,23 @@ from datetime import date, datetime, timedelta
 from kin_news_core.telegram import IDataGetterProxy
 from kin_news_core.messaging import AbstractEventProducer
 
-from kin_reports_generation.domain.entities import GenerateReportEntity, StatisticalReport, WordCloudReport
+from kin_reports_generation.domain.entities import (
+    GenerateReportEntity,
+    WordCloudReport,
+    StatisticalReport,
+    GenerationTemplateWrapper,
+)
 from kin_reports_generation.domain.events import (
     ReportProcessingStarted,
     WordCloudReportProcessingFinished,
     StatisticalReportProcessingFinished,
 )
-from kin_reports_generation.domain.services.predicting.predictor.news_category import NewsCategoryPredictor
+from kin_reports_generation.domain.services.predicting import IPredictor
+from kin_reports_generation.domain.services.predicting.predictor.predictor_factory import PredictorFactory
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_reports_generation.domain.services.word_cloud.reports_builder import WordCloudReportBuilder
 from kin_reports_generation.constants import ReportProcessingResult, REPORTS_STORING_EXCHANGE
-from kin_reports_generation.infrastructure.repositories import ModelRepository
+from kin_reports_generation.infrastructure.repositories import ModelRepository, VisualizationTemplateRepository
 
 
 class IGeneratingReportsService(ABC):
@@ -31,11 +37,13 @@ class IGeneratingReportsService(ABC):
         telegram_client: IDataGetterProxy,
         events_producer: AbstractEventProducer,
         models_repository: ModelRepository,
+        visualization_template_repository: VisualizationTemplateRepository,
     ) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._telegram = telegram_client
         self._events_producer = events_producer
         self._models_repository = models_repository
+        self._visualization_template_repository = visualization_template_repository
 
     def generate_report(self, generate_report_entity: GenerateReportEntity, username: str) -> None:
         self._logger.info(f'[{self.__class__.__name__}] Starting generating report for user: {username}')
@@ -43,8 +51,14 @@ class IGeneratingReportsService(ABC):
 
         try:
             predictor = self._initialize_predictor(generate_report_entity.model_id, username)
+            generate_report_wrapper = GenerationTemplateWrapper(
+                predictor=predictor,
+                generate_report=generate_report_entity,
+                model_metadata=self._models_repository.get_model(generate_report_entity.model_id, username),
+                visualization_template=self._visualization_template_repository.get_template(generate_report_entity.template_id, username),
+            )
 
-            report_entity = self._build_report_entity(generate_report_entity)
+            report_entity = self._build_report_entity(generate_report_wrapper)
             self._publish_finished_report(username, report_entity)
         except Exception as error:
             self._logger.error(
@@ -58,7 +72,7 @@ class IGeneratingReportsService(ABC):
             self._publish_finished_report(username, postponed_report)
 
     @abstractmethod
-    def _build_report_entity(self, generate_report_entity: GenerateReportEntity):
+    def _build_report_entity(self, generate_report_wrapper: GenerationTemplateWrapper) -> StatisticalReport | WordCloudReport:
         pass
 
     @classmethod
@@ -81,9 +95,11 @@ class IGeneratingReportsService(ABC):
     def _datetime_from_date(self, dt: date, end_of_day: bool = False) -> datetime:
         return datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(days=int(end_of_day))
 
-    def _initialize_predictor(self, model_id: str, username: str) -> NewsCategoryPredictor:
+    def _initialize_predictor(self, model_id: str, username: str) -> IPredictor:
         model = self._models_repository.get_model(model_id, username)
-        return NewsCategoryPredictor(model)
+
+        predictor_factory = PredictorFactory(model)
+        return predictor_factory.create_predictor()
 
     def _publish_report_processing_started(self, report_id: int) -> None:
         event = ReportProcessingStarted(report_id=report_id)

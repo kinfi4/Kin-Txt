@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, cast
 
+from celery import Task
 from dependency_injector.wiring import inject
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
 
@@ -12,7 +13,7 @@ from kin_reports_generation.tasks import generate_word_cloud_task, generate_stat
 def on_report_processing_request(
     event: GenerateReportRequestOccurred,
 ) -> None:
-    target_task = _get_celery_task_from_event(event)
+    target_task = cast(Task, _get_celery_task_from_event(event))
     target_task.delay(
         start_date=event.start_date.strftime(DEFAULT_DATE_FORMAT),
         end_date=event.end_date.strftime(DEFAULT_DATE_FORMAT),
@@ -20,6 +21,7 @@ def on_report_processing_request(
         username=event.username,
         report_id=event.report_id,
         model_id=event.model_id,
+        template_id=event.template_id,
     )
 
 

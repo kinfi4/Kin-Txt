@@ -2,6 +2,7 @@ import logging
 from typing import Mapping
 
 from pymongo import MongoClient
+from bson import ObjectId
 
 from kin_reports_generation.domain.entities import ModelEntity, CreateModelEntity
 from kin_reports_generation.exceptions.base import UserModelNotFoundException
@@ -18,7 +19,7 @@ class ModelRepository:
 
     def get_model(self, model_id: str, username: str) -> ModelEntity:
         model_dict = self._models_collection.find_one(
-            {"_id": model_id, "owner_username": username}
+            {"_id": ObjectId(model_id), "owner_username": username}
         )
 
         if model_dict is None:
@@ -40,17 +41,17 @@ class ModelRepository:
         self._models_collection.insert_one(model_dict)
 
     def delete_model(self, model_id: str, username: str) -> None:
-        self._models_collection.delete_one({"_id": model_id, "owner_username": username})
+        self._models_collection.delete_one({"_id": ObjectId(model_id), "owner_username": username})
 
     def update_model(self, model_id: str, username: str, model: CreateModelEntity) -> None:
         self._models_collection.find_one_and_update(
-            {"_id": model_id, "owner_username": username},
+            {"_id": ObjectId(model_id), "owner_username": username},
             {"$set": model.dict(exclude_none=True)},
         )
 
-    def _map_dict_to_model_entity(self, model_dict: Mapping[str, str | list[CategoryMapping]]) -> ModelEntity:
+    def _map_dict_to_model_entity(self, model_dict: Mapping[str, ObjectId | str | list[CategoryMapping]]) -> ModelEntity:
         return ModelEntity(
-            id=model_dict["_id"],
+            id=str(model_dict["_id"]),
             owner_username=model_dict["owner_username"],
             model_path=model_dict["model_path"],
             tokenizer_path=model_dict["tokenizer_path"],
