@@ -23,16 +23,3 @@ class ReportProcessingResult(str, Enum):
     READY = "Ready"
     PROCESSING = "Processing"
     NEW = "New"
-
-
-class MessageCategories(str, Enum):
-    POLITICAL = "Political"
-    SHELLING = "Shelling"
-    HUMANITARIAN = "Humanitarian"
-    ECONOMICAL = "Economical"
-
-
-class SentimentTypes(str, Enum):
-    POSITIVE = "positive"
-    NEGATIVE = "negative"
-    NEUTRAL = "neutral"
