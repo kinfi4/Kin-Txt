@@ -1,17 +1,19 @@
-from typing import Any, Optional, TypeAlias
+from typing import Any, Optional
 from datetime import datetime
 
 from pydantic import BaseModel, Field, validator
 
 from kin_news_core.constants import DEFAULT_DATETIME_FORMAT
-from kin_news_core.types.reports import VisualizationDiagramTypes, RawContentTypes
+from kin_news_core.types.reports import (
+    VisualizationDiagramTypes,
+    RawContentTypes,
+    DataByCategory,
+    DataByDateChannelCategory,
+)
 from kin_reports_generation.constants import (
     ReportProcessingResult,
     ReportTypes,
 )
-
-DataByCategory: TypeAlias = dict[str, int]
-DataByDateChannelCategory: TypeAlias = dict[str, DataByCategory]
 
 
 class BaseReport(BaseModel):
