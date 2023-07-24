@@ -161,4 +161,5 @@ class Container(containers.DeclarativeContainer):
         clients=clients,
         services=services,
         messaging=messaging,
+        repositories=repositories,
     )

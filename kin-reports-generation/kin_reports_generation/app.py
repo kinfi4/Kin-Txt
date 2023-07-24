@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from kin_reports_generation import Settings, constants
 from kin_reports_generation.containers import Container
-from kin_reports_generation import events, domain, tasks
+from kin_reports_generation import events, domain, tasks, views
 from kin_reports_generation.views import api_router
 
 _logger = logging.getLogger(__name__)
@@ -17,9 +17,11 @@ def init_containers(settings: Settings) -> Container:
     container.init_resources()
 
     container.wire(
-        packages=[domain, events],
+        packages=[domain, events, views],
         modules=[tasks],
     )
+
+    container.check_dependencies()
 
     return container
 
@@ -48,7 +50,6 @@ def run_celery() -> None:
 def run_consumer() -> None:
     settings = Settings()
     container = init_containers(settings)
-    container.check_dependencies()
 
     _logger.info('Consuming started...')
     container.messaging.subscriber().start_consuming()

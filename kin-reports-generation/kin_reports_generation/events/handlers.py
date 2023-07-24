@@ -1,7 +1,6 @@
 from typing import Callable, cast
 
 from celery import Task
-from dependency_injector.wiring import inject
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
 
 from kin_reports_generation.constants import ReportTypes
@@ -9,7 +8,6 @@ from kin_reports_generation.domain.events import GenerateReportRequestOccurred
 from kin_reports_generation.tasks import generate_word_cloud_task, generate_statistical_report_task
 
 
-@inject
 def on_report_processing_request(
     event: GenerateReportRequestOccurred,
 ) -> None:
