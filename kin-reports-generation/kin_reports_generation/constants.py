@@ -59,6 +59,13 @@ emoji_regex_compiled = re.compile(
 )
 
 
+class ModelStatuses(str, Enum):
+    VALIDATED = "Validated"
+    VALIDATION_FAILED = "ValidationFailed"
+    VALIDATING = "Validating"
+    CREATED = "Created"
+
+
 class ModelTypes(str, Enum):
     SKLEARN = "Sklearn"
     TENSORFLOW_BERT = "Tensorflow Bert"

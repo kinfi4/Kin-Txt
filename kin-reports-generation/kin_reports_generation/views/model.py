@@ -3,11 +3,11 @@ from fastapi import Depends, APIRouter, status
 from fastapi.responses import Response
 
 from kin_reports_generation.containers import Container
-from kin_reports_generation.domain.entities import User, ModelEntity, ModelValidationEntity, UpdateModelEntity
+from kin_reports_generation.domain.entities import User, ModelEntity, CreateModelEntity, UpdateModelEntity
 from kin_reports_generation.views.helpers.auth import get_current_user
 from kin_reports_generation.domain.services.model import ModelService
 from kin_reports_generation.infrastructure.repositories import ModelRepository
-from kin_reports_generation.exceptions import BaseValidationError, UserModelNotFoundException
+from kin_reports_generation.exceptions import BaseValidationError, UserModelNotFoundException, UnsupportedModelTypeError
 
 router = APIRouter(prefix="/models")
 
@@ -24,12 +24,12 @@ def get_user_models(
 @router.post("")
 @inject
 def validate_and_save_model(
-    model: ModelValidationEntity = Depends(ModelValidationEntity.as_form),
+    model: CreateModelEntity = Depends(CreateModelEntity.as_form),
     current_user: User = Depends(get_current_user),
     models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
     try:
-        models_service.validate_and_save(current_user.username, model)
+        models_service.initiate_model_validation(current_user.username, model)
     except BaseValidationError:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -46,8 +46,10 @@ def update_model(
 ):
     try:
         models_service.update_model(current_user.username, model_id, model)
+    except UnsupportedModelTypeError as error:
+        return Response(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
     except BaseValidationError:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+        return Response(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": "Something went wrong."})
 
     return Response(status_code=status.HTTP_200_OK)
 

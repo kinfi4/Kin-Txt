@@ -6,6 +6,7 @@ from kin_reports_generation.domain.entities import ModelEntity
 from kin_reports_generation.domain.services.predicting.preprocessing.preprocessor import TextPreprocessor
 from kin_reports_generation.domain.services.predicting.predictor.interface import IPredictor
 from kin_reports_generation.domain.services.predicting.vectorizer.vectorizer_factory import VectorizerFactory
+from kin_reports_generation.exceptions import UnsupportedModelTypeError
 
 
 class PredictorFactory:
@@ -21,7 +22,7 @@ class PredictorFactory:
         if self._model_entity.model_type == ModelTypes.SKLEARN:
             return self._create_sk_learn_predictor(self._model_entity, text_preprocessor)
 
-        raise NotImplementedError(f"Model type {self._model_entity.model_type} is not supported")
+        raise UnsupportedModelTypeError(f"Model type {self._model_entity.model_type} is not supported")
 
     def create_text_preprocessor(self) -> TextPreprocessor:
         vectorizer_factory = VectorizerFactory()

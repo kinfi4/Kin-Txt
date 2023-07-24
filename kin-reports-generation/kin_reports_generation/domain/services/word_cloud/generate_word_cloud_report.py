@@ -6,7 +6,7 @@ from typing import Any
 
 from kin_news_core.messaging import AbstractEventProducer
 from kin_reports_generation.domain.entities import GenerateReportEntity, WordCloudReport, GenerationTemplateWrapper
-from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
+from kin_reports_generation.domain.services.generate_report import IGeneratingReportsService
 from kin_reports_generation.domain.services.word_cloud.reports_builder import (
     WordCloudReportBuilder,
 )

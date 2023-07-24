@@ -12,7 +12,7 @@ from kin_reports_generation.domain.entities import (
     GenerationTemplateWrapper,
     ModelEntity,
 )
-from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
+from kin_reports_generation.domain.services.generate_report import IGeneratingReportsService
 from kin_reports_generation.domain.services.statistical_report.reports_builder import ReportsBuilder
 from kin_news_core.telegram.interfaces import IDataGetterProxy
 from kin_reports_generation.infrastructure.repositories import ModelRepository, VisualizationTemplateRepository

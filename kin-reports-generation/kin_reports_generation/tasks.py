@@ -3,15 +3,18 @@ import logging
 from celery import Celery
 from dependency_injector.wiring import Provide, inject
 
+from kin_reports_generation.constants import ModelStatuses
+from kin_reports_generation.domain.services.model import ModelService
 from kin_reports_generation.settings import CelerySettings
-from kin_reports_generation.domain.entities import GenerateReportEntity
-from kin_reports_generation.domain.services.interfaces import IGeneratingReportsService
+from kin_reports_generation.domain.entities import GenerateReportEntity, ModelEntity
+from kin_reports_generation.domain.services.generate_report import IGeneratingReportsService
 from kin_reports_generation.containers import Container
+from kin_reports_generation.types import CategoryMapping
 
 _logger = logging.getLogger(__name__)
 
 
-celery_app = Celery('kin_reports_generation')
+celery_app = Celery("kin_reports_generation")
 celery_app.config_from_object(CelerySettings())
 
 
@@ -28,7 +31,7 @@ def generate_statistical_report_task(
     generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generate_statistics_report_service],
     **kwargs,
 ) -> None:
-    _logger.info('Instantiating generate report entity and running the processing...')
+    _logger.info("Instantiating generate report entity and running the processing...")
 
     generate_report_entity = GenerateReportEntity(
         start_date=start_date,
@@ -55,7 +58,7 @@ def generate_word_cloud_task(
     generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generate_word_cloud_report_service],
     **kwargs,
 ) -> None:
-    _logger.info('Instantiating generate report entity and running the processing...')
+    _logger.info("Instantiating generate report entity and running the processing...")
 
     generate_report_entity = GenerateReportEntity(
         start_date=start_date,
@@ -67,3 +70,16 @@ def generate_word_cloud_task(
     )
 
     generating_word_cloud_service.generate_report(generate_report_entity, username)
+
+
+@celery_app.task
+@inject
+def validate_model(
+    model_dict_data: dict[str, str | ModelStatuses | CategoryMapping],
+    model_service: ModelService = Provide[Container.domain_services.models_service],
+) -> None:
+    model = ModelEntity.parse_obj(model_dict_data)
+    
+    _logger.info(f"Validating model {model.id} for user {model.owner_username}...")
+
+    model_service.validate_model(model)

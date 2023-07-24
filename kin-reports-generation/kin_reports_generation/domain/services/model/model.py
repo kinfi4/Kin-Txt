@@ -1,11 +1,22 @@
 import os
 import logging
+from typing import cast
 
-from kin_reports_generation.constants import ModelTypes
-from kin_reports_generation.domain.entities import ModelValidationEntity, CreateModelEntity, UpdateModelEntity
+from celery import Task
+
+from kin_reports_generation.constants import ModelTypes, ModelStatuses
+from kin_reports_generation.domain.entities import (
+    ModelValidationEntity,
+    CreateModelEntity,
+    UpdateModelEntity,
+    ModelEntity,
+)
 from kin_reports_generation.domain.services.model.validation import ModelValidationService
-from kin_reports_generation.exceptions import BaseValidationError
+from kin_reports_generation.exceptions import BaseValidationError, UnsupportedModelTypeError
 from kin_reports_generation.infrastructure.repositories import ModelRepository
+from kin_reports_generation.tasks import validate_model
+
+validate_model = cast(Task, validate_model)
 
 
 class ModelService:
@@ -20,38 +31,53 @@ class ModelService:
         self._models_repository = models_repository
         self._logger = logging.getLogger(__name__)
 
-    def validate_and_save(self, username: str, model: ModelValidationEntity) -> None:
-        create_model_entity = self._prepare_model_for_validation(username, model)
-        self._validate_model(create_model_entity)
+    def initiate_model_validation(self, username: str, model: CreateModelEntity) -> None:
+        model_to_save = self._prepare_model_for_saving(username, model)
+        model_to_validate = self._models_repository.save_new_model(model_to_save)
 
-        self._models_repository.save_model(create_model_entity)
+        validate_model.delay(model_to_validate.dict())
 
     def update_model(self, username: str, model_id: str, model: UpdateModelEntity) -> None:
         if model.models_has_changed:
-            created_model_entity = self._prepare_model_for_validation(username, model)
-            self._validate_model(created_model_entity)
+            model_to_save = self._prepare_model_for_saving(username, model)
+            model_to_validate = self._models_repository.update_model(model_id, username, model_to_save.dict())
 
-        custom_fields_to_update = CreateModelEntity(
-            name=model.name,
-            model_type=model.model_type,
-            category_mapping=model.category_mapping,
-            owner_username=username,
+            validate_model.delay(model_to_validate.dict())
+            return None
+
+        update_dict = {
+            "category_mapping": model.category_mapping,
+            "name": model.name,
+            "model_type": model.model_type,
+        }
+
+        self._models_repository.update_model(model_id, username, update_dict)
+
+    def validate_model(self, model: ModelEntity) -> None:
+        self._models_repository.update_model_status(model.id, model.owner_username, ModelStatuses.VALIDATING)
+
+        try:
+            validation_status, error_message = self._validation_service.validate_model(model)
+        except Exception as error:
+            self._logger.error(f"[ModelService] Model validation failed: {error}")
+            validation_status, error_message = False, str(error)
+
+        self._models_repository.update_model(
+            model.id,
+            model.owner_username,
+            {
+                "validation_error": error_message,
+                "model_status": ModelStatuses.VALIDATED if validation_status else ModelStatuses.VALIDATION_FAILED,
+            }
         )
 
-        self._models_repository.update_model(model_id, username, custom_fields_to_update)
-
-    def _validate_model(self, model: CreateModelEntity) -> None:
-        validation_result, validation_message = self._validation_service.validate_model(model)
-
-        if not validation_result:
-            self._logger.error(f"[ModelService] Model validation failed: {validation_message}")
-            raise BaseValidationError(validation_message)
-
-    def _prepare_model_for_validation(self, username: str, model: ModelValidationEntity) -> CreateModelEntity:
+    def _prepare_model_for_saving(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
         if model.model_type == ModelTypes.SKLEARN:
             return self._prepare_sk_learn_model_for_validation(username, model)
 
-    def _prepare_sk_learn_model_for_validation(self, username: str, model: ModelValidationEntity) -> CreateModelEntity:
+        raise UnsupportedModelTypeError(f"Model type {model.model_type} is not supported")
+
+    def _prepare_sk_learn_model_for_validation(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
         user_models_path = os.path.join(self._models_storing_path, username)
 
         if not os.path.exists(user_models_path):
@@ -64,7 +90,7 @@ class ModelService:
         with open(tokenizer_file_path, "wb") as file:
             file.write(model.tokenizer_data.file.read())
 
-        return CreateModelEntity(
+        return ModelValidationEntity(
             name=model.name,
             model_type=model.model_type,
             owner_username=username,

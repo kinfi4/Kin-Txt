@@ -1,12 +1,15 @@
 import logging
-from typing import Mapping
+from typing import Mapping, TypeAlias
 
 from pymongo import MongoClient
 from bson import ObjectId
 
-from kin_reports_generation.domain.entities import ModelEntity, CreateModelEntity
+from kin_reports_generation.constants import ModelStatuses
+from kin_reports_generation.domain.entities import ModelEntity, ModelValidationEntity
 from kin_reports_generation.exceptions.base import UserModelNotFoundException
 from kin_reports_generation.types import CategoryMapping
+
+ModelDict: TypeAlias = dict[str, str | ModelStatuses, CategoryMapping]
 
 
 class ModelRepository:
@@ -34,19 +37,31 @@ class ModelRepository:
             for model_dict in models_dicts
         ]
 
-    def save_model(self, model: CreateModelEntity) -> None:
+    def save_new_model(self, model: ModelValidationEntity) -> ModelEntity:
         self._logger.info(f"[ModelRepository] Saving model for user {model.owner_username}")
 
         model_dict = model.dict()
-        self._models_collection.insert_one(model_dict)
+        model_dict["model_status"] = ModelStatuses.CREATED
+        inserted_id = self._models_collection.insert_one(model_dict).inserted_id
+
+        return self.get_model(str(inserted_id), model.owner_username)
 
     def delete_model(self, model_id: str, username: str) -> None:
         self._models_collection.delete_one({"_id": ObjectId(model_id), "owner_username": username})
 
-    def update_model(self, model_id: str, username: str, model: CreateModelEntity) -> None:
+    def update_model(self, model_id: str, username: str, model_dict: ModelDict) -> ModelEntity:
+        returned_model = self._models_collection.find_one_and_update(
+            {"_id": ObjectId(model_id), "owner_username": username},
+            {"$set": model_dict},
+            return_document=True,
+        )
+
+        return self._map_dict_to_model_entity(returned_model)
+
+    def update_model_status(self, model_id: str, username: str, status: ModelStatuses) -> None:
         self._models_collection.find_one_and_update(
             {"_id": ObjectId(model_id), "owner_username": username},
-            {"$set": model.dict(exclude_none=True)},
+            {"$set": {"model_status": status}},
         )
 
     def _map_dict_to_model_entity(self, model_dict: Mapping[str, ObjectId | str | list[CategoryMapping]]) -> ModelEntity:
@@ -56,4 +71,6 @@ class ModelRepository:
             model_path=model_dict["model_path"],
             tokenizer_path=model_dict["tokenizer_path"],
             category_mapping=model_dict["category_mapping"],
+            model_status=model_dict["model_status"],
+            validation_failed_message=model_dict.get("validation_failed_message"),
         )

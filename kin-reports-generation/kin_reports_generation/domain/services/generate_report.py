@@ -47,9 +47,10 @@ class IGeneratingReportsService(ABC):
 
     def generate_report(self, generate_report_entity: GenerateReportEntity, username: str) -> None:
         self._logger.info(f'[{self.__class__.__name__}] Starting generating report for user: {username}')
-        self._publish_report_processing_started(generate_report_entity.report_id)
 
         try:
+            self._publish_report_processing_started(generate_report_entity.report_id)
+
             predictor = self._initialize_predictor(generate_report_entity.model_id, username)
             generate_report_wrapper = GenerationTemplateWrapper(
                 predictor=predictor,

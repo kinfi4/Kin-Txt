@@ -1,11 +1,11 @@
+import logging
 import random
 
 import joblib
-import sklearn as sk
 from sklearn import linear_model, ensemble, naive_bayes, neighbors, svm, tree, feature_extraction
 from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfVectorizer
 
-from kin_reports_generation.domain.entities import CreateModelEntity
+from kin_reports_generation.domain.entities import ModelEntity
 from kin_reports_generation.exceptions import (
     UnableToLoadModelError,
     UnsupportedClassifierException,
@@ -33,26 +33,44 @@ SK_SUPPORTED_TOKENIZERS_LIST = [
 
 
 class SkLearnModelValidator:
-    def validate_model(self, create_model_entity: CreateModelEntity) -> None:
+    def __init__(self) -> None:
+        self._logger = logging.getLogger(self.__class__.__name__)
+
+    def validate_model(self, model_entity: ModelEntity) -> None:
         try:
-            model = joblib.load(create_model_entity.model_path)
+            model = joblib.load(model_entity.model_path)
         except Exception as error:
-            raise UnableToLoadModelError(f"Unable to load model, with message: {error}")
+            self._logger.error(f"Unable to load model, with message: {error}")
+            raise UnableToLoadModelError(
+                f"Unable to load sklearn model from file. "
+                f"Please make sure, that model file is valid joblib file."
+            )
 
         model_name = model.__class__.__name__
         if model_name not in SK_SUPPORTED_MODELS_LIST:
-            raise UnsupportedClassifierException(f"Model of type {model_name} is not supported", model_type=model_name)
+            self._logger.error(f"Model of type {model_name} is not supported")
+            raise UnsupportedClassifierException(
+                f"Sklearn model was loaded, but it is not supported. "
+                f"Kin-News currently is not able to use {model_name} model."
+            )
 
         try:
-            tokenizer = joblib.load(create_model_entity.tokenizer_path)
+            tokenizer = joblib.load(model_entity.tokenizer_path)
         except Exception as error:
-            raise UnableToLoadTokenizerError(f"Unable to load tokenizer with message: {error}")
+            self._logger.error(f"Unable to load tokenizer, with message: {error}")
+            raise UnableToLoadTokenizerError(
+                f"Unable to load tokenizer model from file. "
+                f"Please make sure, that tokenizer file is valid joblib file."
+            )
 
         tokenizer_name = tokenizer.__class__.__name__
         if tokenizer_name not in SK_SUPPORTED_TOKENIZERS_LIST:
-            raise UnsupportedTokenizerException(f"Tokenizer of type {tokenizer_name} is not supported", tokenizer_type=tokenizer_name)
+            raise UnsupportedTokenizerException(
+                f"Tokenizer was loaded successfully, but it is not supported. "
+                f"Kin-News currently is not able to use {tokenizer_name} tokenizer."
+            )
 
-        self._validate_predictions(model, tokenizer, create_model_entity.category_mapping)
+        self._validate_predictions(model, tokenizer, model_entity.category_mapping)
 
     def _validate_predictions(
         self,
@@ -68,7 +86,16 @@ class SkLearnModelValidator:
         try:
             result = model.predict([tokenized_sentence])[0]
         except Exception as error:
-            raise ModelPredictionError(f"Unable to predict with message: {error}")
+            self._logger.error(f"Unable to predict with message: {error}")
+            raise ModelPredictionError(
+                f"Both model and tokenizer were loaded successfully, but exception occurred during test prediction. "
+                f"Exception message: {error}."
+            )
 
         if result not in category_mapping:
-            raise ModelUnsupportedPredictionError(prediction_type=result)
+            self._logger.error(f"Model predicted category {result}, which is not in category mapping")
+            raise ModelUnsupportedPredictionError(
+                f"Both model and tokenizer were loaded successfully. "
+                f"But model predicted category {result}, which is not in category mapping. "
+                f"Please make sure, that model was trained with the same category mapping."
+            )

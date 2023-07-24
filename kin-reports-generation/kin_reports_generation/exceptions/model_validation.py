@@ -3,9 +3,7 @@ class BaseValidationError(Exception):
 
 
 class UnsupportedClassifierException(BaseValidationError):
-    def __init__(self, message: str, model_type: str):
-        super().__init__(message)
-        self.model_type = model_type
+    pass
 
 
 class UnableToLoadModelError(BaseValidationError):
@@ -17,9 +15,7 @@ class UnableToLoadTokenizerError(BaseValidationError):
 
 
 class UnsupportedTokenizerException(BaseValidationError):
-    def __init__(self, message: str, tokenizer_type: str):
-        super().__init__(message)
-        self.tokenizer_type = tokenizer_type
+    pass
 
 
 class ModelPredictionError(BaseValidationError):
@@ -27,7 +23,8 @@ class ModelPredictionError(BaseValidationError):
 
 
 class ModelUnsupportedPredictionError(ModelPredictionError):
-    def __init__(self, prediction_type: str):
-        super().__init__(f"Model does not support {prediction_type} prediction")
-        self.prediction_type = prediction_type
+    pass
 
+
+class UnsupportedModelTypeError(BaseValidationError):
+    pass
