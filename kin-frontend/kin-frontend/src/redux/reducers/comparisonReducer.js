@@ -17,7 +17,7 @@ const fetchReport = (reportId) => {
 
     return axios.get(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
-            'Authorization': `Token ${token}`
+            "Authorization": `Token ${token}`
         }
     }).then(response => response.data);
 }

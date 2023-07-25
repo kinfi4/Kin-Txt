@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import comparisonCss from "./Comparison.module.css";
-import StatisticalReport from "../stats/ReportVisualization/StatisticalReport";
+import StatisticalReport from "../Statistics/ReportVisualization/StatisticalReport";
 import {WORD_CLOUD_REPORT} from "../../../config";
-import WordCloudReport from "../stats/ReportVisualization/WordCloudReport";
+import WordCloudReport from "../Statistics/ReportVisualization/WordCloudReport";
 import {setNullComparisonReports} from "../../../redux/reducers/comparisonReducer";
 import LoadingSpinner from "../../common/spiner/LoadingSpinner";
 

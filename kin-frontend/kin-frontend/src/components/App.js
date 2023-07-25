@@ -4,14 +4,14 @@ import ModalWindow from "./common/modal/ModalWindow";
 import {Route, Switch, Redirect} from "react-router-dom";
 import Login from "./auth/login";
 import Register from "./auth/register";
-import Statistics from "./body/stats/Statistics";
-import Tape from "./body/tape/Tape";
+import Statistics from "./body/Statistics/Statistics";
+import Tape from "./body/Tape/Tape";
 import {useEffect} from "react";
 import store from "../redux/store";
 import {loadUser} from "../redux/reducers/authReducer";
 import {ReactNotifications} from "react-notifications-component";
 import 'react-notifications-component/dist/theme.css'
-import ComparisonWindow from "./body/comparison/ComparisonWindow";
+import ComparisonWindow from "./body/Comparison/ComparisonWindow";
 
 
 export function Main() {
@@ -22,8 +22,8 @@ export function Main() {
             <Switch>
                 <Route exact path={"/statistics/compare"} render={() => <ComparisonWindow />} />
                 <Route path={'/statistics'} render={() => <Statistics />} />
-                <Route exact path={'/tape'} render={() => <Tape />} />
-                <Route path={'/'} render={() => <Redirect to={'/tape'}/>} />
+                <Route exact path={'/Tape'} render={() => <Tape />} />
+                <Route path={'/'} render={() => <Redirect to={'/Tape'}/>} />
             </Switch>
         </>
     )

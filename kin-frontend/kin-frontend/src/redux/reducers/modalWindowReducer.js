@@ -1,5 +1,5 @@
-export const HIDE_MODAL_WINDOW = 'HIDE_MODAL_WINDOW'
-export const SHOW_MODAL_WINDOW = 'SHOW_MODAL_WINDOW'
+export const HIDE_MODAL_WINDOW = "HIDE_MODAL_WINDOW"
+export const SHOW_MODAL_WINDOW = "SHOW_MODAL_WINDOW"
 
 let initialState = {
     active: false,

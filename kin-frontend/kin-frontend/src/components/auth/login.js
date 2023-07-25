@@ -1,5 +1,5 @@
 import React from "react";
-import authCss from './auth.module.css'
+import authCss from "./auth.module.css"
 import {connect} from "react-redux";
 import {login} from "../../redux/reducers/authReducer";
 import Input from "../common/input/Input";
@@ -8,7 +8,7 @@ import {NavLink} from "react-router-dom";
 import Button from "../common/button/Button";
 
 function Login(props) {
-    const [details, setDetails] = useState({username: '', password: ''})
+    const [details, setDetails] = useState({username: "", password: ""})
     let onLoginSubmit = () => {
         props.login(details.username, details.password)
     }
@@ -36,7 +36,7 @@ function Login(props) {
 
                     <Button
                         onClick={(event) => onLoginSubmit()}
-                        text={'SIGN IN'}
+                        text={"SIGN IN"}
                         styles={{
                             marginTop: "15px"
                         }}

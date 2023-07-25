@@ -42,7 +42,7 @@ export let fetchNextPosts = () => (dispatch, getState) => {
 
     axios.get(NEWS_SERVICE_URL + `/messages?start_time=${startTimeTimestamp}&end_time=${endTimeTimestamp}`, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
            dispatch({type: POSTS_LOADED, posts: res.data.messages, newOffset: startTimeTimestamp});

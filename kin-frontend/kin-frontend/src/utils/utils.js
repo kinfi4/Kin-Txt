@@ -2,11 +2,11 @@ import {showMessage} from "./messages";
 import {
     ReportNotFoundError,
     SomethingWentWrongError
-} from "../components/body/stats/ReportVisualization/helpers/Errors";
+} from "../components/body/Statistics/ReportVisualization/helpers/Errors";
 import {NOT_FOUND_STATUS_CODE} from "../config";
 
 export function truncate(str, n){
-    return (str.length > n) ? str.slice(0, n-1) + '...' : str;
+    return (str.length > n) ? str.slice(0, n-1) + "..." : str;
 }
 
 
@@ -18,14 +18,14 @@ export function shuffle(array) {
     return array.sort(() => 0.5 - Math.random());
 }
 
-export function downloadFile(url, contentType='csv') {
+export function downloadFile(url, contentType="csv") {
     const token = localStorage.getItem("token");
-    showMessage([{message: 'Download will start soon...', type: 'success'}])
+    showMessage([{message: "Download will start soon...", type: "success"}])
 
     fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-            'Content-Type': 'application/' + contentType,
+            "Content-Type": 'application/' + contentType,
             'Authorization': `Token ${token}`,
         },
     })

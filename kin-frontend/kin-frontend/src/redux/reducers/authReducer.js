@@ -7,15 +7,15 @@ import {FETCH_ERROR} from "./channelsReducer";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
-const AUTH_ERROR = 'AUTH_ERROR'
-const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-const LOGIN_FAIL = 'LOGIN_FAIL'
-const REGISTRATION_ERROR = 'REGISTRATION_ERROR'
+const AUTH_ERROR = "AUTH_ERROR"
+const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+const LOGIN_FAIL = "LOGIN_FAIL"
+const REGISTRATION_ERROR = "REGISTRATION_ERROR"
 
-export const LOGOUT = 'LOGOUT'
+export const LOGOUT = "LOGOUT"
 
 const initialState = {
-    token: localStorage.getItem('token'),
+    token: localStorage.getItem("token"),
     isAuthenticated: null,
     user: null,
 }
@@ -23,16 +23,16 @@ const initialState = {
 // CHECK THE TOKEN AND LOAD THE USER
 export const loadUser = () => (dispatch, getState) => {
     const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
     }
 
     const token = getState().auth.token;
     if(token){
-        headers['Authorization'] = `Token ${token}`
+        headers["Authorization"] = `Token ${token}`
     }
 
-    axios.get(NEWS_SERVICE_URL + '/me', {
+    axios.get(NEWS_SERVICE_URL + "/me", {
         headers: headers
     }).then(res => {
         if(res.status !== 200) {
@@ -50,8 +50,8 @@ export const loadUser = () => (dispatch, getState) => {
 // LOGIN
 export const login = (username, password) => (dispatch) => {
     const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
     }
 
     // REQUEST BODY
@@ -60,7 +60,7 @@ export const login = (username, password) => (dispatch) => {
         password,
     })
 
-    axios.post(NEWS_SERVICE_URL + '/login', body, {
+    axios.post(NEWS_SERVICE_URL + "/login", body, {
         headers: headers,
     }).then(res => {
         dispatch({ type: LOGIN_SUCCESS, token: res.data.token })
@@ -82,7 +82,7 @@ export const register = (username, password1, password2) => (dispatch) => {
         passwordRepeated: password2
     }
 
-    axios.post(NEWS_SERVICE_URL + '/register', JSON.stringify(body), {
+    axios.post(NEWS_SERVICE_URL + "/register", JSON.stringify(body), {
         headers: {
             'Content-Type': 'application/json',
         }

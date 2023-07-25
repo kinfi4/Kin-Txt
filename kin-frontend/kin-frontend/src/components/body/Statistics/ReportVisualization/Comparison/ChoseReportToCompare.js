@@ -1,5 +1,5 @@
 import React from 'react';
-import TapeCss from "../../../tape/Tape.module.css";
+import TapeCss from "../../../Tape/Tape.module.css";
 import ComparisonCss from "./ChoseComparisonReport.module.css"
 import {connect} from "react-redux";
 import {setComparisonReports} from "../../../../../redux/reducers/comparisonReducer";

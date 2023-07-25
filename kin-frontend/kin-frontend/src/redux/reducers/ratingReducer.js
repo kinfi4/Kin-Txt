@@ -25,7 +25,7 @@ export let fetchChannelRating = (channelLink) => (dispatch) => {
     dispatch({type: START_LOADING_RATING})
     axios.get(NEWS_SERVICE_URL + `/channels/rates?channel=${channelLink}`, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
             dispatch({
@@ -53,11 +53,11 @@ export let rateChannel = (channelLink, rate) => (dispatch) => {
 
     dispatch({type: START_LOADING_RATING})
 
-    axios.post(NEWS_SERVICE_URL + '/channels/rates', body, {
+    axios.post(NEWS_SERVICE_URL + "/channels/rates", body, {
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
         dispatch({

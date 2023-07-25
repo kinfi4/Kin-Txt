@@ -8,10 +8,10 @@ export let showMessage = (messages) => {
         }
 
         Store.addNotification({
-            title: '',
+            title: "",
             message: message,
-            type: el.type,                           // 'default', 'success', 'info', 'warning'
-            container: 'top-right',                  // where to position the notifications
+            type: el.type,                           // "default", "success", "info", "warning"
+            container: "top-right",                  // where to position the notifications
             animationIn: ["animated", "fadeIn"],
             animationOut: ["animated", "fadeOut"],
             dismiss: {

@@ -70,7 +70,7 @@ export let fetchUserReports = () => (dispatch, getState) => {
 
     axios.get(STATISTICS_SERVICE_URL + `/reports` + queryParams, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
            dispatch({type: REPORTS_LOADED, reports: res.data.reports})
@@ -87,7 +87,7 @@ export let fetchReportDetails = (reportId) => (dispatch) => {
 
     axios.get(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
         dispatch({type: REPORT_DETAILS_LOADED, detailedReport: res.data})
@@ -99,7 +99,7 @@ export let fetchReportDetails = (reportId) => (dispatch) => {
 
 export let generateReport = (startDate, endDate, channels, reportType) => (dispatch) => {
     if(!channels.length) {
-        showMessage([{message: "You didn't specify any channel!", type: "danger"}])
+        showMessage([{message: "You didn't specify any Channel!", type: "danger"}])
         return;
     }
 
@@ -119,10 +119,10 @@ export let generateReport = (startDate, endDate, channels, reportType) => (dispa
 
     axios.post(STATISTICS_SERVICE_URL + `/reports`, body, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
-        showMessage([{message: 'Report generation started!', type: 'success'}])
+        showMessage([{message: "Report generation started!", type: "success"}])
     }).catch(err => {
         dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
     })
@@ -134,11 +134,11 @@ export let updateReportName = (reportId, reportName) => (dispatch) => {
 
     axios.put(STATISTICS_SERVICE_URL + `/reports/${reportId}`, body, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
-        window.location.replace('/statistics')
-        showMessage([{message: 'Report renamed', type: 'success'}])
+        window.location.replace("/statistics")
+        showMessage([{message: "Report renamed", type: "success"}])
     }).catch(err => {
         dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
     })
@@ -150,11 +150,11 @@ export let deleteReport = (reportId) => (dispatch) => {
 
     axios.delete(STATISTICS_SERVICE_URL + `/reports/${reportId}`, {
         headers: {
-            'Authorization': `Token ${token}`,
+            "Authorization": `Token ${token}`,
         }
     }).then(res => {
-        window.location.replace('/statistics')
-        showMessage([{message: 'Report deleted!', type: 'success'}])
+        window.location.replace("/statistics")
+        showMessage([{message: "Report deleted!", type: "success"}])
     }).catch(err => {
         dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
     })

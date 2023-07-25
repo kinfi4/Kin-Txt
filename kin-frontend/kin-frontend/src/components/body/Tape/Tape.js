@@ -4,7 +4,7 @@ import mainPageCss from "../MainPage.module.css"
 import {connect} from "react-redux";
 import {showModalWindow} from "../../../redux/reducers/modalWindowReducer";
 import {addChannel, fetchChannels} from "../../../redux/reducers/channelsReducer";
-import ChannelBlock from "./channel/ChannelBlock";
+import ChannelBlock from "./Channel/ChannelBlock";
 import {fetchNextPosts} from "../../../redux/reducers/postsReducer";
 import PostsTape from "./PostsTape";
 import InputModalWindow from "../../common/inputModalWindow/InputModalWindow";

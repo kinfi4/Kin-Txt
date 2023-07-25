@@ -47,7 +47,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
             return;
         }
         if(channels.includes(channelLink)) {
-            showMessage([{message: "Sorry but the specified channel already in the list", type: "danger"}]);
+            showMessage([{message: "Sorry but the specified Channel already in the list", type: "danger"}]);
             return;
         }
 
@@ -188,7 +188,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                         <Creatable
                             isClearable
                             isMulti
-                            placeholder={"Enter channel links..."}
+                            placeholder={"Enter Channel links..."}
                             defaultValue={initialChannels.map(el => ({value: el.link, label: el.link}))}
                             name="channels"
                             value={channels.map(el => ({value: el, label: el}))}

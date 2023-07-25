@@ -9,7 +9,7 @@ import Button from "../common/button/Button";
 
 
 function Register(props) {
-    const [details, setDetails] = useState({username: '', password1: '', password2: ''})
+    const [details, setDetails] = useState({username: "", password1: "", password2: ""})
     let onRegisterSubmit = () => {
         props.register(details.username, details.password1, details.password2)
     }

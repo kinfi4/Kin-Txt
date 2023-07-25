@@ -11,6 +11,7 @@ import {
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
 import ReportFilters from "./ReportFilters/ReportFilters";
+import commonStyles from "../../../common/CommonStyles.module.css";
 
 
 const SelectReportMenu = (props) => {
@@ -20,6 +21,8 @@ const SelectReportMenu = (props) => {
 
     return (
         <>
+            <h2 className={commonStyles.pageTitle}>Your Reports</h2>
+
             <div className={selectReportMenuCss.reportsListContainer}>
                 <table className={selectReportMenuCss.reportTable}>
                     <thead>

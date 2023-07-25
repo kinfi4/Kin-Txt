@@ -3,7 +3,7 @@ import axios from "axios";
 import {STATISTICS_SERVICE_URL} from "../../../../../config";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
-import TapeCss from "../../../tape/Tape.module.css";
+import TapeCss from "../../../Tape/Tape.module.css";
 import GenerateReportCss from "../GenerateReport.module.css";
 import {showMessage} from "../../../../../utils/messages";
 import {AiFillDelete} from "react-icons/ai";
@@ -27,6 +27,10 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
         });
     }
     const onDeleteClick = (templateId) => {
+        if(!window.confirm("Are you sure you want to delete this template?")) {
+            return;
+        }
+
         const token = localStorage.getItem("token");
         axios.delete(STATISTICS_SERVICE_URL + "/templates/" + templateId, {headers: {"Authorization": `Token ${token}`}})
         .then(res => {

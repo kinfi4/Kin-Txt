@@ -7,7 +7,7 @@ const Post = (props) => {
         const script = document.createElement('script');
         script.src = "https://telegram.org/js/telegram-widget.js?21";
 
-        script.setAttribute('data-telegram-post', props.postLink);
+        script.setAttribute('data-telegram-Post', props.postLink);
 
         script.setAttribute('data-dark-color', 'BF8EFF');
         script.setAttribute('data-userpic', 'true');

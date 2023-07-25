@@ -9,10 +9,12 @@ function Header(props) {
     return (
         <>
             <header className={headerCss.header}>
-                <NavLink to={'/tape'}><div className={headerCss.logo}>Kin News</div></NavLink>
+                <NavLink to={'/statistics'}><div className={headerCss.logo}>Kin News</div></NavLink>
                 <nav>
                     <h3><NavLink to={'/tape'}>TAPE</NavLink></h3>
                     <h3><NavLink to={'/statistics'}>STATISTICS</NavLink></h3>
+                    <h3><NavLink to={'/models'}>MODELS</NavLink></h3>
+                    <h3><NavLink to={'/templates'}>VISUALIZATION TEMPLATES</NavLink></h3>
 
                     <h3
                         onClick={(e) => props.logout()}

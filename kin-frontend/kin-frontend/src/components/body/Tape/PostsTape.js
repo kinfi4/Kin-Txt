@@ -2,7 +2,7 @@ import React, {useCallback, useRef} from 'react';
 import LoadingSpinner from "../../common/spiner/LoadingSpinner";
 import {fetchNextPosts} from "../../../redux/reducers/postsReducer";
 import {connect} from "react-redux";
-import Post from "./post/Post";
+import Post from "./Post/Post";
 import TapeCss from "./Tape.module.css"
 
 
