@@ -12,7 +12,7 @@ from kin_reports_generation.domain.entities import (
     ModelEntity,
 )
 from kin_reports_generation.domain.services.model.validation import ModelValidationService
-from kin_reports_generation.exceptions import BaseValidationError, UnsupportedModelTypeError
+from kin_reports_generation.exceptions import UnsupportedModelTypeError
 from kin_reports_generation.infrastructure.repositories import ModelRepository
 from kin_reports_generation.tasks import validate_model
 
