@@ -4,12 +4,12 @@ from celery import Celery
 from dependency_injector.wiring import Provide, inject
 
 from kin_reports_generation.constants import ModelStatuses
-from kin_reports_generation.domain.services.model import ModelService
 from kin_reports_generation.settings import CelerySettings
+from kin_reports_generation.types import CategoryMapping
+from kin_reports_generation.domain.services.model.validation.interface import IModelValidation
 from kin_reports_generation.domain.entities import GenerateReportEntity, ModelEntity
 from kin_reports_generation.domain.services.generate_report import IGeneratingReportsService
 from kin_reports_generation.containers import Container
-from kin_reports_generation.types import CategoryMapping
 
 _logger = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ def generate_word_cloud_task(
 @inject
 def validate_model(
     model_dict_data: dict[str, str | ModelStatuses | CategoryMapping],
-    model_service: ModelService = Provide[Container.domain_services.models_service],
+    model_service: IModelValidation = Provide[Container.domain_services.model_validation_service],
 ) -> None:
     model = ModelEntity.parse_obj(model_dict_data)
     
