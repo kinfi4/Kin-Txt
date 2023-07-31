@@ -7,13 +7,14 @@ import {ModelTypes, STATISTICAL_REPORT, WORD_CLOUD_REPORT} from "../../../../../
 import statsCss from "../../../Statistics/Statistics.module.css";
 import InsertModelBinaries from "../common/InsertModelBinaries";
 import FormInput from "../../../../common/formInputName/FormInput";
+import MappingForm from "../common/MappingForm/MappingForm";
 
 const ModelCreateForm = () => {
     const [data, setData] = React.useState({
         modelType: ModelTypes.SKLEARN_MODEL,
         modelFile: null,
         tokenizerFile: null,
-        categoryMapping: {0: "First Category", 1: "Second Category"},
+        categoryMapping: [{value: 0, categoryName: "First Category"}, {value: 1, categoryName: "Second Category"}],
         name: "",
     });
 
@@ -83,12 +84,19 @@ const ModelCreateForm = () => {
                     </div>
                     {/*Generate model button*/}
                     <div className={formStyles.formInputContainer}>
-                        <div className={formStyles.createModelButton}>Create Model</div>
+                        <div className={formStyles.createModelButton}>Validate model</div>
                     </div>
                 </div>
-                <div>
+                <div className={formStyles.blockOfForms}>
                     <div className={formStyles.formInputContainer}>
-                        INPUT MAPPINGS
+                        <label
+                            id="modelMappings"
+                            className={statsCss.generateReportFormLabel}
+                        >
+                            Enter model mappings:
+                        </label>
+
+                        <MappingForm data={data} setData={setData} id={"modelMappings"} />
                     </div>
                 </div>
             </div>

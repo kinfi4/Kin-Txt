@@ -19,6 +19,7 @@
     width: 28%;
     max-width: 450px;
     flex-direction: column;
+    margin: 20px;
 }
 .createModelButton {
     padding: 10px 15px;
