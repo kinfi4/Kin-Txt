@@ -48,14 +48,18 @@ export const createModel = (model) => (dispatch) => {
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
+    formData.append("modelType", model.modelType);
     formData.append("modelData", model.modelFile);
     formData.append("tokenizerData", model.tokenizerFile);
     formData.append("name", model.name);
-    formData.append("modelType", model.modelType);
-    formData.append("categoryMapping", model.categoryMapping);
 
+    const categoryMappingsAsDict = model.categoryMapping.reduce((acc, curr) => {
+        acc[curr.value] = curr.categoryName;
+        return acc;
+    }, {});
+    formData.append("categoryMapping", JSON.stringify(categoryMappingsAsDict));
 
-    axios.post(REPORTS_BUILDER_URL + "/models", model, {
+    axios.post(REPORTS_BUILDER_URL + "/models", formData, {
         headers: {
             "Authorization": `Token ${token}`,
             "Content-Type": "multipart/form-data",

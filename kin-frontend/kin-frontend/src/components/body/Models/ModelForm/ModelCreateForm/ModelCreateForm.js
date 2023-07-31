@@ -8,8 +8,11 @@ import statsCss from "../../../Statistics/Statistics.module.css";
 import InsertModelBinaries from "../common/InsertModelBinaries";
 import FormInput from "../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
+import {validateFormData} from "../common/FormDataValidation";
+import {createModel} from "../../../../../redux/reducers/modelsReducer";
+import {connect} from "react-redux";
 
-const ModelCreateForm = () => {
+const ModelCreateForm = ({createModel}) => {
     const [data, setData] = React.useState({
         modelType: ModelTypes.SKLEARN_MODEL,
         modelFile: null,
@@ -18,12 +21,25 @@ const ModelCreateForm = () => {
         name: "",
     });
 
+    const onCreateButtonClick = () => {
+        const validationResult = validateFormData(data);
+
+        if (!validationResult) {
+            return;
+        }
+
+        createModel(data);
+    }
+
     return (
         <div className={statsStyles.statsContainer}>
             <h2 className={commonStyles.pageTitle}>Create Model</h2>
 
             <div className={formStyles.modelFormContainer}>
-                <div className={formStyles.blockOfForms}>
+                <div
+                    className={formStyles.blockOfForms}
+                    style={{width: "15%"}}
+                >
                     {/*Select model type*/}
                     <div className={formStyles.formInputContainer}>
                         <label
@@ -84,10 +100,18 @@ const ModelCreateForm = () => {
                     </div>
                     {/*Generate model button*/}
                     <div className={formStyles.formInputContainer}>
-                        <div className={formStyles.createModelButton}>Validate model</div>
+                        <div
+                            onClick={onCreateButtonClick}
+                            className={formStyles.createModelButton}
+                        >
+                            Validate model
+                        </div>
                     </div>
                 </div>
-                <div className={formStyles.blockOfForms}>
+                <div
+                    className={formStyles.blockOfForms}
+                    style={{width: "85%"}}
+                >
                     <div className={formStyles.formInputContainer}>
                         <label
                             id="modelMappings"
@@ -104,4 +128,13 @@ const ModelCreateForm = () => {
     );
 };
 
-export default ModelCreateForm;
+const mapStateToProps = (state) => {
+    return {}
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createModel: (model) => dispatch(createModel(model))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModelCreateForm);
