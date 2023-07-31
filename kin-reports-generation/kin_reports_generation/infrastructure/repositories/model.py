@@ -67,6 +67,8 @@ class ModelRepository:
     def _map_dict_to_model_entity(self, model_dict: Mapping[str, ObjectId | str | list[CategoryMapping]]) -> ModelEntity:
         return ModelEntity(
             id=str(model_dict["_id"]),
+            name=model_dict["name"],
+            model_type=model_dict["model_type"],
             owner_username=model_dict["owner_username"],
             model_path=model_dict["model_path"],
             tokenizer_path=model_dict["tokenizer_path"],

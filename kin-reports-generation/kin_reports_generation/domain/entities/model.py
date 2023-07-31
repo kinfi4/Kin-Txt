@@ -1,8 +1,10 @@
+import json
+from typing import Any
+
 from fastapi import UploadFile, Form, File
 from pydantic import BaseModel, Field
 
 from kin_reports_generation.constants import ModelStatuses
-
 from kin_reports_generation.types import CategoryMapping
 from kin_reports_generation.constants import ModelTypes
 
@@ -40,14 +42,16 @@ class CreateModelEntity(BaseModel):
         cls,
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
-        category_mapping: CategoryMapping = Form(..., alias="categoryMapping"),
+        category_mapping_string: str = Form(..., alias="categoryMapping"),
         model_data: UploadFile = File(None, alias="modelData"),
         tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
-    ):
+    ) -> "CreateModelEntity":
+        loaded_category_mapping = json.loads(category_mapping_string)
+
         return cls(
             name=name,
             model_type=model_type,
-            category_mapping=category_mapping,
+            category_mapping=loaded_category_mapping,
             model_data=model_data,
             tokenizer_data=tokenizer_data
         )
@@ -61,15 +65,17 @@ class UpdateModelEntity(CreateModelEntity):
         cls,
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
-        category_mapping: CategoryMapping = Form(..., alias="categoryMapping"),
+        category_mapping_string: str = Form(..., alias="categoryMapping"),
         model_data: UploadFile = File(None, alias="modelData"),
         tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
         models_has_changed: bool = Form(False, alias="modelsHasChanged"),
-    ):
+    ) -> "UpdateModelEntity":
+        loaded_category_mapping = json.loads(category_mapping_string)
+
         return cls(
             name=name,
             model_type=model_type,
-            category_mapping=category_mapping,
+            category_mapping=loaded_category_mapping,
             model_data=model_data,
             tokenizer_data=tokenizer_data,
             models_has_changed=models_has_changed

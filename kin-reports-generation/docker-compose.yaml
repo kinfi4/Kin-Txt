@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: ./etc/kin-stats/Dockerfile
-    image: 'kin-reports-builder'
+    image: 'kin-reports-builder-api'
     container_name: 'kin-reports-builder-api'
     command: bash -c "python -m kin_reports_generation run-server"
     env_file:

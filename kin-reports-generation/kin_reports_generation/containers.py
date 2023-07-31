@@ -104,13 +104,13 @@ class DomainServices(containers.DeclarativeContainer):
 
     model_validation_service: providers.Singleton[ModelValidationService] = providers.Singleton(
         ModelValidationService,
-        model_repository=repositories.model_repository,
+        models_repository=repositories.model_repository,
     )
 
     models_service: providers.Singleton[ModelService] = providers.Singleton(
         ModelService,
         models_storing_path=config.models_storage_path,
-        model_repository=repositories.model_repository,
+        models_repository=repositories.model_repository,
     )
 
     generate_statistics_report_service: providers.Singleton[GenerateStatisticalReportService] = providers.Singleton(

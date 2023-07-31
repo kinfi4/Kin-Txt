@@ -16,8 +16,8 @@ class ModelValidationService(IModelValidation):
         ModelTypes.SKLEARN: SkLearnModelValidator,
     }
 
-    def __init__(self, model_repository: ModelRepository) -> None:
-        self._model_repository = model_repository
+    def __init__(self, models_repository: ModelRepository) -> None:
+        self._model_repository = models_repository
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def validate_model(self, model: ModelEntity) -> None:

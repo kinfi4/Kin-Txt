@@ -36,7 +36,7 @@ def validate_and_save_model(
 ):
     try:
         model_to_validate = models_service.prepare_model_for_validation(current_user.username, model)
-        validate_model(model_to_validate.dict())
+        validate_model.delay(model_to_validate.dict())
     except BaseValidationError:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -54,7 +54,7 @@ def update_model(
     try:
         validation_needed, model_to_validate = models_service.update_model(current_user.username, model_id, model)
         if validation_needed:
-            validate_model(model_to_validate.dict())
+            validate_model.delay(model_to_validate.dict())
     except UnsupportedModelTypeError as error:
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
     except BaseValidationError:

@@ -1,8 +1,5 @@
 import os
 import logging
-from typing import cast
-
-from celery import Task
 
 from kin_reports_generation.constants import ModelTypes
 from kin_reports_generation.domain.entities import (
