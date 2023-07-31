@@ -19,3 +19,8 @@ export const STATISTICAL_REPORT = "Statistical"
 
 export const NOT_FOUND_STATUS_CODE = 404
 export const REQUEST_IS_TOO_EARLY_STATUS_CODE = 425
+
+export const ModelTypes = {
+    SKLEARN_MODEL: "Sklearn Model",
+    BERT_TENSORFLOW_MODEL: "Tensorflow Bert Model",
+}

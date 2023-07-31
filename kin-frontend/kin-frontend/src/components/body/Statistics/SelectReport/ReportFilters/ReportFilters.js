@@ -16,7 +16,7 @@ const ReportFilters = ({updateFilters, reportNameFilter, dateFromFilter, dateToF
     let {path, url} = useRouteMatch();
     
     return (
-        <tr className={reportFiltersCss.reportFiltersContainer}>
+        <tr className={reportFiltersCss.filtersContainer}>
             <th width={"500px"}>
                 <Input placeholder={"Report name"} onChange={onReportNameFilterChange} id={"reportNameFilter"} value={reportNameFilter} />
             </th>
@@ -31,7 +31,7 @@ const ReportFilters = ({updateFilters, reportNameFilter, dateFromFilter, dateToF
 
             <th>
                 <h2>
-                    <Link to={`${path}/generate`}><span className={selectReportMenuCss.generateNewReportButton}>Generate new</span></Link>
+                    <Link to={`${path}/generate`}><span className={selectReportMenuCss.generateNewItemButton}>Generate New Report</span></Link>
                 </h2>
             </th>
         </tr>

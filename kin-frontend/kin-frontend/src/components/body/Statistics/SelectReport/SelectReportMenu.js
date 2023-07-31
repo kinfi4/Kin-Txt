@@ -19,18 +19,26 @@ const SelectReportMenu = (props) => {
         props.fetchUserReports();
     }, []);
 
+    const names = [
+        {name: "Report 1", reportId: 1, processingStatus: "Processing", generationDate: "2021-05-05"},
+        {name: "Report 2", reportId: 2, processingStatus: "Processing", generationDate: "2021-05-05"},
+        {name: "Report 3", reportId: 3, processingStatus: "Ready", generationDate: "2021-05-05"},
+        {name: "Report 4", reportId: 4, processingStatus: "Postponed", generationDate: "2021-05-05"},
+    ]
+
     return (
         <>
             <h2 className={commonStyles.pageTitle}>Your Reports</h2>
 
             <div className={selectReportMenuCss.reportsListContainer}>
+
                 <table className={selectReportMenuCss.reportTable}>
                     <thead>
                         <ReportFilters />
                     </thead>
                     <tbody>
                     {
-                        props.reportNames.map((el, idx) =>
+                        names.map((el, idx) =>
                             <ReportBlock
                                 name={el.name}
                                 reportId={el.reportId}

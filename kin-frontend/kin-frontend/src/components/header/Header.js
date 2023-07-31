@@ -14,7 +14,7 @@ function Header(props) {
                     <h3><NavLink to={'/tape'}>TAPE</NavLink></h3>
                     <h3><NavLink to={'/statistics'}>STATISTICS</NavLink></h3>
                     <h3><NavLink to={'/models'}>MODELS</NavLink></h3>
-                    <h3><NavLink to={'/templates'}>VISUALIZATION TEMPLATES</NavLink></h3>
+                    <h3><NavLink to={'/templates'}>TEMPLATES</NavLink></h3>
 
                     <h3
                         onClick={(e) => props.logout()}

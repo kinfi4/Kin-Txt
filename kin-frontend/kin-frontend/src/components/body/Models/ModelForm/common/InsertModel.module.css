@@ -1,0 +1,36 @@
+.inputFilesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.inputFileContainer {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.fileInput {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80%;
+    height: 100%;
+    opacity: 0;
+}
+.fileLabel {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1d2c3b;
+    color: white;
+    pointer-events: none; /* Ignore clicks, passing them through to the file input */
+    border: 2px solid #24B382;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.fileInput:hover + .fileLabel {
+    background-color: #3a749a;
+    cursor: pointer;
+}

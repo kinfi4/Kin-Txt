@@ -1,7 +1,10 @@
-.reportFiltersContainer th:first-child{
-    padding-top: 12px;
+.filtersContainer th:first-child{
+    padding-top: 20px;
 }
-.reportFiltersContainer th div:first-child {
+.filtersContainer th div:first-child {
     width: 80%;
+}
+.filtersContainer th {
+    font-size: 18px;
 }
 

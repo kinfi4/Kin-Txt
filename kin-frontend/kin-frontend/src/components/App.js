@@ -12,6 +12,9 @@ import {loadUser} from "../redux/reducers/authReducer";
 import {ReactNotifications} from "react-notifications-component";
 import 'react-notifications-component/dist/theme.css'
 import ComparisonWindow from "./body/Comparison/ComparisonWindow";
+import ModelsList from "./body/Models/ModelsList";
+import ModelCreateForm from "./body/Models/ModelForm/ModelCreateForm/ModelCreateForm";
+import ModelUpdateForm from "./body/Models/ModelForm/ModelUpdateForm/ModelUpdateForm";
 
 
 export function Main() {
@@ -22,8 +25,11 @@ export function Main() {
             <Switch>
                 <Route exact path={"/statistics/compare"} render={() => <ComparisonWindow />} />
                 <Route path={'/statistics'} render={() => <Statistics />} />
-                <Route exact path={'/Tape'} render={() => <Tape />} />
-                <Route path={'/'} render={() => <Redirect to={'/Tape'}/>} />
+                <Route path={'/models/create'} render={() => <ModelCreateForm />} />
+                <Route path={'/models/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
+                <Route path={'/models'} exact render={() => <ModelsList />} />
+                <Route exact path={'/tape'} render={() => <Tape />} />
+                <Route path={'/'} render={() => <Redirect to={'/statistics'}/>} />
             </Switch>
         </>
     )

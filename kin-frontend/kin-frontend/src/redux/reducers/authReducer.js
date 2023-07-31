@@ -101,7 +101,7 @@ export function auth (state=initialState, action){
         case LOGIN_SUCCESS:
             localStorage.setItem('token', action.token)
             if(window.location.pathname === '/sign-in' || window.location.pathname === '/sign-up') {
-                window.location.replace('/')
+                window.location.replace('/statistics')
             }
 
             return {

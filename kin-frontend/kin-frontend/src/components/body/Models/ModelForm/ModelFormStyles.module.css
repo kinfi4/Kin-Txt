@@ -1,0 +1,37 @@
+.modelFormContainer {
+    width: 60%;
+    min-height: 800px;
+    margin-top: 40px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+.formInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin: 15px 0;
+    box-sizing: border-box;
+}
+.blockOfForms {
+    display: flex;
+    width: 28%;
+    max-width: 450px;
+    flex-direction: column;
+}
+.createModelButton {
+    padding: 10px 15px;
+    background-color: #24B382;
+    color: white;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+.createModelButton:hover {
+    background-color: #3a749a;
+}
