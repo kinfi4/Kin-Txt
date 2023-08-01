@@ -80,6 +80,6 @@ def validate_model(
 ) -> None:
     model = ModelEntity.parse_obj(model_dict_data)
     
-    _logger.info(f"Validating model {model.id} for user {model.owner_username}...")
+    _logger.info(f"[CELERY] Initiate model validation {model.id} for user {model.owner_username}...")
 
     model_service.validate_model(model)
