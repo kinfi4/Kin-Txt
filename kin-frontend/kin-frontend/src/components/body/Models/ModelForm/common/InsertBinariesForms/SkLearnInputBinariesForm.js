@@ -1,10 +1,23 @@
 import React from 'react';
 import styles from "../InsertModel.module.css";
 import statsCss from "../../../../Statistics/Statistics.module.css";
+import Spinner from "../FileLoadingSpinner/Spinner";
+import {fi} from "date-fns/locale";
 
 const SkLearnInputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onTokenizerFileChange}) => {
     modelName = modelName ? modelName : "Choose a file with scikit-learn model";
     tokenizerName = tokenizerName ? tokenizerName : "Choose a file with scikit-learn tokenizer";
+
+    const [loading, setLoading] = React.useState(false);
+
+    const handleFileChange = (fileHandler) => async (event) => {
+        setLoading(true);
+        try {
+            await fileHandler(event.target.files[0]);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className={styles.inputFilesContainer} >
@@ -15,8 +28,10 @@ const SkLearnInputBinariesForm = ({modelName, tokenizerName, onModelFileChange, 
                 >
                     Model File:
                 </label>
-                <input type="file" id="file" className={styles.fileInput} onChange={(event) => onModelFileChange(event.target.files[0])} />
-                <label htmlFor="file" className={styles.fileLabel}>{modelName}</label>
+                <input type="file" id="file" className={styles.fileInput} onChange={handleFileChange(onModelFileChange)} />
+                <label htmlFor="file" className={styles.fileLabel}>
+                    {loading ? <Spinner /> : modelName}
+                </label>
             </div>
             <div className={styles.inputFileContainer}>
                 <label
@@ -26,8 +41,10 @@ const SkLearnInputBinariesForm = ({modelName, tokenizerName, onModelFileChange, 
                     Tokenizer File:
                 </label>
 
-                <input type="file" id="file" className={styles.fileInput} onChange={(event) => onTokenizerFileChange(event.target.files[0])} />
-                <label htmlFor="file" className={styles.fileLabel}>{tokenizerName}</label>
+                <input type="file" id="file" className={styles.fileInput} onChange={handleFileChange(onTokenizerFileChange)} />
+                <label htmlFor="file" className={styles.fileLabel}>
+                    {loading ? <Spinner /> : tokenizerName}
+                </label>
             </div>
         </div>
     );

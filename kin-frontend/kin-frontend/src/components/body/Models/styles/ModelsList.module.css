@@ -2,3 +2,11 @@
     padding-bottom: 30px;
     font-size: 20px;
 }
+.controlsContainer span {
+    cursor: pointer;
+    transition: color 0.1s;
+    margin: 0 5px;
+}
+.controlsContainer span:hover {
+    color: #24B382;
+}

@@ -24,3 +24,10 @@ export const ModelTypes = {
     SKLEARN_MODEL: "Sklearn Model",
     BERT_TENSORFLOW_MODEL: "Tensorflow Bert Model",
 }
+
+export const ModelStatuses = {
+    VALIDATED: "Validated",
+    VALIDATION_FAILED: "ValidationFailed",
+    VALIDATING: "Validating",
+    CREATED: "Created"
+}

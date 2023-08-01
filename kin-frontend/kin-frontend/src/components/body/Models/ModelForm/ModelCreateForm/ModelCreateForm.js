@@ -3,7 +3,7 @@ import formStyles from "../ModelFormStyles.module.css";
 import statsStyles from "../../../Statistics/Statistics.module.css";
 import commonStyles from "../../../../common/CommonStyles.module.css";
 import Select from "react-select";
-import {ModelTypes, STATISTICAL_REPORT, WORD_CLOUD_REPORT} from "../../../../../config";
+import {ModelTypes} from "../../../../../config";
 import statsCss from "../../../Statistics/Statistics.module.css";
 import InsertModelBinaries from "../common/InsertModelBinaries";
 import FormInput from "../../../../common/formInputName/FormInput";

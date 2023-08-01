@@ -9,6 +9,14 @@ import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 import {deleteModel, loadUserModels} from "../../../redux/reducers/modelsReducer";
+import {ModelStatuses} from "../../../config";
+
+let modelStatusToStatusClass = {
+    [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
+    [ModelStatuses.VALIDATING]: selectReportMenuCss.statusCellProcessing,
+    [ModelStatuses.VALIDATION_FAILED]: selectReportMenuCss.statusCellFailed,
+    [ModelStatuses.CREATED]: selectReportMenuCss.statusCellProcessing,
+}
 
 
 const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
@@ -30,8 +38,12 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
         return (
             <tr>
                 <td>{name}</td>
-                <td>{status}</td>
-                <td>
+                <td
+                    className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
+                >
+                    <div className={selectReportMenuCss.circle}></div> {status}
+                </td>
+                <td className={modelsCss.controlsContainer}>
                     <span><AiFillEdit /></span>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>

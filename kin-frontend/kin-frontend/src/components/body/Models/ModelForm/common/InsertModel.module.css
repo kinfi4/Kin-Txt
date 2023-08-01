@@ -19,6 +19,7 @@
     opacity: 0;
 }
 .fileLabel {
+    height: 25px;
     padding: 10px 15px;
     display: flex;
     align-items: center;
