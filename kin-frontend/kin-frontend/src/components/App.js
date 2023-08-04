@@ -4,7 +4,7 @@ import ModalWindow from "./common/modal/ModalWindow";
 import {Route, Switch, Redirect} from "react-router-dom";
 import Login from "./auth/login";
 import Register from "./auth/register";
-import Statistics from "./body/Statistics/Statistics";
+import Statistics from "./body/Reports/Statistics";
 import Tape from "./body/Tape/Tape";
 import {useEffect} from "react";
 import store from "../redux/store";
@@ -15,6 +15,7 @@ import ComparisonWindow from "./body/Comparison/ComparisonWindow";
 import ModelsList from "./body/Models/ModelsList";
 import ModelCreateForm from "./body/Models/ModelForm/ModelCreateForm/ModelCreateForm";
 import ModelUpdateForm from "./body/Models/ModelForm/ModelUpdateForm/ModelUpdateForm";
+import TemplatesList from "./body/VIsualizationTemplates/TemplatesList";
 
 
 export function Main() {
@@ -29,7 +30,7 @@ export function Main() {
                 <Route path={'/models/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
                 <Route path={'/models'} exact render={() => <ModelsList />} />
                 <Route exact path={'/tape'} render={() => <Tape />} />
-                <Route path={'/'} render={() => <Redirect to={'/statistics'}/>} />
+                <Route path={'/'} render={() => <TemplatesList />} />
             </Switch>
         </>
     )

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "../InsertModel.module.css";
-import statsCss from "../../../../Statistics/Statistics.module.css";
+import statsCss from "../../../../Reports/Statistics.module.css";
 import Spinner from "../FileLoadingSpinner/Spinner";
 import {fi} from "date-fns/locale";
 

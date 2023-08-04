@@ -11,6 +11,7 @@ import {reportsReducer} from "./reducers/reportsReducer";
 import {wordsCloudReducer} from "./reducers/wordCloud";
 import {comparisonReducer} from "./reducers/comparisonReducer";
 import modelsReducer from "./reducers/modelsReducer";
+import visualizationTemplatesReducer from "./reducers/visualizationTemplates";
 
 
 let store = createStore(
@@ -24,6 +25,7 @@ let store = createStore(
         wordsCloudReducer: wordsCloudReducer,
         comparisonReducer: comparisonReducer,
         modelsReducer: modelsReducer,
+        visualizationTemplatesReducer: visualizationTemplatesReducer,
     }),
     composeWithDevTools(
         applyMiddleware(thunk)

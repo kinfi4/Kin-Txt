@@ -2,7 +2,7 @@ import {showMessage} from "./messages";
 import {
     ReportNotFoundError,
     SomethingWentWrongError
-} from "../components/body/Statistics/ReportVisualization/helpers/Errors";
+} from "../components/body/Reports/ReportVisualization/helpers/Errors";
 import {NOT_FOUND_STATUS_CODE} from "../config";
 
 export function truncate(str, n){
