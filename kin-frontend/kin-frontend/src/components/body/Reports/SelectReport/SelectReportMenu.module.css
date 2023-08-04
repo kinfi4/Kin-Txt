@@ -37,6 +37,9 @@
     border: solid 1px white;
     transition: linear 0.1s;
     font-size: 20px;
+    flex-wrap: nowrap;
+    display: flex;
+    justify-content: center;
 }
 .generateNewItemButton:hover {
     color: #1f755c  ;

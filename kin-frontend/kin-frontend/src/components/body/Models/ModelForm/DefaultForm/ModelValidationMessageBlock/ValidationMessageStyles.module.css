@@ -1,0 +1,23 @@
+.validationResultsContainer {
+    border-radius: 3px;
+    border-bottom: 1px solid #2CA884;
+    width: 800px;
+    padding: 10px 15px;
+    color: #c9e0ef;
+}
+.validationResult {
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.validationPassed {
+    color: #2CA884;
+}
+.validationFailed {
+    color: crimson;
+}

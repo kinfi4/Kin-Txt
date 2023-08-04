@@ -4,7 +4,7 @@ import commonStyles from "../../common/CommonStyles.module.css";
 import selectReportMenuCss from "../Reports/SelectReport/SelectReportMenu.module.css";
 import mainPageCss from "../MainPage.module.css";
 import statisticsCss from "../Reports/Statistics.module.css";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
@@ -37,14 +37,16 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
 
         return (
             <tr>
-                <td>{name}</td>
+                <td>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}>{name}</Link>
+                </td>
                 <td
                     className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
                 >
                     <div className={selectReportMenuCss.circle}></div> {status}
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    <span><AiFillEdit /></span>
+                    <Link className={modelsCss.modelLink} to={`${path}/create/edit/${id}`}><AiFillEdit /></Link>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>
             </tr>
@@ -62,7 +64,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                             <thead>
                                 <tr className={modelsCss.filtersBlock}>
                                     <th width={"500px"}>Name</th>
-                                    <th width={"200px"}>Status</th>
+                                    <th width={"250px"}>Status</th>
                                     <th>
                                         <Link to={`${path}/create`}><span className={selectReportMenuCss.generateNewItemButton}>Create New Model</span></Link>
                                     </th>

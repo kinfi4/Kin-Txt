@@ -27,7 +27,7 @@ export function Main() {
                 <Route exact path={"/statistics/compare"} render={() => <ComparisonWindow />} />
                 <Route path={'/statistics'} render={() => <Statistics />} />
                 <Route path={'/models/create'} render={() => <ModelCreateForm />} />
-                <Route path={'/models/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
+                <Route path={'/models/edit/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
                 <Route path={'/models'} exact render={() => <ModelsList />} />
                 <Route exact path={'/tape'} render={() => <Tape />} />
                 <Route path={'/'} render={() => <TemplatesList />} />

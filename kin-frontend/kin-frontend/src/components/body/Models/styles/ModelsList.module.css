@@ -10,3 +10,11 @@
 .controlsContainer span:hover {
     color: #24B382;
 }
+.modelLink {
+    color: white;
+    cursor: pointer;
+    transition: color 0.1s;
+}
+.modelLink:hover {
+    color: #1f755c;
+}
