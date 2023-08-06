@@ -51,7 +51,10 @@ def delete_template(
     current_user: User = Depends(get_current_user),
     visualization_template_repository: VisualizationTemplateRepository = Depends(Provide[Container.repositories.visualization_template_repository]),
 ):
-    visualization_template_repository.delete_template(current_user.username, template_id)
+    try:
+        visualization_template_repository.delete_template(current_user.username, template_id)
+    except UserTemplateNotFoundException:
+        pass
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

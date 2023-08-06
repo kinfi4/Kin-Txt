@@ -2,7 +2,7 @@ from typing import cast
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends, APIRouter, status
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from celery import Task
 
 from kin_reports_generation.containers import Container
@@ -56,9 +56,11 @@ def update_model(
         if validation_needed:
             validate_model.delay(model_to_validate.dict())
     except UnsupportedModelTypeError as error:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
+    except UserModelNotFoundException:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"errors": "Model not found."})
     except BaseValidationError:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": "Something went wrong."})
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": "Something went wrong."})
 
     return Response(status_code=status.HTTP_200_OK)
 
@@ -83,6 +85,9 @@ def delete_model(
     current_user: User = Depends(get_current_user),
     models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
-    models_repository.delete_model(model_id, username=current_user.username)
+    try:
+        models_repository.delete_model(model_id, username=current_user.username)
+    except UserModelNotFoundException:
+        pass
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)

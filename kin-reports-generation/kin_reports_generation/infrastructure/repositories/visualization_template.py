@@ -2,6 +2,7 @@ import logging
 from typing import TypeAlias, Mapping
 
 from bson import ObjectId
+from bson.errors import InvalidId
 from pymongo import MongoClient
 
 from kin_reports_generation.domain.entities import VisualizationTemplate
@@ -20,7 +21,7 @@ class VisualizationTemplateRepository:
 
     def get_template(self, template_id: str, username: str) -> VisualizationTemplate:
         template_dict = self._templates_collection.find_one(
-            {"_id": ObjectId(template_id), "owner_username": username}
+            {"_id": self._get_object_id_from_str(template_id), "owner_username": username}
         )
 
         if template_dict is None:
@@ -44,20 +45,26 @@ class VisualizationTemplateRepository:
         self._templates_collection.insert_one(template_dict)
 
     def delete_template(self, template_id: str, username: str) -> None:
-        self._templates_collection.delete_one({"_id": ObjectId(template_id), "owner_username": username})
+        self._templates_collection.delete_one({"_id": self._get_object_id_from_str(template_id), "owner_username": username})
 
     def update_template(self, template_id: str, username: str, template: VisualizationTemplate) -> None:
-        if not self._templates_collection.find_one({"_id": ObjectId(template_id), "owner_username": username}):
+        if not self._templates_collection.find_one({"_id": self._get_object_id_from_str(template_id), "owner_username": username}):
             raise UserTemplateNotFoundException(f"Template for {username} with id {template_id} not found")
 
         self._templates_collection.find_one_and_update(
-            {"_id": ObjectId(template_id), "owner_username": username},
+            {"_id": self._get_object_id_from_str(template_id), "owner_username": username},
             {"$set": {
                 "name": template.name,
                 "content_types": template.content_types,
                 "visualization_diagram_types": template.visualization_diagram_types,
             }},
         )
+
+    def _get_object_id_from_str(self, object_id_str: str) -> ObjectId:
+        try:
+            return ObjectId(object_id_str)
+        except InvalidId:
+            raise UserTemplateNotFoundException(f"Template with id {object_id_str} not found")
 
     def _map_dict_to_template_entity(self, template_dict: TemplateDict) -> VisualizationTemplate:
         return VisualizationTemplate(

@@ -30,8 +30,8 @@ class ModelEntity(ModelValidationEntity):
 class CreateModelEntity(BaseModel):
     name: str
     model_type: ModelTypes = Field(..., alias="modelType")
-    model_data: UploadFile | None = Field(None, alias="modelData")
-    tokenizer_data: UploadFile | None = Field(None, alias="tokenizerData")
+    model_data: UploadFile = Field(..., alias="modelData")
+    tokenizer_data: UploadFile = Field(..., alias="tokenizerData")
     category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
 
     class Config:
@@ -43,8 +43,8 @@ class CreateModelEntity(BaseModel):
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
         category_mapping_string: str = Form(..., alias="categoryMapping"),
-        model_data: UploadFile = File(None, alias="modelData"),
-        tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
+        model_data: UploadFile = File(..., alias="modelData"),
+        tokenizer_data: UploadFile = File(..., alias="tokenizerData"),
     ) -> "CreateModelEntity":
         loaded_category_mapping = json.loads(category_mapping_string)
 
@@ -59,6 +59,8 @@ class CreateModelEntity(BaseModel):
 
 class UpdateModelEntity(CreateModelEntity):
     models_has_changed: bool = Field(False, alias="modelsHasChanged")
+    model_data: UploadFile | None = Field(None, alias="modelData")
+    tokenizer_data: UploadFile | None = Field(None, alias="tokenizerData")
 
     @classmethod
     def as_form(
@@ -66,8 +68,8 @@ class UpdateModelEntity(CreateModelEntity):
         name: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
         category_mapping_string: str = Form(..., alias="categoryMapping"),
-        model_data: UploadFile = File(None, alias="modelData"),
-        tokenizer_data: UploadFile = File(None, alias="tokenizerData"),
+        model_data: UploadFile | None = File(None, alias="modelData"),
+        tokenizer_data: UploadFile | None = File(None, alias="tokenizerData"),
         models_has_changed: bool = Form(False, alias="modelsHasChanged"),
     ) -> "UpdateModelEntity":
         loaded_category_mapping = json.loads(category_mapping_string)

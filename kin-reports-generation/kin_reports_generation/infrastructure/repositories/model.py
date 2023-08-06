@@ -1,8 +1,9 @@
 import logging
 from typing import Mapping, TypeAlias
 
-from pymongo import MongoClient
 from bson import ObjectId
+from bson.errors import InvalidId
+from pymongo import MongoClient
 
 from kin_reports_generation.constants import ModelStatuses
 from kin_reports_generation.domain.entities import ModelEntity, ModelValidationEntity
@@ -22,7 +23,7 @@ class ModelRepository:
 
     def get_model(self, model_id: str, username: str) -> ModelEntity:
         model_dict = self._models_collection.find_one(
-            {"_id": ObjectId(model_id), "owner_username": username}
+            {"_id": self._get_object_id_from_str(model_id), "owner_username": username}
         )
 
         if model_dict is None:
@@ -47,11 +48,11 @@ class ModelRepository:
         return self.get_model(str(inserted_id), model.owner_username)
 
     def delete_model(self, model_id: str, username: str) -> None:
-        self._models_collection.delete_one({"_id": ObjectId(model_id), "owner_username": username})
+        self._models_collection.delete_one({"_id": self._get_object_id_from_str(model_id), "owner_username": username})
 
     def update_model(self, model_id: str, username: str, model_dict: ModelDict) -> ModelEntity:
         returned_model = self._models_collection.find_one_and_update(
-            {"_id": ObjectId(model_id), "owner_username": username},
+            {"_id": self._get_object_id_from_str(model_id), "owner_username": username},
             {"$set": model_dict},
             return_document=True,
         )
@@ -60,9 +61,15 @@ class ModelRepository:
 
     def update_model_status(self, model_id: str, username: str, status: ModelStatuses) -> None:
         self._models_collection.find_one_and_update(
-            {"_id": ObjectId(model_id), "owner_username": username},
+            {"_id": self._get_object_id_from_str(model_id), "owner_username": username},
             {"$set": {"model_status": status}},
         )
+
+    def _get_object_id_from_str(self, model_id: str) -> ObjectId:
+        try:
+            return ObjectId(model_id)
+        except InvalidId:
+            raise UserModelNotFoundException(f"Model with id {model_id} not found")
 
     def _map_dict_to_model_entity(self, model_dict: Mapping[str, ObjectId | str | list[CategoryMapping]]) -> ModelEntity:
         return ModelEntity(
