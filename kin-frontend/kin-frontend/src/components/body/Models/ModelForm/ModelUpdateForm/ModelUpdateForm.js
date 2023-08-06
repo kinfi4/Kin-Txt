@@ -17,7 +17,7 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
         modelStatus: null,
         modelName: null,
         tokenizerName: null,
-        validationFailedMessage: null,
+        validationMessage: null,
         id: modelId,
     });
 
@@ -39,7 +39,7 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
                 ),
                 modelName: response.modelPath.split("/").pop(),
                 tokenizerName: response.tokenizerPath.split("/").pop(),
-                validationFailedMessage: response.validationFailedMessage,
+                validationMessage: response.validationMessage,
                 id: modelId,
             });
         }).catch((error) => {

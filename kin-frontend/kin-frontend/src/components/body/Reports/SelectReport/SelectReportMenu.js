@@ -14,17 +14,10 @@ import ReportFilters from "./ReportFilters/ReportFilters";
 import commonStyles from "../../../common/CommonStyles.module.css";
 
 
-const SelectReportMenu = (props) => {
+const SelectReportMenu = ({reportNames, ...props}) => {
     useEffect(() => {
         props.fetchUserReports();
     }, []);
-
-    const names = [
-        {name: "Report 1", reportId: 1, processingStatus: "Processing", generationDate: "2021-05-05"},
-        {name: "Report 2", reportId: 2, processingStatus: "Processing", generationDate: "2021-05-05"},
-        {name: "Report 3", reportId: 3, processingStatus: "Ready", generationDate: "2021-05-05"},
-        {name: "Report 4", reportId: 4, processingStatus: "Postponed", generationDate: "2021-05-05"},
-    ]
 
     return (
         <>
@@ -38,7 +31,7 @@ const SelectReportMenu = (props) => {
                     </thead>
                     <tbody>
                     {
-                        names.map((el, idx) =>
+                        reportNames.map((el, idx) =>
                             <ReportBlock
                                 name={el.name}
                                 reportId={el.reportId}

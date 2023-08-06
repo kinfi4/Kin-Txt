@@ -46,7 +46,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                     <div className={selectReportMenuCss.circle}></div> {status}
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    <Link className={modelsCss.modelLink} to={`${path}/create/edit/${id}`}><AiFillEdit /></Link>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}><AiFillEdit /></Link>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>
             </tr>

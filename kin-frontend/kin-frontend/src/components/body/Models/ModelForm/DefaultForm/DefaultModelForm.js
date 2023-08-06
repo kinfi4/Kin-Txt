@@ -17,7 +17,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
 
             <ModelValidationMessageBlock
                 validationStatus={data.modelStatus}
-                validationMessage={data.validationFailedMessage}
+                validationMessage={data.validationMessage}
             />
 
             <div className={formStyles.modelFormContainer}>
