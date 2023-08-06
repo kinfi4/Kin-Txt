@@ -1,7 +1,7 @@
 import React from "react";
 import {ModelTypes} from "../../../../../config";
 import {validateFormData} from "../common/FormDataValidation";
-import {createModel} from "../../../../../redux/reducers/modelsReducer";
+import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import {connect} from "react-redux";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 
@@ -35,7 +35,7 @@ const ModelCreateForm = ({createModel}) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createModel: (model) => dispatch(createModel(model))
+        createModel: (model) => dispatch(validateAndSaveModel(model))
     }
 }
 

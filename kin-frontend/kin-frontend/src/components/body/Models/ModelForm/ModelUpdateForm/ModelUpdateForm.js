@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
-import basicStyles from "../ModelFormStyles.module.css";
 import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {ModelTypes, REPORTS_BUILDER_URL} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
+import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
+import {validateFormData} from "../common/FormDataValidation";
+import {connect} from "react-redux";
 
-const ModelUpdateForm = ({modelId}) => {
+const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
     const [data, setData] = React.useState({
         modelType: ModelTypes.SKLEARN_MODEL,
         modelFile: null,
@@ -16,9 +18,8 @@ const ModelUpdateForm = ({modelId}) => {
         modelName: null,
         tokenizerName: null,
         validationFailedMessage: null,
-        modelsHasChanged: false,
+        id: modelId,
     });
-
 
     useEffect(() => {
         const requester = new APIRequester(REPORTS_BUILDER_URL);
@@ -39,6 +40,7 @@ const ModelUpdateForm = ({modelId}) => {
                 modelName: response.modelPath.split("/").pop(),
                 tokenizerName: response.tokenizerPath.split("/").pop(),
                 validationFailedMessage: response.validationFailedMessage,
+                id: modelId,
             });
         }).catch((error) => {
             console.log(error);
@@ -51,15 +53,31 @@ const ModelUpdateForm = ({modelId}) => {
         });
     }, []);
 
+    const onUpdateButtonClick = () => {
+        const validationResult = validateFormData(data, true);
+
+        if (!validationResult) {
+            return;
+        }
+
+        onModelSavingCallback(data);
+    }
+
 
     return (
         <DefaultModelForm
             data={data}
             setData={setData}
-            onModelSavingCallback={() => {}}
+            onModelSavingCallback={onUpdateButtonClick}
             isUpdateForm={true}
         />
     );
 };
 
-export default ModelUpdateForm;
+const mapDispatchToProp = (dispatch) => {
+    return {
+        onModelSavingCallback: (model) => dispatch(validateAndSaveModel(model, true)),
+    };
+}
+
+export default connect(() => {return{};}, mapDispatchToProp)(ModelUpdateForm);

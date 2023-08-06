@@ -1,18 +1,18 @@
 import {ModelTypes} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 
-export const validateFormData = (data) => {
+export const validateFormData = (data, isUpdate=false) => {
     if(!Object.values(ModelTypes).includes(data.modelType)) {
         showMessage([{message: `Unknown model type selected: '${data.modelType}'`, type: 'danger'}]);
         return false;
     }
 
-    if(!data.modelFile) {
+    if(!data.modelFile && !isUpdate) {
         showMessage([{message: `No model file selected`, type: 'danger'}]);
         return false;
     }
 
-    if(!data.tokenizerFile) {
+    if(!data.tokenizerFile && !isUpdate) {
         showMessage([{message: `No tokenizer file selected`, type: 'danger'}]);
         return false;
     }

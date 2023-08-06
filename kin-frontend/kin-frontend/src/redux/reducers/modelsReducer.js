@@ -8,8 +8,7 @@ axios.defaults.xsrfCookieName = "csrftoken";
 
 let initialState = {
     models: [],
-}
-
+};
 
 const MODELS_LOADED = "MODELS_LOADED";
 
@@ -44,14 +43,23 @@ export const deleteModel = (modelId) => (dispatch) => {
     });
 };
 
-export const createModel = (model) => (dispatch) => {
+export const validateAndSaveModel = (model, updating=false) => (dispatch) => {
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
     formData.append("modelType", model.modelType);
-    formData.append("modelData", model.modelFile);
-    formData.append("tokenizerData", model.tokenizerFile);
     formData.append("name", model.name);
+
+    if (updating && (model.modelFile || model.tokenizerFile)) {
+        formData.append("modelsHasChanged", "true");
+    }
+
+    if (model.modelFile) {
+        formData.append("modelData", model.modelFile);
+    }
+    if (model.tokenizerFile) {
+        formData.append("tokenizerData", model.tokenizerFile);
+    }
 
     const categoryMappingsAsDict = model.categoryMapping.reduce((acc, curr) => {
         acc[curr.value] = curr.categoryName;
@@ -59,7 +67,18 @@ export const createModel = (model) => (dispatch) => {
     }, {});
     formData.append("categoryMapping", JSON.stringify(categoryMappingsAsDict));
 
-    axios.post(REPORTS_BUILDER_URL + "/models", formData, {
+    let resultUrl = "/models";
+    let resultMethod = "POST";
+
+    if (updating) {
+        resultUrl = "/models/" + model.id;
+        resultMethod = "PUT";
+    }
+
+    axios({
+        method: resultMethod,
+        url: REPORTS_BUILDER_URL + resultUrl,
+        data: formData,
         headers: {
             "Authorization": `Token ${token}`,
             "Content-Type": "multipart/form-data",
