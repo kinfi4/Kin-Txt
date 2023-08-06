@@ -81,5 +81,5 @@ class ModelRepository:
             tokenizer_path=model_dict["tokenizer_path"],
             category_mapping=model_dict["category_mapping"],
             model_status=model_dict["model_status"],
-            validation_failed_message=model_dict.get("validation_failed_message"),
+            validation_message=model_dict.get("validation_message"),
         )

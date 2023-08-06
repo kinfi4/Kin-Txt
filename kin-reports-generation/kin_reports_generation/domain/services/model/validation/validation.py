@@ -4,7 +4,7 @@ from typing import TypeAlias
 from kin_reports_generation.constants import ModelTypes, ModelStatuses
 from kin_reports_generation.domain.entities import ModelEntity
 from kin_reports_generation.domain.services.model.validation.interface import IModelValidation
-from kin_reports_generation.domain.services.model.validation.sklearn_validator import SkLearnModelValidator
+from kin_reports_generation.domain.services.model.validation.sklearn_validation.sklearn_validator import SkLearnModelValidator
 from kin_reports_generation.exceptions import BaseValidationError
 from kin_reports_generation.infrastructure.repositories import ModelRepository
 
@@ -33,7 +33,7 @@ class ModelValidationService(IModelValidation):
             model.id,
             model.owner_username,
             {
-                "validation_error": error_message,
+                "validation_message": error_message,
                 "model_status": ModelStatuses.VALIDATED if validation_status else ModelStatuses.VALIDATION_FAILED,
             }
         )

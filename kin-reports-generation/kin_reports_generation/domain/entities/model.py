@@ -1,5 +1,4 @@
 import json
-from typing import Any
 
 from fastapi import UploadFile, Form, File
 from pydantic import BaseModel, Field
@@ -24,7 +23,7 @@ class ModelValidationEntity(BaseModel):
 class ModelEntity(ModelValidationEntity):
     id: str
     model_status: ModelStatuses = Field(..., alias="modelStatus")
-    validation_failed_message: str | None = Field(None, alias="validationFailedMessage")
+    validation_message: str | None = Field(None, alias="validationMessage")
 
 
 class CreateModelEntity(BaseModel):
