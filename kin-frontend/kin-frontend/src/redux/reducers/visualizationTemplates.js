@@ -1,9 +1,5 @@
-import axios from "axios";
 import {REPORTS_BUILDER_URL} from "../../config";
-import {FETCH_ERROR} from "./channelsReducer";
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
+import APIRequester from "../../components/common/apiCalls/APIRequester";
 
 let initialState = {
     templates: [],
@@ -12,34 +8,29 @@ let initialState = {
 const TEMPLATES_LOADED = "TEMPLATES_LOADED";
 
 
-export const loadUserTemplates = () => (dispatch) => {
-    const token = localStorage.getItem("token")
+export const loadUserTemplates = () => async (dispatch) => {
+    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
 
-    axios.get(REPORTS_BUILDER_URL + "/visualization-template", {
-        headers: {
-            "Authorization": `Token ${token}`,
-        }
-    }).then(res => {
-        dispatch({type: TEMPLATES_LOADED, templates: res.data})
-    }).catch(err => {
-        console.log(err.response.data.errors)
-        dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
-    });
+    const response = await apiRequester.get(`/visualization-template`);
+    dispatch({type: TEMPLATES_LOADED, templates: response.data})
 }
 
-export const deleteTemplate = (templateId) => (dispatch) => {
-    const token = localStorage.getItem("token")
+export const deleteTemplate = (templateId) => async (dispatch) => {
+    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
 
-    axios.delete(REPORTS_BUILDER_URL + `/visualization-template/${templateId}`, {
-        headers: {
-            "Authorization": `Token ${token}`,
-        }
-    }).then(res => {
-        dispatch(loadUserTemplates())
-    }).catch(err => {
-        console.log(err.response.data.errors)
-        dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
-    });
+    await apiRequester.delete(`/visualization-template/${templateId}`);
+    dispatch(loadUserTemplates());
+}
+
+export const createTemplate = (templateData) => async (dispatch) => {
+    console.log(templateData);
+    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+
+    const response = await apiRequester.post(`/visualization-template`, templateData);
+
+    if(response.status === 201) {
+        dispatch(loadUserTemplates());
+    }
 }
 
 

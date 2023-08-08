@@ -27,19 +27,19 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
         requester.get(`/models/${modelId}`).then((response) => {
             setData({
                 ...data,
-                modelType: response.modelType,
+                modelType: response.data.modelType,
                 modelFile: null,
                 tokenizerFile: null,
-                name: response.name,
-                modelStatus: response.modelStatus,
-                categoryMapping: Object.entries(response.categoryMapping).map(
+                name: response.data.name,
+                modelStatus: response.data.modelStatus,
+                categoryMapping: Object.entries(response.data.categoryMapping).map(
                     (value, categoryName) => ({
                         value: Number(value[0]), categoryName: value[1]
                     })
                 ),
-                modelName: response.modelPath.split("/").pop(),
-                tokenizerName: response.tokenizerPath.split("/").pop(),
-                validationMessage: response.validationMessage,
+                modelName: response.data.modelPath.split("/").pop(),
+                tokenizerName: response.data.tokenizerPath.split("/").pop(),
+                validationMessage: response.data.validationMessage,
                 id: modelId,
             });
         }).catch((error) => {

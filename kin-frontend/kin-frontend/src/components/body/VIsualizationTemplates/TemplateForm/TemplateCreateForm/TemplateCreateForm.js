@@ -1,8 +1,10 @@
 import React from "react";
 import TemplateDefaultForm from "../TemplateDefaultForm/TemplateDefaultForm";
+import {createTemplate} from "../../../../../redux/reducers/visualizationTemplates";
+import {connect} from "react-redux";
 
 
-const TemplateCreateForm = () => {
+const TemplateCreateForm = ({createTemplate}) => {
     const [data, setData] = React.useState({
         name: "",
         charts: [],
@@ -11,8 +13,18 @@ const TemplateCreateForm = () => {
     return <TemplateDefaultForm
         data={data}
         setData={setData}
+        onCreationCallback={() => createTemplate({
+            name: data.name,
+            visualizationDiagramTypes: data.charts,
+        })}
     />;
 };
 
 
-export default TemplateCreateForm;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createTemplate: (data) => dispatch(createTemplate(data)),
+    };
+}
+
+export default connect(null, mapDispatchToProps)(TemplateCreateForm);

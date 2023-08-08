@@ -7,11 +7,10 @@ import formStyles from "../../../Models/ModelForm/ModelFormStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
 import FormInput from "../../../../common/formInputName/FormInput";
-import {Cell, Pie, PieChart, ResponsiveContainer} from "recharts";
 import FormChart from "./Charts/FormChart";
 
 
-const TemplateDefaultForm = ({isUpdateForm=false, data, setData}) => {
+const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallback}) => {
     const onChartSelected = (chartId) => {
         if(data.charts.includes(chartId)) {
             setData({...data, charts: data.charts.filter((chart) => chart !== chartId)});
@@ -19,6 +18,20 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData}) => {
         }
 
         setData({...data, charts: [...data.charts, chartId]});
+    }
+    const onSelectAll = () => {
+        setData({...data, charts: [
+            "ByCategory__Pie",
+            "ByChannel__Pie",
+            "ByChannel+ByCategory__TwoLevelPie",
+            "ByCategory__Bar",
+            "ByChannel__Bar",
+            "ByHour__Bar",
+            "ByDate__Line"
+        ]});
+    }
+    const onUnselectAll = () => {
+        setData({...data, charts: []});
     }
 
     return (
@@ -42,15 +55,18 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData}) => {
                     />
 
                     <div>
-                        <div className={`${styles.selectButton} ${styles.createTemplateButton}`}>
-                            CREATE TEMPLATE
+                        <div
+                            className={`${styles.selectButton} ${styles.createTemplateButton}`}
+                            onClick={onCreationCallback}
+                        >
+                            {isUpdateForm ? "UPDATE TEMPLATE" : "CREATE TEMPLATE"}
                         </div>
                     </div>
                 </div>
 
                 <div className={formStyles.formInputContainer}>
-                    <div className={styles.selectButton}>SELECT ALL</div>
-                    <div className={styles.selectButton}>UNSELECT ALL</div>
+                    <div className={styles.selectButton} onClick={onSelectAll}>SELECT ALL</div>
+                    <div className={styles.selectButton} onClick={onUnselectAll}>UNSELECT ALL</div>
                 </div>
             </div>
 
