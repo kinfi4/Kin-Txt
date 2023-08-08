@@ -4,9 +4,10 @@ import {FETCH_ERROR} from "../../../redux/reducers/channelsReducer";
 
 
 export default class APIRequester {
-    constructor(url, dispatch=null) {
+    constructor(url, dispatch=null, reRaiseErrors=false) {
         this.url = url;
         this.dispatch = dispatch;
+        this.reRaiseErrors = reRaiseErrors;
 
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
@@ -63,7 +64,9 @@ export default class APIRequester {
             this.dispatch({ type: LOGOUT })
         } else if (this.dispatch) {
             this.dispatch({type: FETCH_ERROR, errors: error.response.data.errors})
-        } else {
+        }
+
+        if (this.reRaiseErrors) {
             throw error;
         }
     }

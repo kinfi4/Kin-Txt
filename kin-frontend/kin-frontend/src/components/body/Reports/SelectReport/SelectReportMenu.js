@@ -2,21 +2,21 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 
 import selectReportMenuCss from "./SelectReportMenu.module.css"
+import commonStyles from "../../../common/CommonStyles.module.css";
+
 import {
     deleteReport,
-    fetchReportDetails,
     fetchUserReports,
     updateReportName
 } from "../../../../redux/reducers/reportsReducer";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
 import ReportFilters from "./ReportFilters/ReportFilters";
-import commonStyles from "../../../common/CommonStyles.module.css";
 
 
-const SelectReportMenu = ({reportNames, ...props}) => {
+const SelectReportMenu = ({reportNames, fetchUserReports, ...props}) => {
     useEffect(() => {
-        props.fetchUserReports();
+        fetchUserReports();
     }, []);
 
     return (
@@ -62,7 +62,6 @@ let mapDispatchToProps = (dispatch) => {
         fetchUserReports: () => dispatch(fetchUserReports()),
         updateReportName: (reportId, reportName) => dispatch(updateReportName(reportId, reportName)),
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),
-        fetchReportDetails: (reportId) => dispatch(fetchReportDetails(reportId)),
         showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
     }
 }

@@ -8,11 +8,11 @@ import {
 import {connect} from "react-redux";
 import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 
-const PostponedReport = (props) => {
+const PostponedReport = ({report, deleteReport}) => {
     const onDeleteClick = () => {
         const userConfirm = window.confirm("Are you sure to delete this report?");
         if (userConfirm) {
-            props.deleteReport(props.report.reportId);
+            deleteReport(report.reportId);
         }
     }
 
@@ -22,7 +22,7 @@ const PostponedReport = (props) => {
             <div className={reportsVisualizationCss.postponedContainer}>
                 <div className={visualizationCss.header}>
                 <span>
-                    {props.report.name}
+                    {report.name}
                 </span>
 
                     <div
@@ -37,7 +37,7 @@ const PostponedReport = (props) => {
                     <img src={processingImageFailedIcon} alt="Processing Failed"/>
                     <div>
                         We are sorry for this! But your report processing failed with error: <br/> <br/>
-                        {props.report.reportFailedReason}
+                        {report.reportFailedReason}
                     </div>
                 </div>
             </div>
@@ -45,14 +45,10 @@ const PostponedReport = (props) => {
     );
 };
 
-let mapStateToProps = (state) => {
-    return {}
-}
-
 let mapDispatchToProps = (dispatch) => {
     return {
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostponedReport);
+export default connect(null, mapDispatchToProps)(PostponedReport);

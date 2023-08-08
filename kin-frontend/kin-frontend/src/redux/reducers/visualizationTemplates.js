@@ -12,7 +12,7 @@ export const loadUserTemplates = () => async (dispatch) => {
     const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
 
     const response = await apiRequester.get(`/visualization-template`);
-    dispatch({type: TEMPLATES_LOADED, templates: response.data})
+    dispatch({type: TEMPLATES_LOADED, templates: response.data});
 }
 
 export const deleteTemplate = (templateId) => async (dispatch) => {

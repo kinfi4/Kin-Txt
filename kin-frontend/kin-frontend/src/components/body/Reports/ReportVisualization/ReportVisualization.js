@@ -1,20 +1,51 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {REPORT_STATUS_POSTPONED, REPORT_STATUS_PROCESSING, WORD_CLOUD_REPORT} from "../../../../config";
+
+import {
+    REPORT_STATUS_POSTPONED,
+    REPORT_STATUS_PROCESSING,
+    STATISTICS_SERVICE_URL,
+    WORD_CLOUD_REPORT
+} from "../../../../config";
 import PostponedReport from "./PostponedReport";
 import StatisticalReport from "./StatisticalReport";
 import ProcessingReport from "./ProcessingReport";
 import WordCloudReport from "./WordCloudReport";
-import {removeCurrentReportFromState} from "../../../../redux/reducers/reportsReducer";
 import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
 import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
+import {startLoading, stopLoading} from "../../../../redux/reducers/reportsReducer";
+import APIRequester from "../../../common/apiCalls/APIRequester";
+import {showMessage} from "../../../../utils/messages";
 
-const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) => {
-    useEffect(() => {
-        return () => {
-            setCurrentReportNull();
+const ReportVisualization = ({reportId, reportIsLoading, startReportLoading, endReportLoading}) => {
+    const [report, setReport] = React.useState(null);
+
+    const loadReport = async () => {
+        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
+        const response = await apiRequester.get(`/reports/${reportId}`);
+
+        if(response.status === 404) {
+            showMessage([{message: 'Report not found', type: 'danger'}]);
+            return null;
         }
+
+        if(response.status !== 200) {
+            showMessage([{message: 'Error loading report', type: 'danger'}]);
+            return null;
+        }
+
+        return response.data;
+    }
+
+    useEffect(() => {
+        startReportLoading();
+
+        loadReport().then((report) => {
+            setReport(report);
+            endReportLoading();
+        });
     }, []);
+
 
     if(reportIsLoading === true) {
         return <LoadingSpinner width={100} height={100} marginTop={"15%"} />
@@ -47,14 +78,14 @@ const ReportVisualization = ({setCurrentReportNull, reportIsLoading, report}) =>
 
 let mapStateToProps = (state) => {
     return {
-        report: state.reportsReducer.detailedReport,
         reportIsLoading: state.reportsReducer.loading,
     }
 }
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        setCurrentReportNull: () => dispatch(removeCurrentReportFromState())
+        startReportLoading: () => dispatch(startLoading()),
+        endReportLoading: () => dispatch(stopLoading()),
     }
 }
 

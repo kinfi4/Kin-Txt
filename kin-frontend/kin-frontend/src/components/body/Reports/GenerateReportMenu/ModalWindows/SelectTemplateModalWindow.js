@@ -4,7 +4,7 @@ import {STATISTICS_SERVICE_URL} from "../../../../../config";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
 import TapeCss from "../../../Tape/Tape.module.css";
-import GenerateReportCss from "../GenerateReport.module.css";
+import GenerateReportCss from "../styles/GenerateReport.module.css";
 import {showMessage} from "../../../../../utils/messages";
 import {AiFillDelete} from "react-icons/ai";
 import APIRequester from "../../../../common/apiCalls/APIRequester";

@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import TapeCss from "../../../Tape/Tape.module.css";
 import Input from "../../../../common/input/Input";
 import Button from "../../../../common/button/Button";
-import generateReportCss from "../../GenerateReportMenu/GenerateReport.module.css";
+import generateReportCss from "../../GenerateReportMenu/styles/GenerateReport.module.css";
 import {AiFillDelete} from "react-icons/ai";
 import {showMessage} from "../../../../../utils/messages";
 

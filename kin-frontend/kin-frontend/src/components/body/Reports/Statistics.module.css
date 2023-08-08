@@ -84,8 +84,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    font-size: 18px;
 
-    width: 360px;
+    width: 353px;
 }
 .templateButtonsContainer div {
     background-color: #3a749a;

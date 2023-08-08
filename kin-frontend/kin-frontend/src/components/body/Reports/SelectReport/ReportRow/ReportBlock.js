@@ -1,9 +1,12 @@
-import selectReportMenuCss from "../SelectReportMenu.module.css";
-import {Link} from "react-router-dom";
-import {REPORT_STATUS_POSTPONED, REPORT_STATUS_PROCESSING} from "../../../../../config";
-import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 import React from "react";
+import {AiFillDelete, AiFillEdit} from "react-icons/ai";
+import {Link} from "react-router-dom";
+
+import selectReportMenuCss from "../SelectReportMenu.module.css";
+
+import {REPORT_STATUS_POSTPONED, REPORT_STATUS_PROCESSING} from "../../../../../config";
 import EditReportModalWindow from "./EditReportModalWindow";
+
 
 const reportStatusToStatusClass = {
     "Processing": selectReportMenuCss.statusCellProcessing,
@@ -39,12 +42,12 @@ const ReportBlock = (props) => {
             >
                 <Link
                     className={`
-                    ${selectReportMenuCss.reportLink}
-                    ${props.reportStatus === REPORT_STATUS_POSTPONED ? selectReportMenuCss.postponed : ""}
-                    ${props.reportStatus === REPORT_STATUS_PROCESSING ? selectReportMenuCss.processing : ""}`
+                        ${selectReportMenuCss.reportLink}
+                        ${props.reportStatus === REPORT_STATUS_POSTPONED ? selectReportMenuCss.postponed : ""}
+                        ${props.reportStatus === REPORT_STATUS_PROCESSING ? selectReportMenuCss.processing : ""}`
                     }
                     onClick={() => props.fetchReportDetails(props.reportId)}
-                    to={"/statistics/view"}
+                    to={`/reports/view/${props.reportId}`}
                 >
                     <span>{props.name}</span>
                 </Link>

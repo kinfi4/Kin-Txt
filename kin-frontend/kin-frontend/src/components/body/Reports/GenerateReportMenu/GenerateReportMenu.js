@@ -1,19 +1,28 @@
 import React, {useEffect, useState} from "react";
+import {connect} from "react-redux";
+import {DateRangePicker} from "react-date-range";
+import Creatable from 'react-select/creatable';
+import Select from "react-select";
+
 import statsCss from "../Statistics.module.css";
 import mainPageCss from "../../MainPage.module.css";
-import {DateRangePicker} from "react-date-range";
-import {connect} from "react-redux";
+
 import {hideModalWindow, showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
-import {generateReport, setChannelsListForGeneration} from "../../../../redux/reducers/reportsReducer";
-import {fetchChannels} from "../../../../redux/reducers/channelsReducer";
-import {NEWS_SERVICE_URL, STATISTICAL_REPORT, STATISTICS_SERVICE_URL, WORD_CLOUD_REPORT} from "../../../../config";
+import {generateReport} from "../../../../redux/reducers/reportsReducer";
+import {
+    NEWS_SERVICE_URL,
+    STATISTICAL_REPORT,
+    STATISTICS_SERVICE_URL,
+    WORD_CLOUD_REPORT
+} from "../../../../config";
 import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
-import Select from "react-select";
 import {showMessage} from "../../../../utils/messages";
-import axios from "axios";
-import Creatable from 'react-select/creatable';
 import InputModalWindow from "../../../common/inputModalWindow/InputModalWindow";
 import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow";
+import {loadUserTemplates} from "../../../../redux/reducers/visualizationTemplates";
+import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
+import APIRequester from "../../../common/apiCalls/APIRequester";
+import {formStyles, multiSelectStyles} from "./styles/formStyles";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -22,100 +31,110 @@ const initialGenerateReportState = {
     startDate: new Date(),
     endDate: new Date(),
     reportType: STATISTICAL_REPORT,
+    channels: [],
+    templateId: "",
+    modelId: "",
 }
 
-const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerationRequest, showModalWindow, hideModalWindow, ...props}) => {
-    useEffect(() => {
-        props.fetchChannels();
-    }, []);
-    useEffect(() => {
-        setChannels(initialChannels.map(el => el.link));
-    }, [initialChannels]);
-
+const GenerateReportMenu = ({
+    userModels,
+    userTemplates,
+    sendGenerationRequest,
+    showModalWindow,
+    hideModalWindow,
+    loadUserModels,
+    loadUserTemplates,
+}) => {
     const [data, setData] = useState(initialGenerateReportState);
 
-    const handleChannelsListChange = (selectedOptions, action) => {
+    useEffect(() => {
+        loadUserTemplates();
+        loadUserModels();
+    }, []);
+
+    const handleChannelsListChange = async (selectedOptions, action) => {
         if(action.action === ACTION_CREATE_OPTION) {
-            addNewChannel(action.option.value);
+            await addNewChannel(action.option.value);
         } else if (action.action === ACTION_REMOVE_OPTION) {
-            removeChannelFromList(action.removedValue.value);
+            await removeChannelFromList(action.removedValue.value);
         }
     }
-    const addNewChannel = (channelLink) => {
+    const addNewChannel = async (channelLink) => {
         if(!channelLink) {
             showMessage([{message: "Sorry, but you have to specify the link.", type: "danger"}]);
             return;
         }
-        if(channels.includes(channelLink)) {
+        if(data.channels.includes(channelLink)) {
             showMessage([{message: "Sorry but the specified Channel already in the list", type: "danger"}]);
             return;
         }
 
-        const token = localStorage.getItem("token");
-        axios.get(NEWS_SERVICE_URL + `/channels/exists/${channelLink}`, {
-            headers: {
-                'Authorization': `Token ${token}`,
-            }
-        }).then(res => {
-            if(res.data.exists) {
-                channelLink = channelLink.replace("https://t.me/", "");
-                const newList = [...channels, channelLink];
+        const apiRequester = new APIRequester(NEWS_SERVICE_URL);
 
-                setChannels(newList);
-            } else {
-                showMessage([{message: "Channel with provided link does not exists!", type: "danger"}]);
-            }
-        })
+        const response = await apiRequester.get(`/channels/exists/${channelLink}`);
+
+        if(response.data.exists) {
+            channelLink = channelLink.replace("https://t.me/", "");
+            const newList = [...data.channels, channelLink];
+
+            setData({...data, channels: newList});
+        } else {
+            showMessage([{message: "Channel with provided link does not exists!", type: "danger"}]);
+        }
     }
-    const removeChannelFromList = (channelLink) => {
-        const newList = channels.filter(link => link !== channelLink);
-        setChannels(newList);
+
+    const removeChannelFromList = async (channelLink) => {
+        const newList = data.channels.filter(link => link !== channelLink);
+        setData({...data, channels: newList});
     }
-    const saveTemplate = (templateName) => {
-        if (!templateName) {
-            showMessage([{message: "You have to specify the template name.", type: "danger"}]);
+
+    const saveBlueprint = async (blueprintName) => {
+        if (!blueprintName) {
+            showMessage([{message: "You have to specify the blueprint name.", type: "danger"}]);
             return;
         }
 
-        const token = localStorage.getItem("token");
-
         const postData = {
-            name: templateName,
+            name: blueprintName,
             reportType: data.reportType,
-            channelList: channels,
+            channelList: data.channels,
             fromDate: data.startDate.toISOString(),
             toDate: data.endDate.toISOString(),
+            modelId: data.modelId,
+            templateId: data.templateId,
         };
-        axios.post(STATISTICS_SERVICE_URL + "/templates", postData, {
-            headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json',
-            }
-        }).then(res => {
-            if(res.status === 201) {
-                showMessage([{message: "Template has been saved successfully", type: "success"}]);
+
+        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
+
+        try {
+            const response = await apiRequester.post("/templates", postData)
+            if (response.status === 201) {
+                showMessage([{message: "Blueprint has been saved successfully", type: "success"}]);
                 hideModalWindow();
             } else {
-                showMessage([{message: "Something went wrong during template saving.", type: "danger"}]);
+                showMessage([{message: "Something went wrong during blueprint saving.", type: "danger"}]);
             }
-        }).catch(err => {
-            showMessage([{message: "Something went wrong during template saving.", type: "danger"}]);
-        })
+        } catch (error) {
+            showMessage([{message: "Something went wrong during blueprint saving.", type: "danger"}]);
+        }
     }
-    const loadTemplate = (templateId) => {
-        const token = localStorage.getItem("token");
-        axios.get(STATISTICS_SERVICE_URL + `/templates/${templateId}`, {headers: {'Authorization': `Token ${token}`}})
-        .then(res => {
-            setData({
-                startDate: new Date(res.data.fromDate),
-                endDate: new Date(res.data.toDate),
-                reportType: res.data.reportType,
-            });
+    const loadBlueprint = async (blueprintId) => {
+        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
 
-            setChannels(res.data.channelList);
-        })
-        .catch(err => {
+        const response = await apiRequester.get(`/templates/${blueprintId}`);
+
+        if(!response.data) {
             showMessage([{message: "Something went wrong during template loading.", type: "danger"}]);
+            return;
+        }
+
+        setData({
+            startDate: new Date(response.data.fromDate),
+            endDate: new Date(response.data.toDate),
+            reportType: response.data.reportType,
+            channels: response.data.channelList,
+            templateId: response.data.templateId,
+            modelId: response.data.modelId
         });
     }
 
@@ -124,21 +143,49 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
             <BackOnStatsPageLink />
 
             <div className={statsCss.generateReportForm}>
-                <DateRangePicker
-                    rangeColors={["#2CA884"]}
-                    ranges={[{
-                        startDate: data.startDate,
-                        endDate: data.endDate,
-                        key: 'selection',
-                    }]}
-                    onChange={
-                        (range) => setData({
-                            ...data,
-                            startDate: range.selection.startDate,
-                            endDate: range.selection.endDate,
-                        })
-                    }
-                />
+                <div className={statsCss.controls}>
+                    <DateRangePicker
+                        rangeColors={["#2CA884"]}
+                        ranges={[{
+                            startDate: data.startDate,
+                            endDate: data.endDate,
+                            key: 'selection',
+                        }]}
+                        onChange={
+                            (range) => setData({
+                                ...data,
+                                startDate: range.selection.startDate,
+                                endDate: range.selection.endDate,
+                            })
+                        }
+                    />
+
+                    <div className={statsCss.generateReportFormFieldContainer}>
+                        <div className={statsCss.templateButtonsContainer}>
+                            <div onClick={() => showModalWindow(
+                                <InputModalWindow
+                                    actionCallback={saveBlueprint}
+                                    title={"NAME YOUR TEMPLATE"}
+                                    inputPlaceholder={"Template name"}
+                                    submitPlaceholder={"SAVE"}
+                                />,
+                                450,
+                                300,
+                            )}>
+                                SAVE AS BLUEPRINT
+                            </div>
+                            <div onClick={() => showModalWindow(
+                                <SelectTemplateModalWindow
+                                    choseTemplate={loadBlueprint}
+                                />,
+                                450,
+                                800,
+                            )}>
+                                LOAD BLUEPRINT
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div className={statsCss.controls}>
                     <div className={statsCss.generateReportFormFieldContainer}>
@@ -159,23 +206,48 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                                 {value: STATISTICAL_REPORT, label: "Statistical report"},
                                 {value: WORD_CLOUD_REPORT, label: "Word cloud"},
                             ]}
-                            styles={{
-                                control: (styles) => ({
-                                    ...styles,
-                                    backgroundColor: "#1d2c3b",
-                                    border: '1px solid #2CA884',
-                                    '&:hover': {
-                                        border: '1px solid #2CA884',
-                                    },
-                                    minWidth: "360px",
-                                    maxWidth: "360px",
-                                    cursor: "pointer"
-                                }),
-                                singleValue: (styles) => ({ ...styles, color: "#cecece" }),
-                                option: (styles) => ({ ...styles, cursor: "pointer" }),
-                            }}
+                            styles={formStyles}
                         />
                     </div>
+
+                    <div className={statsCss.generateReportFormFieldContainer}>
+                        <label
+                            id="modelId"
+                            className={statsCss.generateReportFormLabel}
+                        >
+                            Model:
+                        </label>
+
+                        <Select
+                            isSearchable={true}
+                            name="modelId"
+                            value={{value: data.modelId, label: userModels.find(model => model.id === data.modelId)?.name}}
+                            onChange={newValue => setData({...data, modelId: newValue.value})}
+                            options={[...userModels.map(model => ({value: model.id, label: model.name}))]}
+                            styles={formStyles}
+                        />
+                    </div>
+
+                    {
+                        data.reportType === STATISTICAL_REPORT &&
+                        <div className={statsCss.generateReportFormFieldContainer}>
+                            <label
+                                id="templateId"
+                                className={statsCss.generateReportFormLabel}
+                            >
+                                Visualization template:
+                            </label>
+
+                            <Select
+                                isSearchable={true}
+                                name="templateId"
+                                value={{value: data.templateId, label: userTemplates.find(t => t.id === data.templateId)?.name}}
+                                onChange={newValue => setData({...data, templateId: newValue.value})}
+                                options={[...userTemplates.map(template => ({value: template.id, label: template.name}))]}
+                                styles={formStyles}
+                            />
+                        </div>
+                    }
 
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label
@@ -189,84 +261,19 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                             isClearable
                             isMulti
                             placeholder={"Enter Channel links..."}
-                            defaultValue={initialChannels.map(el => ({value: el.link, label: el.link}))}
                             name="channels"
-                            value={channels.map(el => ({value: el, label: el}))}
+                            value={data.channels.map(el => ({value: el, label: el}))}
                             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null, Menu: () => null}}
                             onChange={handleChannelsListChange}
-                            styles={{
-                                control: (styles) => ({
-                                    ...styles,
-                                    cursor: "text",
-                                    backgroundColor: "#1d2c3b",
-                                    border: '1px solid #2CA884',
-                                    '&:hover': {
-                                        border: '1px solid #2CA884',
-                                    },
-                                    minHeight: '150px',
-                                    maxHeight: "250px",
-                                    minWidth: "360px",
-                                    maxWidth: "360px",
-                                }),
-                                input: (styles) => ({ ...styles, color: "#cecece" }),
-                                placeholder: (styles) => ({ ...styles, color: "#bdbdbd" }),
-                                menu: (provided, state) => ({
-                                    ...provided,
-                                    width: 'fit-content',
-                                    marginLeft: 0,
-                                    marginTop: 0,
-                                }),
-                                multiValue: (base, state) => ({
-                                    ...base,
-                                    backgroundColor: '#64617E',
-                                    color: 'white',
-                                    borderRadius: '3px',
-                                    padding: '5px',
-                                }),
-                                multiValueLabel: (base, state) => ({
-                                    ...base,
-                                    color: "#cecece",
-                                    fontWeight: "bold",
-                                }),
-                                multiValueRemove: (base, state) => ({
-                                    ...base,
-                                    cursor: 'pointer',
-                                }),
-                            }}
+                            styles={multiSelectStyles}
                         />
-                    </div>
-
-                    <div className={statsCss.generateReportFormFieldContainer}>
-                        <div className={statsCss.templateButtonsContainer}>
-                            <div onClick={() => showModalWindow(
-                                <InputModalWindow
-                                    actionCallback={saveTemplate}
-                                    title={"NAME YOUR TEMPLATE"}
-                                    inputPlaceholder={"Template name"}
-                                    submitPlaceholder={"SAVE"}
-                                />,
-                                450,
-                                300,
-                            )}>
-                                SAVE AS BLUEPRINT
-                            </div>
-                            <div onClick={() => showModalWindow(
-                                <SelectTemplateModalWindow
-                                    choseTemplate={loadTemplate}
-                                />,
-                                450,
-                                800,
-                            )}>
-                                LOAD BLUEPRINT
-                            </div>
-                        </div>
                     </div>
 
                     <div className={statsCss.generateReportsControlsContainer}>
                         <div
                             className={mainPageCss.controlButton}
                             onClick={() => {
-                                sendGenerationRequest(data.startDate, data.endDate, channels, data.reportType);
+                                sendGenerationRequest(data);
                                 setData(initialGenerateReportState);
                             }}
                             style={{backgroundColor: "#2CA884", fontSize: "22px", width: "310px"}}
@@ -280,19 +287,21 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
     )
 }
 
-let mapStateToProps = (state) => {
+
+const mapStateToProps = (state) => {
     return {
-        initialChannels: state.channels.channels,
-        channels: state.reportsReducer.channelListForGeneration,
+        userModels: state.modelsReducer.models,
+        userTemplates: state.visualizationTemplatesReducer.templates,
     }
 }
-let mapDispatchToProps = (dispatch) => {
+
+const mapDispatchToProps = (dispatch) => {
     return {
-        sendGenerationRequest: (startDate, endDate, channels, reportType) => dispatch(generateReport(startDate, endDate, channels, reportType)),
-        setChannels: (channels) => dispatch(setChannelsListForGeneration(channels)),
-        fetchChannels: () => dispatch(fetchChannels()),
+        sendGenerationRequest: (data) => dispatch(generateReport(data)),
         showModalWindow: (content, width, height) => dispatch(showModalWindow(content, width, height)),
         hideModalWindow: () => dispatch(hideModalWindow),
+        loadUserModels: () => dispatch(loadUserModels()),
+        loadUserTemplates: () => dispatch(loadUserTemplates()),
     }
 }
 
