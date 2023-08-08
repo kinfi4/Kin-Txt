@@ -45,7 +45,10 @@ class VisualizationTemplateRepository:
         self._templates_collection.insert_one(template_dict)
 
     def delete_template(self, template_id: str, username: str) -> None:
-        self._templates_collection.delete_one({"_id": self._get_object_id_from_str(template_id), "owner_username": username})
+        self._templates_collection.delete_one({
+            "_id": self._get_object_id_from_str(template_id),
+            "owner_username": username,
+        })
 
     def update_template(self, template_id: str, username: str, template: VisualizationTemplate) -> None:
         if not self._templates_collection.find_one({"_id": self._get_object_id_from_str(template_id), "owner_username": username}):

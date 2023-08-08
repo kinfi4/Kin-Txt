@@ -52,7 +52,7 @@ def delete_template(
     visualization_template_repository: VisualizationTemplateRepository = Depends(Provide[Container.repositories.visualization_template_repository]),
 ):
     try:
-        visualization_template_repository.delete_template(current_user.username, template_id)
+        visualization_template_repository.delete_template(template_id, current_user.username)
     except UserTemplateNotFoundException:
         pass
 

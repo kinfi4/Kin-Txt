@@ -19,12 +19,11 @@ class VisualizationTemplate(BaseModel):
 
             content_type, diagram_type = visualization_diagram_type.split("__")
 
-            if content_type not in RawContentTypes.__members__:
-                raise ValueError("Invalid content_type")
-            if diagram_type not in VisualizationDiagramTypes.__members__:
-                raise ValueError("Invalid diagram_type")
-
-            content_types_set.add(content_type)
+            if "+" in content_type:
+                content_types_set.add(content_type.split("+")[0])    
+                content_types_set.add(content_type.split("+")[1])
+            else:
+                content_types_set.add(content_type)
 
         values["content_types"] = list(content_types_set) if content_types_set else None
 
