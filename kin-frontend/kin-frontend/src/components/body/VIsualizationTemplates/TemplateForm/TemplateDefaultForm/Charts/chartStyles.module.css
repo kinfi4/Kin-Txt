@@ -1,0 +1,22 @@
+.chartContainer {
+    width: 300px;
+    text-align: center;
+    border: 1px solid #564e60;
+    padding: 10px 30px 30px 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    transition: linear 0.1s;
+}
+.chartContainer, .chartContainer * {
+    cursor: pointer;
+}
+.chartContainer:hover {
+    border: 1px solid #2CA884;
+}
+.active {
+    background-color: #3b6056;
+}

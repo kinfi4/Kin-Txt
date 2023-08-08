@@ -1,0 +1,77 @@
+.upperFormBlock {
+    width: 75%;
+    height: 150px;
+
+    border-bottom: 1px solid #2CA884;
+
+    margin: 50px 100px 0 100px;
+    box-sizing: border-box;
+
+    gap: 100px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+.upperFormBlock > div:first-child {
+    width: 500px;
+}
+.upperFormBlock > div:last-child {
+    width: 200px;
+}
+.upperFormBlock div:last-child {
+    align-items: end;
+}
+.selectButton {
+    background-color: #23886a;
+    color: white;
+    transition: linear 0.1s;
+    border: none;
+    border-radius: 1px;
+    width: 120px;
+    padding: 5px 8px;
+    text-align: center;
+    cursor: pointer;
+
+    font-size: medium;
+}
+.selectButton:hover {
+    background-color: #739bcb;
+}
+.createTemplateButton {
+    width: 150px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+}
+.selectChartsContainer {
+    width: 75%;
+    color: white;
+    margin-top: 20px;
+}
+.chartCategoryContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    margin-bottom: 80px;
+}
+.chartCategoryContainer h2 {
+    width: 100%;
+    border-bottom: 1px solid #2CA884;
+    padding-bottom: 10px;
+    text-align: left;
+}
+.chartsListContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 10px;
+}

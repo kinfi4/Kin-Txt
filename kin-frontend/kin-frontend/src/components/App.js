@@ -16,6 +16,7 @@ import ModelsList from "./body/Models/ModelsList";
 import ModelCreateForm from "./body/Models/ModelForm/ModelCreateForm/ModelCreateForm";
 import ModelUpdateForm from "./body/Models/ModelForm/ModelUpdateForm/ModelUpdateForm";
 import TemplatesList from "./body/VIsualizationTemplates/TemplatesList";
+import TemplateCreateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateCreateForm/TemplateCreateForm";
 
 
 export function Main() {
@@ -30,7 +31,9 @@ export function Main() {
                 <Route path={'/models/edit/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
                 <Route path={'/models'} exact render={() => <ModelsList />} />
                 <Route exact path={'/tape'} render={() => <Tape />} />
-                <Route path={'/'} render={() => <TemplatesList />} />
+                <Route path={'/templates/create'} render={() => <TemplateCreateForm />} />
+                <Route path={'/templates'} render={() => <TemplatesList />} />
+                <Route path={'/'} render={() => <Statistics />} />
             </Switch>
         </>
     )
