@@ -4,6 +4,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 
 from kin_statistics_api.domain.entities.generation_template import GenerationTemplate
 from kin_statistics_api.exceptions import GenerationTemplateNotFound
@@ -32,7 +33,7 @@ class TemplatesRepository:
         self._logger.info(f"[TemplatesMongoRepository] Loading {username} template with id: {template_id}")
 
         template_dict = self._templates_collection.find_one(
-            {"owner_username": username, "_id": ObjectId(template_id)}
+            {"owner_username": username, "_id": self._get_object_id_from_str(template_id)}
         )
 
         if template_dict is None:
@@ -49,7 +50,7 @@ class TemplatesRepository:
         self._templates_collection.insert_one(template_dict)
 
     def delete_template(self, username: str, template_id: str) -> None:
-        self._templates_collection.delete_one({"owner_username": username, "_id": ObjectId(template_id)})
+        self._templates_collection.delete_one({"owner_username": username, "_id": self._get_object_id_from_str(template_id)})
 
     def _map_dict_to_template_entity(self, template_dict: Mapping[str, str | list[str] | datetime]) -> GenerationTemplate:
         return GenerationTemplate(
@@ -59,4 +60,12 @@ class TemplatesRepository:
             from_date=template_dict["from_date"],
             to_date=template_dict["to_date"],
             report_type=template_dict["report_type"],
+            template_id=template_dict["template_id"],
+            model_id=template_dict["model_id"],
         )
+
+    def _get_object_id_from_str(self, object_id_str: str) -> ObjectId:
+        try:
+            return ObjectId(object_id_str)
+        except InvalidId:
+            raise GenerationTemplateNotFound(f"Template with id {object_id_str} not found")

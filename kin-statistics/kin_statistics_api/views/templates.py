@@ -62,6 +62,8 @@ def delete_report(
 ):
     try:
         templates_service.delete_user_template(current_user.username, template_id)
+    except GenerationTemplateNotFound:
+        pass
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 

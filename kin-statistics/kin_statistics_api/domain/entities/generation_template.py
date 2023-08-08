@@ -13,6 +13,8 @@ class GenerationTemplate(BaseModel):
     from_date: datetime = Field(..., alias="fromDate")
     to_date: datetime = Field(..., alias="toDate")
     report_type: ReportTypes = Field(..., alias="reportType")
+    template_id: str = Field(..., alias="templateId")
+    model_id: str = Field(..., alias="modelId")
 
     class Config:
         allow_population_by_field_name = True
