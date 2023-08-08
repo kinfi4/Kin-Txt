@@ -18,17 +18,31 @@ export const loadUserTemplates = () => async (dispatch) => {
 export const deleteTemplate = (templateId) => async (dispatch) => {
     const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
 
-    await apiRequester.delete(`/visualization-template/${templateId}`);
-    dispatch(loadUserTemplates());
+    const response = await apiRequester.delete(`/visualization-template/${templateId}`);
+
+    if(response.status === 204) {
+        dispatch(loadUserTemplates());
+    }
 }
 
 export const createTemplate = (templateData) => async (dispatch) => {
-    console.log(templateData);
     const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
 
     const response = await apiRequester.post(`/visualization-template`, templateData);
 
     if(response.status === 201) {
+        window.location.href = "/templates";
+        dispatch(loadUserTemplates());
+    }
+}
+
+export const updateTemplate = (templateId, templateData) => async (dispatch) => {
+    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+
+    const response = await apiRequester.put(`/visualization-template/${templateId}`, templateData);
+
+    if(response.status === 200) {
+        window.location.href = "/templates";
         dispatch(loadUserTemplates());
     }
 }

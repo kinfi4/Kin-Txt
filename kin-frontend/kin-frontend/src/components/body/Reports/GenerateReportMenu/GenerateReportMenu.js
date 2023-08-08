@@ -248,7 +248,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                                 450,
                                 300,
                             )}>
-                                SAVE AS TEMPLATE
+                                SAVE AS BLUEPRINT
                             </div>
                             <div onClick={() => showModalWindow(
                                 <SelectTemplateModalWindow
@@ -257,7 +257,7 @@ const GenerateReportMenu = ({channels, initialChannels, setChannels, sendGenerat
                                 450,
                                 800,
                             )}>
-                                LOAD TEMPLATE
+                                LOAD BLUEPRINT
                             </div>
                         </div>
                     </div>

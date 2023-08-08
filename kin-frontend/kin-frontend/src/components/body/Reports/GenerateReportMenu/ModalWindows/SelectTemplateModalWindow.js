@@ -7,6 +7,7 @@ import TapeCss from "../../../Tape/Tape.module.css";
 import GenerateReportCss from "../GenerateReport.module.css";
 import {showMessage} from "../../../../../utils/messages";
 import {AiFillDelete} from "react-icons/ai";
+import APIRequester from "../../../../common/apiCalls/APIRequester";
 
 const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) => {
     const [templates, setTemplates] = useState([]);
@@ -15,32 +16,31 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
         hideModalWindow();
     }
     const loadTemplates = () => {
-        const token = localStorage.getItem("token");
-        axios.get(STATISTICS_SERVICE_URL + "/templates", {headers: {"Authorization": `Token ${token}`}})
-        .then(res => {
-            setTemplates(res.data.templates.map(template => {
+        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
+
+        apiRequester.get("/templates").then((response) => {
+            setTemplates(response.data.templates.map(template => {
                 return {name: template.name, id: template.id};
             }));
-        })
-        .catch(err => {
-            showMessage([{message: "Something went wrong during templates loading.", type: "danger"}]);
+        }).catch((error) => {
+            showMessage([{message: "Something went wrong during blueprint loading.", type: "danger"}]);
         });
     }
+
     const onDeleteClick = (templateId) => {
-        if(!window.confirm("Are you sure you want to delete this template?")) {
+        if(!window.confirm("Are you sure you want to delete this blueprint?")) {
             return;
         }
 
-        const token = localStorage.getItem("token");
-        axios.delete(STATISTICS_SERVICE_URL + "/templates/" + templateId, {headers: {"Authorization": `Token ${token}`}})
-        .then(res => {
-            showMessage([{message: "Template deleted.", type: "success"}]);
+        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
+
+        apiRequester.delete(`/templates/${templateId}`).then((response) => {
+            showMessage([{message: "Blueprint deleted.", type: "success"}]);
             loadTemplates();
-        })
-        .catch(err => {
-            showMessage([{message: "Something went wrong during template deleting.", type: "danger"}]);
-        })
-    }
+        }).catch((error) => {
+            showMessage([{message: "Something went wrong during blueprint deleting.", type: "danger"}]);
+        });
+    };
 
     useEffect(() => {
         loadTemplates();
@@ -49,7 +49,7 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
 
     return (
         <div className={TapeCss.enterLinkContainer}>
-            <h2 style={{textAlign: "center", marginBottom: "40px"}}>CHOSE YOUR TEMPLATE</h2>
+            <h2 style={{textAlign: "center", marginBottom: "40px"}}>CHOSE YOUR BLUEPRINT</h2>
             <>
                 {
                     templates.map((template, idx) => (
@@ -61,7 +61,6 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
                     )
                 }
             </>
-
         </div>
     );
 };

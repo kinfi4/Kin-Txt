@@ -46,6 +46,18 @@ export default class APIRequester {
         }
     }
 
+    async put(path, data, contentType="application/json") {
+        try {
+            return await axios.put(
+                this.url + path,
+                data,
+                {headers: this._buildHeaders({"Content-Type": contentType})},
+            );
+        } catch (error) {
+            await this._handleErrors(error);
+        }
+    }
+
     async _handleErrors(error) {
         if (error.response.status === 401 && this.dispatch) {
             this.dispatch({ type: LOGOUT })

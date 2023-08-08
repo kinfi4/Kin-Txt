@@ -11,7 +11,7 @@ import statisticsCss from "../Reports/Statistics.module.css";
 import modelsCss from "./../Models/styles/ModelsList.module.css";
 
 import {ModelStatuses} from "../../../config";
-import {loadUserTemplates} from "../../../redux/reducers/visualizationTemplates";
+import {deleteTemplate, loadUserTemplates} from "../../../redux/reducers/visualizationTemplates";
 
 let modelStatusToStatusClass = {
     [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
@@ -40,7 +40,7 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
             <tr>
                 <td>{name}</td>
                 <td className={modelsCss.controlsContainer}>
-                    <span><AiFillEdit /></span>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}><AiFillEdit /></Link>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>
             </tr>
@@ -58,7 +58,7 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
                             <thead>
                             <tr className={modelsCss.filtersBlock}>
                                 <th width={"500px"}>Name</th>
-                                <th>
+                                <th width={"200px"}>
                                     <Link to={`${path}/create`}><span className={selectReportMenuCss.generateNewItemButton}>New Template</span></Link>
                                 </th>
                             </tr>
@@ -92,6 +92,7 @@ let mapStateToProps = (state) => {
 let mapDispatchToProps = (dispatch) => {
     return {
         loadUserTemplates: () => dispatch(loadUserTemplates()),
+        deleteTemplate: (templateId) => dispatch(deleteTemplate(templateId)),
     };
 }
 
