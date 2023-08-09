@@ -38,11 +38,17 @@ class ManagingReportsService:
     def start_report_generation(self, user: User, generation_entity: GenerateReportEntity) -> None:
         self._iam_repository.set_user_began_report_generation(user.username)
         report_id = self._iam_repository.create_new_user_report(user.username)
-        empty_report = self._build_empty_report(report_id, generation_entity.report_type)
+
+        empty_report = self._build_empty_report(report_id, generation_entity)
 
         self.save_report(empty_report)
 
-        generation_event = GenerateReportRequestOccurred(**generation_entity.dict(), username=user.username, report_id=report_id)
+        generation_event = GenerateReportRequestOccurred(
+            **generation_entity.dict(),
+            username=user.username,
+            report_id=report_id,
+        )
+
         self._events_producer.publish(
             REPORTS_GENERATION_EXCHANGE,
             [generation_event],
@@ -79,7 +85,6 @@ class ManagingReportsService:
             report_type=new_report.report_type,
             generation_date=new_report.generation_date,
             processing_status=new_report.processing_status,
-            posts_categories=new_report.posts_categories,
         )
 
     def get_user_detailed_report(self, username: str, report_id: int) -> StatisticalReport | WordCloudReport:
@@ -102,12 +107,11 @@ class ManagingReportsService:
         if not all([report_id in user_reports for report_id in report_ids]):
             raise ReportAccessForbidden("You do not have permission for this report!")
 
-    @staticmethod
-    def _build_empty_report(report_id: int, report_type: ReportTypes) -> BaseReport:
+    def _build_empty_report(self, report_id: int, generation_entity: GenerateReportEntity) -> BaseReport:
         return BaseReport(
             report_id=report_id,
-            report_type=report_type,
+            report_type=generation_entity.report_type,
             processing_status=ReportProcessingResult.NEW,
-            name=f'Report: {datetime.now().strftime("%b %d, %Y %H:%M:%S")}',
+            name=generation_entity.name,
             generation_date=datetime.now(),
         )

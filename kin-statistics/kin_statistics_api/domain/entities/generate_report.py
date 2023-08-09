@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, Field, ValidationError, root_validator, validator
 
@@ -16,12 +16,13 @@ def _cast_string_to_date(date_string: str) -> date:
 
 
 class GenerateReportEntity(BaseModel):
+    name: str = Field(..., max_length=80)
     model_id: str = Field(..., alias="modelId")
-    template_id: str = Field(..., alias="templateId")
+    template_id: str | None = Field(..., alias="templateId")
     start_date: date = Field(..., alias="startDate")
     end_date: date = Field(..., alias="endDate")
     channel_list: list[str] = Field(..., alias="channels")
-    report_type: Optional[ReportTypes] = Field(None, alias="reportType")
+    report_type: ReportTypes = Field(..., alias="reportType")
 
     @validator("channel_list", pre=True, allow_reuse=True)
     def validate_channels(cls, channels: list[str]) -> list[str]:
@@ -51,6 +52,9 @@ class GenerateReportEntity(BaseModel):
 
         if (fields["end_date"] - fields["start_date"]).days > 365:
             raise ValueError("The period of time between start and end dates must be less than 1 year")
+
+        if fields["report_type"] == ReportTypes.STATISTICAL and fields.get("template_id") is None:
+            raise ValueError("Template id must be specified for statistical report type.")
 
         return fields
 

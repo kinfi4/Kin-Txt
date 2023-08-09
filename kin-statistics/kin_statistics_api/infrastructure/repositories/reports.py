@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, Mapping
 
 from pymongo import MongoClient, ReturnDocument
 
@@ -94,15 +94,15 @@ class ReportsMongoRepository(IReportRepository):
         if dict_report is None:
             return
 
-        if dict_report["processing_status"] == ReportProcessingResult.PROCESSING:
-            raise ImpossibleToModifyProcessingReport("You can not delete the report during processing.")
+        # TODO: update logic so it's possible to delete processing reports
+        # if dict_report["processing_status"] == ReportProcessingResult.PROCESSING:
+        #     raise ImpossibleToModifyProcessingReport("You can not delete the report during processing.")
 
         self._reports_collection.delete_one({
             "report_id": report_id
         })
 
-    @staticmethod
-    def _map_dict_to_identification_entity(dict_report: dict[str, Any]) -> ReportIdentificationEntity:
+    def _map_dict_to_identification_entity(self, dict_report: dict[str, Any]) -> ReportIdentificationEntity:
         return ReportIdentificationEntity(
             report_id=dict_report["report_id"],
             name=dict_report["name"],
@@ -111,9 +111,8 @@ class ReportsMongoRepository(IReportRepository):
             generation_date=dict_report["generation_date"],
         )
 
-    @staticmethod
-    def _map_dict_to_entity(dict_report: dict[str, Any]) -> StatisticalReport | WordCloudReport:
+    def _map_dict_to_entity(self, dict_report: Mapping[str, Any]) -> StatisticalReport | WordCloudReport:
         if dict_report.get("report_type") == ReportTypes.WORD_CLOUD:
-            return WordCloudReport.from_dict(dict_report)
+            return WordCloudReport.from_dict(dict(dict_report))
 
-        return StatisticalReport.from_dict(dict_report)
+        return StatisticalReport.from_dict(dict(dict_report))

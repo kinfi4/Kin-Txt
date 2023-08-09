@@ -22,7 +22,6 @@ class BaseReport(BaseModel):
     report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias="reportType")
     processing_status: ReportProcessingResult = Field(..., alias="processingStatus")
     generation_date: datetime = Field(..., alias="generationDate")
-    posts_categories: list[str] = Field(..., alias="postsCategories")
 
     report_failed_reason: str | None = Field(None, alias="reportFailedReason")
 
@@ -48,7 +47,8 @@ class BaseReport(BaseModel):
 
 class StatisticalReport(BaseReport):
     total_messages_count: int | None = Field(None, alias="totalMessagesCount")
-    visualization_diagrams_list: list[VisualizationDiagramTypes] = Field(..., alias="visualizationDiagramsList")
+    posts_categories: list[str] | None = Field(None, alias="postsCategories")
+    visualization_diagrams_list: list[VisualizationDiagramTypes] | None = Field(None, alias="visualizationDiagramsList")
 
     data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] | None = Field(None, alias="data")
 
@@ -61,15 +61,19 @@ class StatisticalReport(BaseReport):
             report_id=dict_report["report_id"],
             report_type=dict_report["report_type"],
             name=dict_report["name"],
+            generation_date=dict_report["generation_date"],
             processing_status=dict_report["processing_status"],
             report_failed_reason=dict_report["report_failed_reason"],
             total_messages_count=dict_report["total_messages_count"],
-            set_of_visualization_diagrams=dict_report["set_of_visualization_diagrams"],
+            set_of_visualization_diagrams=dict_report.get("set_of_visualization_diagrams"),
+            posts_categories=dict_report.get("posts_categories"),
             data=dict_report["data"],
         )
 
 
 class WordCloudReport(BaseReport):
+    posts_categories: list[str] | None = Field(..., alias="postsCategories")
+
     total_words: int | None = Field(None, alias="totalWords")
     total_words_frequency: list[tuple[str, int]] | None = Field(None, alias="totalWordsFrequency")
     data_by_channel: dict[str, list[tuple[str, int]]] | None = Field(None, alias="dataByChannel")
@@ -92,12 +96,14 @@ class WordCloudReport(BaseReport):
             report_type=dict_report["report_type"],
             name=dict_report["name"],
             processing_status=dict_report["processing_status"],
+            generation_date=dict_report["generation_date"],
             report_failed_reason=dict_report.get("report_failed_reason"),
             total_words=dict_report.get("total_words"),
             data_by_channel_by_category=dict_report.get("data_by_channel_by_category"),
             data_by_category=dict_report.get("data_by_category"),
             data_by_channel=dict_report.get("data_by_channel"),
             total_words_frequency=dict_report.get("total_words_frequency"),
+            posts_categories=dict_report.get("posts_categories"),
         )
 
 

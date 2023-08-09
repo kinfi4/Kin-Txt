@@ -15,6 +15,7 @@ class GenerationTemplate(BaseModel):
     report_type: ReportTypes = Field(..., alias="reportType")
     template_id: str = Field(..., alias="templateId")
     model_id: str = Field(..., alias="modelId")
+    report_name: str = Field(..., alias="reportName")
 
     class Config:
         allow_population_by_field_name = True

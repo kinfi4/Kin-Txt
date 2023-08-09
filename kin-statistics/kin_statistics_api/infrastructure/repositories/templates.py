@@ -62,6 +62,7 @@ class TemplatesRepository:
             report_type=template_dict["report_type"],
             template_id=template_dict["template_id"],
             model_id=template_dict["model_id"],
+            report_name=template_dict["report_name"],
         )
 
     def _get_object_id_from_str(self, object_id_str: str) -> ObjectId:
