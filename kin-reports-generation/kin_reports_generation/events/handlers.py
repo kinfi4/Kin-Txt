@@ -20,6 +20,7 @@ def on_report_processing_request(
         report_id=event.report_id,
         model_id=event.model_id,
         template_id=event.template_id,
+        report_name=event.name,
     )
 
 

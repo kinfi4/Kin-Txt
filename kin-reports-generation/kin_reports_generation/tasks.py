@@ -28,6 +28,7 @@ def generate_statistical_report_task(
     report_id: int,
     model_id: str,
     template_id: str,
+    report_name: str,
     generating_reports_service: IGeneratingReportsService = Provide[Container.domain_services.generate_statistics_report_service],
     **kwargs,
 ) -> None:
@@ -40,6 +41,7 @@ def generate_statistical_report_task(
         report_id=report_id,
         model_id=model_id,
         template_id=template_id,
+        name=report_name,
     )
 
     generating_reports_service.generate_report(generate_report_entity, username)
@@ -55,6 +57,7 @@ def generate_word_cloud_task(
     report_id: int,
     model_id: str,
     template_id: str,
+    report_name: str,
     generating_word_cloud_service: IGeneratingReportsService = Provide[Container.domain_services.generate_word_cloud_report_service],
     **kwargs,
 ) -> None:
@@ -67,6 +70,7 @@ def generate_word_cloud_task(
         report_id=report_id,
         model_id=model_id,
         template_id=template_id,
+        name=report_name,
     )
 
     generating_word_cloud_service.generate_report(generate_report_entity, username)

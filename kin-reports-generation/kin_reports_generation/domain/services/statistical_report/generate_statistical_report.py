@@ -46,14 +46,11 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
         with open(tmp_file.name, "r") as user_report_file:
             self._save_data_to_file(generate_report_entity.generate_report_metadata.report_id, user_report_file)
 
-        builder = ReportsBuilder(
-            report_id=generate_report_entity.generate_report_metadata.report_id,
-            posts_categories=[category for category in generate_report_entity.model_metadata.category_mapping.values()],
-            visualization_diagrams_list=generate_report_entity.visualization_template.visualization_diagram_types,
-        )
-
         return (
-            builder
+            ReportsBuilder.from_report_id(generate_report_entity.generate_report_metadata.report_id)
+            .set_visualization_diagrams_list(generate_report_entity.visualization_template.visualization_diagram_types)
+            .set_posts_categories([category for category in generate_report_entity.model_metadata.category_mapping.values()])
+            .set_report_name(generate_report_entity.generate_report_metadata.name)
             .set_total_messages_count(report_data["total_messages"])
             .set_data(report_data["data"])
             .build()
@@ -94,40 +91,40 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
 
                 for content_type in generate_report_wrapper.visualization_template.content_types:
                     if content_type == RawContentTypes.BY_CHANNEL:
-                        report_data[content_type][channel] += 1
+                        report_data["data"][content_type][channel] += 1
                     elif content_type == RawContentTypes.BY_CATEGORY:
-                        report_data[content_type][message_category] += 1
+                        report_data["data"][content_type][message_category] += 1
                     elif content_type == RawContentTypes.BY_CHANNEL_BY_CATEGORY:
-                        report_data[content_type][channel][message_category] += 1
+                        report_data["data"][content_type][channel][message_category] += 1
                     elif content_type == RawContentTypes.BY_DAY_HOUR:
-                        report_data[content_type][str(message_hour)] += 1
+                        report_data["data"][content_type][str(message_hour)] += 1
                     elif content_type == RawContentTypes.BY_DATE:
-                        if message_date_str not in report_data[content_type]:
-                            report_data[content_type][message_date_str] = 0
+                        if message_date_str not in report_data["data"][content_type]:
+                            report_data["data"][content_type][message_date_str] = 0
 
-                        report_data[content_type][message_date_str] += 1
+                        report_data["data"][content_type][message_date_str] += 1
                     elif content_type == RawContentTypes.BY_DATE_BY_CATEGORY:
-                        if message_date_str not in report_data[content_type]:
-                            report_data[content_type][message_date_str] = {message_category: 0 for message_category in posts_category_list}
+                        if message_date_str not in report_data["data"][content_type]:
+                            report_data["data"][content_type][message_date_str] = {message_category: 0 for message_category in posts_category_list}
 
-                        report_data[content_type][message_date_str][message_category] += 1
+                        report_data["data"][content_type][message_date_str][message_category] += 1
                     elif content_type == RawContentTypes.BY_DATE_BY_CHANNEL:
-                        if message_date_str not in report_data[content_type]:
-                            report_data[content_type][message_date_str] = {_channel: 0 for _channel in generate_report_meta.channel_list}
+                        if message_date_str not in report_data["data"][content_type]:
+                            report_data["data"][content_type][message_date_str] = {_channel: 0 for _channel in generate_report_meta.channel_list}
 
-                        report_data[content_type][message_date_str][message_category] += 1
+                        report_data["data"][content_type][message_date_str][message_category] += 1
 
         if RawContentTypes.BY_DATE_BY_CHANNEL in generate_report_wrapper.visualization_template.content_types:
-            report_data[RawContentTypes.BY_DATE_BY_CHANNEL] = self._reverse_dict_keys(
-                report_data[RawContentTypes.BY_DATE_BY_CHANNEL]
+            report_data["data"][RawContentTypes.BY_DATE_BY_CHANNEL] = self._reverse_dict_keys(
+                report_data["data"][RawContentTypes.BY_DATE_BY_CHANNEL]
             )
         if RawContentTypes.BY_DATE_BY_CATEGORY in generate_report_wrapper.visualization_template.content_types:
-            report_data[RawContentTypes.BY_DATE_BY_CATEGORY] = self._reverse_dict_keys(
-                report_data[RawContentTypes.BY_DATE_BY_CATEGORY]
+            report_data["data"][RawContentTypes.BY_DATE_BY_CATEGORY] = self._reverse_dict_keys(
+                report_data["data"][RawContentTypes.BY_DATE_BY_CATEGORY]
             )
         if RawContentTypes.BY_DATE in generate_report_wrapper.visualization_template.content_types:
-            report_data[RawContentTypes.BY_DATE] = self._reverse_dict_keys(
-                report_data[RawContentTypes.BY_DATE]
+            report_data["data"][RawContentTypes.BY_DATE] = self._reverse_dict_keys(
+                report_data["data"][RawContentTypes.BY_DATE]
             )
 
         return report_data
@@ -145,16 +142,16 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
     def _initialize_report_data_dict(self, generate_report_wrapper: GenerationTemplateWrapper) -> dict[str | RawContentTypes, Any]:
         _report_data = {}
 
-        for diagram_type in generate_report_wrapper.visualization_template.visualization_diagram_types:
-            _report_data[diagram_type] = self._initialize_diagram_type(
-                diagram_type=diagram_type,
+        for content_type in generate_report_wrapper.visualization_template.content_types:
+            _report_data[content_type] = self._initialize_diagram_type(
+                diagram_type=content_type,
                 generate_report_meta=generate_report_wrapper.generate_report_metadata,
                 model_metadata=generate_report_wrapper.model_metadata
             )
 
         return {
             "total_messages": 0,
-            **_report_data,
+            "data": _report_data,
         }
 
     def _initialize_diagram_type(

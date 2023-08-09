@@ -5,7 +5,7 @@ from itertools import chain
 from typing import Any
 
 from kin_news_core.messaging import AbstractEventProducer
-from kin_reports_generation.domain.entities import GenerateReportEntity, WordCloudReport, GenerationTemplateWrapper
+from kin_reports_generation.domain.entities import WordCloudReport, GenerationTemplateWrapper
 from kin_reports_generation.domain.services.generate_report import IGeneratingReportsService
 from kin_reports_generation.domain.services.word_cloud.reports_builder import (
     WordCloudReportBuilder,
@@ -36,6 +36,8 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
 
         return (
             WordCloudReportBuilder.from_report_id(generate_report_wrapper.generate_report_metadata.report_id)
+            .set_posts_categories([category for category in generate_report_wrapper.model_metadata.category_mapping.values()])
+            .set_report_name(generate_report_wrapper.generate_report_metadata.name)
             .set_total_words_count(gathered_results["total_words"])
             .set_data_by_category(gathered_results["data_by_category"])
             .set_data_by_channel(gathered_results["data_by_channel"])
@@ -48,7 +50,10 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
         generate_report_meta = generate_report_wrapper.generate_report_metadata
         predictor = generate_report_wrapper.predictor
 
-        _data = self._initialize_data(generate_report_meta.channel_list)
+        _data = self._initialize_data(
+            channels=generate_report_meta.channel_list,
+            categories=[category for category in generate_report_wrapper.model_metadata.category_mapping.values()],
+        )
 
         for channel_name in generate_report_meta.channel_list:
             telegram_messages = self._telegram.fetch_posts_from_channel(
@@ -111,7 +116,7 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
         return result_data
 
     @staticmethod
-    def _initialize_data(channels: list[str]) -> dict[str, Any]:
+    def _initialize_data(channels: list[str], categories: list[str]) -> dict[str, Any]:
         return {
             "total_words": 0,
             "total_words_frequency": Counter(),
@@ -119,11 +124,11 @@ class GenerateWordCloudReportService(IGeneratingReportsService):
                 channel_name: Counter() for channel_name in channels
             },
             "data_by_category": {
-                news_category: Counter() for news_category in chain(list(SentimentTypes), list(MessageCategories))
+                news_category: Counter() for news_category in categories
             },
             "data_by_channel_by_category": {
                 channel_name: {
-                    news_category: Counter() for news_category in chain(list(SentimentTypes), list(MessageCategories))
+                    news_category: Counter() for news_category in categories
                 } for channel_name in channels
             }
         }

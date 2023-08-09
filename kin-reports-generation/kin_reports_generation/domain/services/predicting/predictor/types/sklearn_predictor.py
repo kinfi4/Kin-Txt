@@ -24,4 +24,4 @@ class SkLearnPredictor(IPredictor):
         return self._get_predicted_news_type_label(prediction_result)
 
     def _get_predicted_news_type_label(self, prediction_result: int) -> str:
-        return self._metadata.category_mapping[prediction_result]
+        return self._metadata.category_mapping[str(prediction_result)]

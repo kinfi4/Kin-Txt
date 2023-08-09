@@ -15,6 +15,7 @@ def _cast_string_to_date(date_string: str) -> date:
 
 
 class GenerateReportEntity(BaseModel):
+    name: str
     report_id: int
     model_id: str
     template_id: str

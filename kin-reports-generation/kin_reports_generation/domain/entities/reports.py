@@ -22,7 +22,6 @@ class BaseReport(BaseModel):
     report_type: ReportTypes = Field(ReportTypes.STATISTICAL, alias="reportType")
     processing_status: ReportProcessingResult = Field(..., alias="processingStatus")
     generation_date: datetime = Field(..., alias="generationDate")
-    posts_categories: list[str] = Field(..., alias="postsCategories")
 
     report_failed_reason: str | None = Field(None, alias="reportFailedReason")
 
@@ -39,8 +38,10 @@ class BaseReport(BaseModel):
 
 
 class StatisticalReport(BaseReport):
+    posts_categories: list[str] | None = Field(None, alias="postsCategories")
+    visualization_diagrams_list: list[VisualizationDiagramTypes] | None = Field(None, alias="visualizationDiagramsList")
+
     total_messages_count: int | None = Field(None, alias="totalMessagesCount")
-    visualization_diagrams_list: list[VisualizationDiagramTypes] = Field(..., alias="visualizationDiagramsList")
 
     data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] | None = Field(None, alias="data")
 
@@ -62,6 +63,8 @@ class StatisticalReport(BaseReport):
 
 
 class WordCloudReport(BaseReport):
+    posts_categories: list[str] | None = Field(None, alias="postsCategories")
+
     total_words: int | None = Field(None, alias="totalWords")
     total_words_frequency: list[tuple[str, int]] | None = Field(None, alias="totalWordsFrequency")
     data_by_channel: dict[str, list[tuple[str, int]]] | None = Field(None, alias="dataByChannel")

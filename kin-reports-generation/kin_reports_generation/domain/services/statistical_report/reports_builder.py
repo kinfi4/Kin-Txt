@@ -1,3 +1,4 @@
+from typing_extensions import Self
 from datetime import datetime
 
 from kin_news_core.types.reports import RawContentTypes, VisualizationDiagramTypes
@@ -13,14 +14,12 @@ class ReportsBuilder:
     def __init__(
         self,
         report_id: int,
-        visualization_diagrams_list: list[VisualizationDiagramTypes],
-        posts_categories: list[str],
     ) -> None:
         self._report_id = report_id
-        self._visualization_diagrams_list = visualization_diagrams_list
-        self._posts_categories = posts_categories
+        self._visualization_diagrams_list = None
+        self._posts_categories = None
 
-        self._report_name = self._default_report_name_generator()
+        self._report_name = ""
 
         self._total_messages_count = 0
         self._status = ReportProcessingResult.READY
@@ -30,23 +29,35 @@ class ReportsBuilder:
 
         self._report_data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] = {}
 
-    def set_report_name(self, name: str) -> "ReportsBuilder":
+    @classmethod
+    def from_report_id(cls, report_id: int) -> Self:
+        return cls(report_id=report_id)
+
+    def set_posts_categories(self, posts_categories: list[str]) -> Self:
+        self._posts_categories = posts_categories
+        return self
+
+    def set_visualization_diagrams_list(self, visualization_diagrams_list: list[VisualizationDiagramTypes]) -> Self:
+        self._visualization_diagrams_list = visualization_diagrams_list
+        return self
+
+    def set_report_name(self, name: str) -> Self:
         self._report_name = name
         return self
 
-    def set_total_messages_count(self, total_messages: int) -> "ReportsBuilder":
+    def set_total_messages_count(self, total_messages: int) -> Self:
         self._total_messages_count = total_messages
         return self
 
-    def set_data(self, data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory]) -> "ReportsBuilder":
+    def set_data(self, data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory]) -> Self:
         self._report_data = data
         return self
 
-    def set_status(self, result_status: ReportProcessingResult) -> "ReportsBuilder":
+    def set_status(self, result_status: ReportProcessingResult) -> Self:
         self._status = result_status
         return self
 
-    def set_failed_reason(self, reason: str) -> "ReportsBuilder":
+    def set_failed_reason(self, reason: str) -> Self:
         self._failed_reason = reason
         return self
 
@@ -63,7 +74,3 @@ class ReportsBuilder:
             visualization_diagrams_list=self._visualization_diagrams_list,
             data=self._report_data,
         )
-
-    @staticmethod
-    def _default_report_name_generator() -> str:
-        return f'News Reports: {datetime.now().strftime("%b %d, %Y %H:%M:%S")}'

@@ -39,7 +39,7 @@ class PredictorFactory:
         model = joblib.load(model_metadata.model_path)
 
         return SkLearnPredictor(
-            model=model.model,
+            model=model,
             model_metadata=model_metadata,
             text_preprocessor=text_preprocessor,
         )

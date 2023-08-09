@@ -10,6 +10,7 @@ from kin_reports_generation.domain.entities import (
     WordCloudReport,
     StatisticalReport,
     GenerationTemplateWrapper,
+    VisualizationTemplate,
 )
 from kin_reports_generation.domain.events import (
     ReportProcessingStarted,
@@ -54,9 +55,9 @@ class IGeneratingReportsService(ABC):
             predictor = self._initialize_predictor(generate_report_entity.model_id, username)
             generate_report_wrapper = GenerationTemplateWrapper(
                 predictor=predictor,
-                generate_report=generate_report_entity,
+                generate_report_metadata=generate_report_entity,
                 model_metadata=self._models_repository.get_model(generate_report_entity.model_id, username),
-                visualization_template=self._visualization_template_repository.get_template(generate_report_entity.template_id, username),
+                visualization_template=self._load_visualization_template(generate_report_entity.template_id, username),
             )
 
             report_entity = self._build_report_entity(generate_report_wrapper)
@@ -64,30 +65,30 @@ class IGeneratingReportsService(ABC):
         except Exception as error:
             self._logger.error(
                 f'[{self.__class__.__name__}]'
-                f' {error.__class__.__name__} occurred during processing report for user: {username} with message: {str(error)}'
+                f' {error.__class__.__name__} occurred during processing report for user: {username} with message: {str(error)}',
+                exc_info=True,
             )
 
             error.with_traceback(error.__traceback__)
 
-            postponed_report = self._build_postponed_report(generate_report_entity.report_id, error)
+            postponed_report = self._build_postponed_report(generate_report_entity.report_id, generate_report_entity.name, error)
             self._publish_finished_report(username, postponed_report)
 
     @abstractmethod
     def _build_report_entity(self, generate_report_wrapper: GenerationTemplateWrapper) -> StatisticalReport | WordCloudReport:
         pass
 
-    @classmethod
-    def _build_empty_report(cls, report_id: int) -> StatisticalReport | WordCloudReport:
-        return (
-            cls.reports_builder.from_report_id(report_id)
-            .set_status(ReportProcessingResult.PROCESSING)
-            .build()
-        )
+    def _load_visualization_template(self, template_id: str | None, username: str) -> VisualizationTemplate | None:
+        if not template_id:
+            return None
+
+        return self._visualization_template_repository.get_template(template_id, username)
 
     @classmethod
-    def _build_postponed_report(cls, report_id: int, error: Exception) -> StatisticalReport | WordCloudReport:
+    def _build_postponed_report(cls, report_id: int, report_name: str, error: Exception) -> StatisticalReport | WordCloudReport:
         return (
             cls.reports_builder.from_report_id(report_id)
+            .set_report_name(report_name)
             .set_status(ReportProcessingResult.POSTPONED)
             .set_failed_reason(str(error))
             .build()
