@@ -38,7 +38,6 @@ const ReportBlock = (props) => {
         <tr>
             <td
                 className={selectReportMenuCss.reportRowCell}
-                width={"500px"}
             >
                 <Link
                     className={`
@@ -46,7 +45,6 @@ const ReportBlock = (props) => {
                         ${props.reportStatus === REPORT_STATUS_POSTPONED ? selectReportMenuCss.postponed : ""}
                         ${props.reportStatus === REPORT_STATUS_PROCESSING ? selectReportMenuCss.processing : ""}`
                     }
-                    onClick={() => props.fetchReportDetails(props.reportId)}
                     to={`/reports/view/${props.reportId}`}
                 >
                     <span>{props.name}</span>
@@ -64,7 +62,10 @@ const ReportBlock = (props) => {
             >
                 {props.reportProcessingDate}
             </td>
-            <td className={selectReportMenuCss.reportRowCell}>
+            <td
+                className={selectReportMenuCss.reportRowCell}
+                width={"250px"}
+            >
                 <div className={selectReportMenuCss.reportControls}>
                     <span onClick={onEditClick}><AiFillEdit /></span>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>

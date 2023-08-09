@@ -4,6 +4,7 @@ import {FETCH_ERROR} from "./channelsReducer";
 import {showMessage} from "../../utils/messages";
 import {translateDateToString} from "../../utils/utils";
 import APIRequester from "../../components/common/apiCalls/APIRequester";
+import {hideModalWindow} from "./modalWindowReducer";
 
 
 const reportsFilters = {
@@ -82,10 +83,9 @@ export let generateReport = (data) => async (dispatch) => {
     console.log(`Sending generate report request for dates: ${startDateString} : ${endDateString}`)
 
     const body = {
+        ...data,
         startDate: startDateString,
         endDate: endDateString,
-        channels: data.channels,
-        reportType: data.reportType,
     }
 
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, dispatch);
@@ -97,14 +97,15 @@ export let generateReport = (data) => async (dispatch) => {
     }
 }
 
-export let updateReportName = (reportId, reportName) => (dispatch) => {
+export let updateReportName = (reportId, reportName) => async (dispatch) => {
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, dispatch);
 
-    const response = apiRequester.put(`/reports/${reportId}`, {name: reportName});
+    const response = await apiRequester.put(`/reports/${reportId}`, {name: reportName});
 
     if(response) {
-        window.location.replace("/statistics")
         showMessage([{message: "Report renamed", type: "success"}])
+        dispatch(hideModalWindow);
+        dispatch(fetchUserReports());
     }
 }
 
@@ -113,8 +114,8 @@ export let deleteReport = (reportId) => async (dispatch) => {
     const response = await apiRequester.delete(`/reports/${reportId}`);
 
     if (response) {
-        window.location.replace("/statistics")
         showMessage([{message: "Report deleted!", type: "success"}])
+        dispatch(fetchUserReports());
     }
 }
 export const startLoading = () => (dispatch) => {

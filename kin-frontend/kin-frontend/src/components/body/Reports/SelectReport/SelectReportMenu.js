@@ -38,7 +38,6 @@ const SelectReportMenu = ({reportNames, fetchUserReports, ...props}) => {
                                 reportStatus={el.processingStatus}
                                 updateReportName={props.updateReportName}
                                 deleteReport={props.deleteReport}
-                                fetchReportDetails={props.fetchReportDetails}
                                 showModal={props.showModal}
                                 reportProcessingDate={el.generationDate}
                                 key={idx}

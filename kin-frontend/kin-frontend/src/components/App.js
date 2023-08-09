@@ -4,7 +4,7 @@ import ModalWindow from "./common/modal/ModalWindow";
 import {Route, Switch, Redirect} from "react-router-dom";
 import Login from "./auth/login";
 import Register from "./auth/register";
-import Statistics from "./body/Reports/Statistics";
+import Statistics from "./body/Reports/Reports";
 import Tape from "./body/Tape/Tape";
 import {useEffect} from "react";
 import store from "../redux/store";
@@ -18,6 +18,7 @@ import ModelUpdateForm from "./body/Models/ModelForm/ModelUpdateForm/ModelUpdate
 import TemplatesList from "./body/VIsualizationTemplates/TemplatesList";
 import TemplateCreateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateCreateForm/TemplateCreateForm";
 import TemplateUpdateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateUpdateForm/TemplateUpdateForm";
+import ReportVisualization from "./body/Reports/ReportVisualization/ReportVisualization";
 
 
 export function Main() {
@@ -26,8 +27,8 @@ export function Main() {
             <Header/>
 
             <Switch>
-                <Route exact path={"/statistics/compare"} render={() => <ComparisonWindow />} />
-                <Route path={'/statistics'} render={() => <Statistics />} />
+                <Route exact path={"/reports/compare"} render={() => <ComparisonWindow />} />
+                <Route path={'/reports'} render={() => <Statistics />} />
                 <Route path={'/models/create'} render={() => <ModelCreateForm />} />
                 <Route path={'/models/edit/:id'} render={({match}) => <ModelUpdateForm modelId={match.params.id} />} />
                 <Route path={'/models'} exact render={() => <ModelsList />} />

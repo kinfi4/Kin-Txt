@@ -1,14 +1,17 @@
 import React from "react";
-import formStyles from "../ModelFormStyles.module.css";
+import Select from "react-select";
+
+import formStyles from "./../ModelFormStyles.module.css";
 import statsStyles from "../../../Reports/Statistics.module.css";
 import commonStyles from "../../../../common/CommonStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
-import Select from "react-select";
+
 import {ModelTypes} from "../../../../../config";
 import InsertModelBinaries from "../common/InsertModelBinaries";
 import FormInput from "../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
+import {selectStyles} from "../../../Reports/GenerateReportMenu/styles/formStyles";
 
 const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=false}) => {
     return (
@@ -42,6 +45,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                             onChange={newValue => setData({...data, modelType: newValue.value})}
                             options={Object.entries(ModelTypes).map(([key, value]) => ({value: value, label: value}))}
                             styles={{
+                                ...selectStyles,
                                 control: (styles) => ({
                                     ...styles,
                                     backgroundColor: "#1d2c3b",
@@ -52,8 +56,6 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                                     width: "100%",
                                     cursor: "pointer"
                                 }),
-                                singleValue: (styles) => ({ ...styles, color: "#cecece" }),
-                                option: (styles) => ({ ...styles, cursor: "pointer" }),
                             }}
                         />
                     </div>

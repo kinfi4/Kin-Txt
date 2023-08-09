@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Form.module.css";
 
 
-const FormInput = ({id, value, placeholder, onChange, ...props}) => {
+const FormInput = ({id, value, placeholder, onChange, style, ...props}) => {
     return (
         <input
             type="text"
@@ -11,6 +11,8 @@ const FormInput = ({id, value, placeholder, onChange, ...props}) => {
             id={id}
             placeholder={placeholder}
             className={styles.formInput}
+            style={style}
+            {...props}
         />
     );
 };

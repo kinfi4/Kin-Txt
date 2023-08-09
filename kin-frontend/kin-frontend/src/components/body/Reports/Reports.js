@@ -14,7 +14,7 @@ import {connect} from "react-redux";
 import {loadFilteredWordsFromStorage} from "../../../redux/reducers/wordCloud";
 
 
-const Statistics = (props) => {
+const Reports = (props) => {
     useEffect(() => {
         props.loadFilteredWordsFromStorage();
     }, []);
@@ -46,4 +46,4 @@ let mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Statistics);
+export default connect(mapStateToProps, mapDispatchToProps)(Reports);

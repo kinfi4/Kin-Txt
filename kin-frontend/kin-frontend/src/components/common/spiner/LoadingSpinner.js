@@ -10,7 +10,7 @@ const LoadingSpinner = (props) => {
                 width: props.width,
                 height: props.height,
                 marginTop: props.marginTop ? props.marginTop : "50px",
-        }}
+            }}
         >
             <div></div>
             <div></div>

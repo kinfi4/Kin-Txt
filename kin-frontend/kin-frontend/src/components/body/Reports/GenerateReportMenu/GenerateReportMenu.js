@@ -22,7 +22,8 @@ import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow"
 import {loadUserTemplates} from "../../../../redux/reducers/visualizationTemplates";
 import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
 import APIRequester from "../../../common/apiCalls/APIRequester";
-import {formStyles, multiSelectStyles} from "./styles/formStyles";
+import {selectStyles, multiSelectStyles} from "./styles/formStyles";
+import FormInput from "../../../common/formInputName/FormInput";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -34,6 +35,7 @@ const initialGenerateReportState = {
     channels: [],
     templateId: "",
     modelId: "",
+    name: "",
 }
 
 const GenerateReportMenu = ({
@@ -102,6 +104,7 @@ const GenerateReportMenu = ({
             toDate: data.endDate.toISOString(),
             modelId: data.modelId,
             templateId: data.templateId,
+            reportName: data.name,
         };
 
         const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
@@ -134,7 +137,8 @@ const GenerateReportMenu = ({
             reportType: response.data.reportType,
             channels: response.data.channelList,
             templateId: response.data.templateId,
-            modelId: response.data.modelId
+            modelId: response.data.modelId,
+            name: response.data.reportName,
         });
     }
 
@@ -144,6 +148,23 @@ const GenerateReportMenu = ({
 
             <div className={statsCss.generateReportForm}>
                 <div className={statsCss.controls}>
+                    <div className={statsCss.generateReportFormFieldContainer}>
+                        <label
+                            id="reportName"
+                            className={statsCss.generateReportFormLabel}
+                        >
+                            Give your report a name:
+                        </label>
+
+                        <FormInput
+                            placeholder={"Report name"}
+                            id={"reportName"}
+                            value={data.name}
+                            onChange={(event) => setData({...data, name: event.target.value})}
+                            style={{width: "95%"}}
+                        />
+                    </div>
+
                     <DateRangePicker
                         rangeColors={["#2CA884"]}
                         ranges={[{
@@ -206,7 +227,7 @@ const GenerateReportMenu = ({
                                 {value: STATISTICAL_REPORT, label: "Statistical report"},
                                 {value: WORD_CLOUD_REPORT, label: "Word cloud"},
                             ]}
-                            styles={formStyles}
+                            styles={selectStyles}
                         />
                     </div>
 
@@ -224,7 +245,7 @@ const GenerateReportMenu = ({
                             value={{value: data.modelId, label: userModels.find(model => model.id === data.modelId)?.name}}
                             onChange={newValue => setData({...data, modelId: newValue.value})}
                             options={[...userModels.map(model => ({value: model.id, label: model.name}))]}
-                            styles={formStyles}
+                            styles={selectStyles}
                         />
                     </div>
 
@@ -244,7 +265,7 @@ const GenerateReportMenu = ({
                                 value={{value: data.templateId, label: userTemplates.find(t => t.id === data.templateId)?.name}}
                                 onChange={newValue => setData({...data, templateId: newValue.value})}
                                 options={[...userTemplates.map(template => ({value: template.id, label: template.name}))]}
-                                styles={formStyles}
+                                styles={selectStyles}
                             />
                         </div>
                     }

@@ -22,7 +22,7 @@ const ChoseReport = ({reportsIdentifiers, reportType, currentReportId, setCompar
                     reportsIdentifiers.map((reportIdentifier, idx) => {
                         if (reportIdentifier.reportId !== currentReportId && reportIdentifier.processingStatus === "Ready" && reportIdentifier.reportType === reportType) {
                             return (
-                                <NavLink to={"/statistics/compare"}>
+                                <NavLink to={"/reports/compare"}>
                                     <div
                                         key={idx}
                                         className={`${ComparisonCss.comparisonReportBlock}`}

@@ -1,4 +1,4 @@
-export const formStyles = {
+export const selectStyles = {
     control: (styles) => ({
         ...styles,
         backgroundColor: "#1d2c3b",
