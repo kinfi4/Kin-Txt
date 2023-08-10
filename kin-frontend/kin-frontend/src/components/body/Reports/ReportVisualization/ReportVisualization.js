@@ -7,10 +7,10 @@ import {
     STATISTICS_SERVICE_URL,
     WORD_CLOUD_REPORT
 } from "../../../../config";
-import PostponedReport from "./PostponedReport";
-import StatisticalReport from "./StatisticalReport";
-import ProcessingReport from "./ProcessingReport";
-import WordCloudReport from "./WordCloudReport";
+import PostponedReport from "./VisualizationTypes/Postponed/PostponedReport";
+import StatisticalReport from "./VisualizationTypes/Statistical/StatisticalReport";
+import ProcessingReport from "./VisualizationTypes/Prosessing/ProcessingReport";
+import WordCloudReport from "./VisualizationTypes/WordCloud/WordCloudReport";
 import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
 import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
 import {startLoading, stopLoading} from "../../../../redux/reducers/reportsReducer";

@@ -1,0 +1,19 @@
+.chartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.75);
+
+    transition: box-shadow 0.3s ease-in-out;
+
+    padding: 5px 40px 40px 40px;
+}
+.chartContainer h4 {
+    color: whitesmoke;
+    text-align: center;
+}
+.chartContainer:hover {
+    box-shadow: 3px 3px 8px rgb(58, 116, 154);
+}

@@ -42,8 +42,8 @@
     justify-content: center;
 }
 .generateNewItemButton:hover {
-    color: #1f755c  ;
-    border: solid 1px #1f755c;
+    color: #7b6991  ;
+    border: solid 1px #7b6991;
 }
 .reportsListContainer {
     flex: 1;

@@ -1,6 +1,6 @@
 import React from 'react';
-import processingIcon from "../../../../images/processing-icon.png";
-import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
+import processingIcon from "../../../../../../images/processing-icon.png";
+import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
 
 const ProcessingReport = () => {
     return (

@@ -29,7 +29,7 @@
 .generateReportForm {
     margin-top: 50px;
     display: flex;
-    align-items: center;
+    align-items: start;
     flex-direction: row;
     justify-content: center;
     gap: 50px;

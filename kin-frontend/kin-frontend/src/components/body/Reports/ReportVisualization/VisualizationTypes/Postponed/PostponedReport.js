@@ -1,12 +1,12 @@
 import React from 'react';
-import reportsVisualizationCss from "./ReportsVisualization.module.css"
-import processingImageFailedIcon from "../../../../images/processing-failed.png"
-import visualizationCss from "./ReportsVisualization.module.css";
+import reportsVisualizationCss from "../../ReportsVisualization.module.css"
+import processingImageFailedIcon from "../../../../../../images/processing-failed.png"
+import visualizationCss from "../../ReportsVisualization.module.css";
 import {
     deleteReport,
-} from "../../../../redux/reducers/reportsReducer";
+} from "../../../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";
-import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
+import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
 
 const PostponedReport = ({report, deleteReport}) => {
     const onDeleteClick = () => {

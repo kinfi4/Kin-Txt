@@ -23,9 +23,9 @@
     background-color: #2c4257;
     border: solid #677fde 2px;
     position: absolute;
-    top: 55px;
+    top: 45px;
     right: 0;
-    width: 96.7%;
+    width: 96%;
 
     border-top: 2px solid #1d2c3b;
 }
@@ -34,15 +34,14 @@
     justify-content: center;
     align-items: center;
 
-    margin: 10px;
     border-bottom: 2px solid #f7fdff;
 
     border-bottom: 1px solid blueviolet;
-    padding: 10px 20px;
+    height: 60px;
 
     transition: linear 0.1s;
 
-    font-size: smaller;
+    font-size: 17px;
 }
 .exportOptions div:last-child {
     border-bottom: none;
@@ -51,10 +50,10 @@
     color: #9167c7;
 }
 .header {
-    padding: 10px 20px;
+    padding-bottom: 20px;
     z-index: 2;
     width: 100%;
-    min-width: 800px;
+    min-width: 750px;
 
     margin-top: 45px;
 
@@ -67,14 +66,14 @@
     color: #f7fdff;
     font-weight: bold;
 
-    box-shadow: 0 0 5px #524662;
+    border-bottom: 2px solid rgb(86, 78, 96);
 }
 .exportButton {
     position: relative;
-    font-size: 22px;
+    font-size: 15px;
     background-color: #2CA884;
-    padding: 15px 20px;
-    border-radius: 2px;
+    padding: 15px 18px;
+    border-radius: 4px;
 
     transition: linear 0.2s;
 
@@ -189,4 +188,14 @@
 .reportOptions {
     display: flex;
     gap: 10px;
+}
+.chartsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    flex-wrap: wrap;
+    gap: 20px;
 }
