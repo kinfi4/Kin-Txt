@@ -59,7 +59,7 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
     def __gather_report_data(self, generate_report_wrapper: GenerationTemplateWrapper) -> dict[str | RawContentTypes, Any]:
         generate_report_meta = generate_report_wrapper.generate_report_metadata
         predictor = generate_report_wrapper.predictor
-        posts_category_list = list(generate_report_wrapper.model_metadata.category_mapping.keys())
+        posts_category_list = list(generate_report_wrapper.model_metadata.category_mapping.values())
 
         report_data = self._initialize_report_data_dict(generate_report_wrapper)
 
@@ -105,14 +105,14 @@ class GenerateStatisticalReportService(IGeneratingReportsService):
                         report_data["data"][content_type][message_date_str] += 1
                     elif content_type == RawContentTypes.BY_DATE_BY_CATEGORY:
                         if message_date_str not in report_data["data"][content_type]:
-                            report_data["data"][content_type][message_date_str] = {message_category: 0 for message_category in posts_category_list}
+                            report_data["data"][content_type][message_date_str] = {category: 0 for category in posts_category_list}
 
                         report_data["data"][content_type][message_date_str][message_category] += 1
                     elif content_type == RawContentTypes.BY_DATE_BY_CHANNEL:
                         if message_date_str not in report_data["data"][content_type]:
                             report_data["data"][content_type][message_date_str] = {_channel: 0 for _channel in generate_report_meta.channel_list}
 
-                        report_data["data"][content_type][message_date_str][message_category] += 1
+                        report_data["data"][content_type][message_date_str][channel] += 1
 
         if RawContentTypes.BY_DATE_BY_CHANNEL in generate_report_wrapper.visualization_template.content_types:
             report_data["data"][RawContentTypes.BY_DATE_BY_CHANNEL] = self._reverse_dict_keys(

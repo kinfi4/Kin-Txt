@@ -65,7 +65,7 @@ class StatisticalReport(BaseReport):
             processing_status=dict_report["processing_status"],
             report_failed_reason=dict_report["report_failed_reason"],
             total_messages_count=dict_report["total_messages_count"],
-            set_of_visualization_diagrams=dict_report.get("set_of_visualization_diagrams"),
+            visualization_diagrams_list=dict_report.get("visualization_diagrams_list"),
             posts_categories=dict_report.get("posts_categories"),
             data=dict_report["data"],
         )
