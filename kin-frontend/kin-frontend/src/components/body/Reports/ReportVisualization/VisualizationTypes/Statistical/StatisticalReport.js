@@ -57,7 +57,7 @@ const StatisticalReport = ({showComparisonButton=true, report, ...props}) => {
                         style={{
                             fontSize: "20px",
                             marginLeft: "20px",
-                            color: "#24B382",
+                            color: "#7b6991",
                         }}
                     >
                         [{transformLargeNumberToReadable(report.totalMessagesCount)} messages processed]

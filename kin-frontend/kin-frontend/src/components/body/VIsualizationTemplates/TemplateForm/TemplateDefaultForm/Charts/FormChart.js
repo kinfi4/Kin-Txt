@@ -5,6 +5,10 @@ import FormPieChart from "./_ChartsVisualizations/FormPieChart";
 import FormBarChart from "./_ChartsVisualizations/FormBarChart";
 import FormTwoLevelPieChart from "./_ChartsVisualizations/FormTwoLevelPieChart";
 import FormLineChart from "./_ChartsVisualizations/FormLineChart";
+import FormStackedBarChart from "./_ChartsVisualizations/FormStackedBarChart";
+import FormRadarChart from "./_ChartsVisualizations/FormRadarChart";
+import FormMultiLineChart from "./_ChartsVisualizations/FormMultiLineChart";
+import FormMultiAreaChart from "./_ChartsVisualizations/FormMultiAreaChart";
 
 
 const FormChart = ({chartId, onClick, isSelected}) => {
@@ -12,41 +16,43 @@ const FormChart = ({chartId, onClick, isSelected}) => {
     const [visualizationCategory, chartType] = chartId.split("__");
 
     const data = chartDataFactory.createChartData(visualizationCategory);
+    const params = {
+        visualizationCategory,
+        data,
+        onClick,
+        isSelected,
+    }
 
     if (chartType === "Pie") {
-        return <FormPieChart
-            visualizationCategory={visualizationCategory}
-            data={data}
-            onClick={() => onClick(chartId)}
-            isSelected={isSelected}
-        />;
+        return <FormPieChart {...params} />;
     }
 
     if (chartType === "TwoLevelPie") {
-        return <FormTwoLevelPieChart
-            visualizationCategory={visualizationCategory}
-            data={data}
-            onClick={() => onClick(chartId)}
-            isSelected={isSelected}
-        />;
+        return <FormTwoLevelPieChart {...params} />;
     }
 
     if (chartType === "Bar") {
-        return <FormBarChart
-            visualizationCategory={visualizationCategory}
-            data={data}
-            onClick={() => onClick(chartId)}
-            isSelected={isSelected}
-        />;
+        return <FormBarChart {...params} />;
     }
 
     if (chartType === "Line") {
-        return <FormLineChart
-            visualizationCategory={visualizationCategory}
-            data={data}
-            onClick={() => onClick(chartId)}
-            isSelected={isSelected}
-        />;
+        return <FormLineChart {...params} />;
+    }
+
+    if (chartType === "MultiLine") {
+        return <FormMultiLineChart {...params} />;
+    }
+
+    if (chartType === "StackedBar") {
+        return <FormStackedBarChart {...params} />;
+    }
+
+    if (chartType === "Radar") {
+        return <FormRadarChart {...params} />;
+    }
+
+    if(chartType === "MultiArea") {
+        return <FormMultiAreaChart {...params} />;
     }
 
     return (

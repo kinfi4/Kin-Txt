@@ -7,10 +7,11 @@ import styles from "../chartStyles.module.css";
 const visualizationCategoryToTitleMapping = {
     "ByCategory": "",
     "ByChannel": "",
-    "ByDate": "The dependency of the number of messages by date",
+    "ByDateByCategory": "Distribution of categories popularity by date",
+    "ByDateByChannel": "Distribution of channels posts by date",
 }
 
-const FormLineChart = ({visualizationCategory, data, onClick, isSelected=false}) => {
+const FromMultiLineChart = ({visualizationCategory, data, onClick, isSelected=false}) => {
     return (
         <div
             className={`${styles.chartContainer} ${isSelected ? styles.active : ""}`}
@@ -27,7 +28,8 @@ const FormLineChart = ({visualizationCategory, data, onClick, isSelected=false})
                 >
                     <YAxis />
                     <XAxis dataKey="date" interval={0} />
-                    <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="value1" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="value2" stroke="#fff" activeDot={{ r: 8 }} />
                 </LineChart>
 
             </div>
@@ -35,4 +37,4 @@ const FormLineChart = ({visualizationCategory, data, onClick, isSelected=false})
     );
 };
 
-export default FormLineChart;
+export default FromMultiLineChart;

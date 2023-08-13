@@ -23,7 +23,7 @@ const FormBarChart = ({visualizationCategory, data, onClick, isSelected=false}) 
                 height={220}
                 data={data}
             >
-                <Bar dataKey="value" fill={data[0].color} barSize={40} barGap={3} />
+                <Bar dataKey="value" fill={data[0].color} barSize={70} barGap={3} />
                 <XAxis dataKey="name" interval={0} angle={data.length < 5 ? 0 : -90} color="#fff"  dy={25} height={60} />
             </BarChart>
         </div>

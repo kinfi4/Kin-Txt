@@ -10,6 +10,30 @@ import FormInput from "../../../../common/formInputName/FormInput";
 import FormChart from "./Charts/FormChart";
 
 
+const possibleCharts = {
+    "Pie": {
+        title: "Pie Chart",
+        charts: ["ByCategory__Pie", "ByChannel__Pie", "ByChannel+ByCategory__TwoLevelPie"],
+    },
+    "Bar": {
+        title: "Bar Chart",
+        charts: ["ByCategory__Bar", "ByChannel__Bar", "ByHour__Bar", "ByChannelByCategory__StackedBar"],
+    },
+    "Line": {
+        title: "Line Chart",
+        charts: ["ByDate__Line", "ByDateByCategory__MultiLine", "ByDateByChannel__MultiLine"],
+    },
+    "Area": {
+        title: "Area Chart",
+        charts: ["ByDateByCategory__MultiArea"],
+    },
+    "Radar": {
+        title: "Radar Chart",
+        charts: ["ByCategory__Radar"],
+    },
+}
+
+
 const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallback}) => {
     const onChartSelected = (chartId) => {
         if(data.charts.includes(chartId)) {
@@ -20,15 +44,12 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallb
         setData({...data, charts: [...data.charts, chartId]});
     }
     const onSelectAll = () => {
-        setData({...data, charts: [
-            "ByCategory__Pie",
-            "ByChannel__Pie",
-            "ByChannel+ByCategory__TwoLevelPie",
-            "ByCategory__Bar",
-            "ByChannel__Bar",
-            "ByHour__Bar",
-            "ByDate__Line"
-        ]});
+        setData({
+            ...data,
+            charts: Object.values(possibleCharts).reduce((acc, chartType) => {
+                return acc.concat(chartType.charts);
+            }, [])
+        });
     }
     const onUnselectAll = () => {
         setData({...data, charts: []});
@@ -75,61 +96,30 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallb
                     Create your own visualization template to suit your needs.
                     Select all the charts you want to see in your future statistical reports
                 </h2>
-                <div className={styles.chartCategoryContainer}>
-                    <h2>Pie Charts</h2>
-                    <div className={styles.chartsListContainer}>
-                        <FormChart
-                            chartId={"ByCategory__Pie"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByCategory__Pie")}
-                        />
-                        <FormChart
-                            chartId={"ByChannel__Pie"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByChannel__Pie")}
-                        />
-                        <FormChart
-                            chartId={"ByChannel+ByCategory__TwoLevelPie"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByChannel+ByCategory__TwoLevelPie")}
-                        />
-                    </div>
-                </div>
-                <div className={styles.chartCategoryContainer}>
-                    <h2>Bar Charts</h2>
-                    <div className={styles.chartsListContainer}>
-                        <FormChart
-                            chartId={"ByCategory__Bar"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByCategory__Bar")}
-                        />
-                        <FormChart
-                            chartId={"ByChannel__Bar"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByChannel__Bar")}
-                        />
-                        <FormChart
-                            chartId={"ByHour__Bar"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByHour__Bar")}
-                        />
-                    </div>
-                </div>
-                <div className={styles.chartCategoryContainer}>
-                    <h2>Line Charts</h2>
-                    <div className={styles.chartsListContainer}>
-                        <FormChart
-                            chartId={"ByDate__Line"}
-                            onClick={onChartSelected}
-                            isSelected={data.charts.includes("ByDate__Line")}
-                        />
-                    </div>
-                </div>
-                <div className={styles.chartCategoryContainer}>
-                    <h2>Area Charts</h2>
-                    <div className={styles.chartsListContainer}>
-                    </div>
-                </div>
+                {
+                    Object.keys(possibleCharts).map((chartType) => {
+                        return (
+                            <div key={chartType} className={styles.chartCategoryContainer}>
+                                <h2>{possibleCharts[chartType].title}</h2>
+
+                                <div className={styles.chartsListContainer}>
+                                    {
+                                        possibleCharts[chartType].charts.map((chartId) => {
+                                            return (
+                                                <FormChart
+                                                    key={chartId}
+                                                    chartId={chartId}
+                                                    isSelected={data.charts.includes(chartId)}
+                                                    onClick={() => onChartSelected(chartId)}
+                                                />
+                                            );
+                                        })
+                                    }
+                                </div>
+                            </div>
+                        );
+                    })
+                }
             </div>
         </div>
     );

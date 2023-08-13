@@ -18,14 +18,14 @@ export class ChartDataFactory {
                 ];
             case "ByDateByCategory":
                 return [
-                    {date: "2020-01-01", name: "Category 1", value: 400, color: "#FF0000"},
-                    {date: "2020-01-02", name: "Category 1", value: 300, color: "#FF0000"},
-                    {date: "2020-01-03", name: "Category 1", value: 300, color: "#FF0000"},
-                    {date: "2020-01-04", name: "Category 1", value: 200, color: "#FF0000"},
-                    {date: "2020-01-01", name: "Category 2", value: 400, color: "#00FF00"},
-                    {date: "2020-01-02", name: "Category 2", value: 300, color: "#00FF00"},
-                    {date: "2020-01-03", name: "Category 2", value: 300, color: "#00FF00"},
-                    {date: "2020-01-04", name: "Category 2", value: 200, color: "#00FF00"},
+                    {date: "2020-01-01", value1: 300, value2: 500, value3: 234, color: "#FF0000"},
+                    {date: "2020-01-02", value1: 400, value2: 100, value3: 430, color: "#FF0000"},
+                    {date: "2020-01-03", value1: 100, value2: 200, value3: 300, color: "#FF0000"},
+                    {date: "2020-01-04", value1: 600, value2: 324, value3: 234, color: "#FF0000"},
+                    {date: "2020-01-05", value1: 400, value2: 250, value3: 243, color: "#FF0000"},
+                    {date: "2020-01-06", value1: 400, value2: 349, value3: 300, color: "#FF0000"},
+                    {date: "2020-01-07", value1: 100, value2: 280, value3: 200, color: "#FF0000"},
+                    {date: "2020-01-08", value1: 230, value2: 340, value3: 120, color: "#FF0000"},
                 ];
             case "ByHour":
                 return [
@@ -62,11 +62,27 @@ export class ChartDataFactory {
                     {date: "2020-01-04", value: 200, color: "#86863a"},
                     {date: "2020-01-05", value: 400, color: "#b77070"},
                 ]
+            case "ByDateByChannel":
+                return [
+                    {date: "2020-01-01", value1: 40, value2: 100, color: "#FF0000"},
+                    {date: "2020-01-02", value1: 120, value2: 100, color: "#FF0000"},
+                    {date: "2020-01-03", value1: 65, value2: 30, color: "#FF0000"},
+                    {date: "2020-01-04", value1: 48, value2: 123, color: "#FF0000"},
+                    {date: "2020-01-05", value1: 94, value2: 120, color: "#FF0000"},
+                    {date: "2020-01-06", value1: 94, value2: 20, color: "#FF0000"},
+                    {date: "2020-01-07", value1: 100, value2: 84, color: "#FF0000"},
+                ]
             case "ByChannel":
                 return [
                     {name: "Channel 1", value: 400, color: "#6262cc"},
                     {name: "Channel 2", value: 300, color: "#5da45d"},
                     {name: "Channel 3", value: 300, color: "#b77070"},
+                ];
+            case "ByChannelByCategory":
+                return [
+                    {name: "Channel 1", value1: 400, value2: 200, value3: 250, color: "#6262cc"},
+                    {name: "Channel 2", value1: 300, value2: 290, value3: 120, color: "#5da45d"},
+                    {name: "Channel 3", value1: 300, value2: 100, value3: 90, color: "#b77070"},
                 ];
             default:
                 return [];
