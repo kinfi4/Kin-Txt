@@ -9,7 +9,7 @@ from .utils import cut_channel_link, export_post_to_csv, get_or_create_channel_f
 from .fetch_config import LoadPostsConfig
 
 
-client = TelegramClient('session-1', api_id=int(os.getenv("API_ID")), api_hash=os.getenv("API_HASH"))
+client = TelegramClient("session-1", api_id=int(os.getenv("API_ID")), api_hash=os.getenv("API_HASH"))
 
 
 def fetch(config: LoadPostsConfig) -> None:
@@ -31,7 +31,11 @@ async def collect_posts(config: LoadPostsConfig) -> None:
 
             message: Message
             async for message in client.iter_messages(entity, offset_date=config.start_date, reverse=True):
-                if not message.text or len(message.text) < 10:
+                from random import random
+                if random() < 0.95:
+                    continue
+
+                if not message.text:
                     continue
 
                 if message.date.date() > config.end_date.date():

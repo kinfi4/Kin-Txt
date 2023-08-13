@@ -1,6 +1,6 @@
 import click
 
-from .validate import Validator
+from .label import Validator
 
 
 @click.group()
@@ -10,11 +10,9 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--file-path", "-f", help="Path to file with posts")
-@click.option("--correct-label", "-c", help="Correct label")
-def validate_posts(file_path: str, correct_label: str) -> None:
-    validator = Validator(file_path, correct_label)
-
-    validator.validate()
+def label(file_path: str) -> None:
+    validator = Validator(file_path)
+    validator.start_labeling()
 
 
 if __name__ == "__main__":
