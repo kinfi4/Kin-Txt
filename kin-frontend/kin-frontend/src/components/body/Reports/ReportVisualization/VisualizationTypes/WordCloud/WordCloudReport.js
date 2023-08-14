@@ -37,7 +37,7 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                             style={{
                                 fontSize: "20px",
                                 marginLeft: "20px",
-                                color: "#24B382",
+                                color: "#7b6991",
                             }}
                         >
                             [{transformLargeNumberToReadable(report.totalWords)} words processed]

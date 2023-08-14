@@ -1,0 +1,19 @@
+.container {
+    background-color: #FFFFFF;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 0;
+}
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+.label {
+    margin-right: 10px;
+    color: #666;
+}
+.value {
+    color: #333
+}

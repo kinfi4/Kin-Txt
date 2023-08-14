@@ -9,7 +9,6 @@ export class LineChartRenderer extends BaseChartRenderer {
         const chartData = data[this.contentType];
         this._data = Object.entries(chartData).map(([key, value]) => ({ name: key, value }));
 
-        console.log(this._data)
         this._colors = [
             '#0088FE', '#00C49F', '#FFBB28', '#FF8042',
             '#41B883', '#E46651', '#00D8FF', '#D7263D',

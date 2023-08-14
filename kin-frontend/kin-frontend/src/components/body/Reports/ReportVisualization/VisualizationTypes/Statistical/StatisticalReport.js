@@ -44,7 +44,6 @@ const StatisticalReport = ({showComparisonButton=true, report, ...props}) => {
         return <></>
     }
 
-    console.log(report)
     return (
         <>
             <BackOnStatsPageLink top={"120px"} left={"25px"}/>

@@ -8,7 +8,6 @@ import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer"
 
 
 const ChoseReport = ({reportsIdentifiers, reportType, currentReportId, setComparisonReports, hideModalWindow}) => {
-    console.log(reportsIdentifiers)
     function onChoseReport (reportId) {
         hideModalWindow();
         setComparisonReports(currentReportId, reportId);

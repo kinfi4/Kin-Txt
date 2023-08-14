@@ -1,6 +1,11 @@
 import {PieChartRenderer} from "./ChartTypes/PieChartRenderer";
 import {LineChartRenderer} from "./ChartTypes/LineChartRenderer";
 import {BarChartRenderer} from "./ChartTypes/BarChartRenderer";
+import {TwoLevelPieChartRenderer} from "./ChartTypes/TwoLevelPieChartRenderer";
+import {StackedBarChartRenderer} from "./ChartTypes/StackedBarChartRenderer";
+import {RadarChartRenderer} from "./ChartTypes/RadarChartRenderer";
+import {MultiLineChartRenderer} from "./ChartTypes/MultiLineChartRenderer";
+import {MultiAreaChartRenderer} from "./ChartTypes/MultiAreaChartRenderer";
 
 export class ChartRenderersFactory {
     static chartConfigs = {
@@ -21,8 +26,22 @@ export class ChartRenderersFactory {
                     ChartRenderersFactory.chartConfigs.smallChartHeight,
                     reportData,
                 );
+            case "TwoLevelPie":
+                return new TwoLevelPieChartRenderer(
+                    contentType,
+                    ChartRenderersFactory.chartConfigs.smallChartWidth,
+                    ChartRenderersFactory.chartConfigs.smallChartHeight,
+                    reportData,
+                );
             case "Bar":
                 return new BarChartRenderer(
+                    contentType,
+                    ChartRenderersFactory.chartConfigs.smallChartWidth,
+                    ChartRenderersFactory.chartConfigs.smallChartHeight,
+                    reportData,
+                );
+            case "StackedBar":
+                return new StackedBarChartRenderer(
                     contentType,
                     ChartRenderersFactory.chartConfigs.smallChartWidth,
                     ChartRenderersFactory.chartConfigs.smallChartHeight,
@@ -35,16 +54,29 @@ export class ChartRenderersFactory {
                     ChartRenderersFactory.chartConfigs.largeChartHeight,
                     reportData,
                 );
+            case "MultiLine":
+                return new MultiLineChartRenderer(
+                    contentType,
+                    ChartRenderersFactory.chartConfigs.largeChartWidth,
+                    ChartRenderersFactory.chartConfigs.largeChartHeight,
+                    reportData,
+                );
+            case "MultiArea":
+                return new MultiAreaChartRenderer(
+                    contentType,
+                    ChartRenderersFactory.chartConfigs.largeChartWidth,
+                    ChartRenderersFactory.chartConfigs.largeChartHeight,
+                    reportData,
+                );
+            case "Radar":
+                return new RadarChartRenderer(
+                    contentType,
+                    ChartRenderersFactory.chartConfigs.smallChartWidth,
+                    ChartRenderersFactory.chartConfigs.smallChartHeight,
+                    reportData,
+                );
             default:
                 throw new Error(`Chart type ${chartType} not supported`);
         }
     }
 }
-
-
-// 0: "ByCategory__Pie"
-// 1: "ByChannel__Pie"
-// 2: "ByCategory__Bar"
-// 3: "ByChannel__Bar"
-// 4: "ByHour__Bar"
-// 5: "ByDate__Line"

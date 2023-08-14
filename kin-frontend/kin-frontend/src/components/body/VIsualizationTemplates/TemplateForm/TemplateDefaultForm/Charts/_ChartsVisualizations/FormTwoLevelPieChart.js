@@ -1,5 +1,5 @@
 import React from "react";
-import {Bar, BarChart, Legend, Pie, PieChart} from "recharts";
+import {Legend, Pie, PieChart} from "recharts";
 import styles from "../chartStyles.module.css";
 
 const visualizationCategoryToTitleMapping = {

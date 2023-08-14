@@ -36,13 +36,10 @@ export const generateColorsList = (numberOfColors) => {
         "#90AECF"
     ];
 
-    let res = shuffle(allColors).slice(0, numberOfColors);
-
-    return res;
+    return shuffle(allColors).slice(0, numberOfColors);
 }
 
 export const toPercent = (decimal, fixed = 0) => {
-    // console.log(decimal)
     return `${(decimal * 100).toFixed(0)}%`
 };
 

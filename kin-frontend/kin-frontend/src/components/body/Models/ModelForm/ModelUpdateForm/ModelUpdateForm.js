@@ -43,7 +43,6 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
                 id: modelId,
             });
         }).catch((error) => {
-            console.log(error);
             if(error.response && error.response.status === 404) {
                 showMessage([{message: "Model not found", type: 'danger'}]);
                 return;

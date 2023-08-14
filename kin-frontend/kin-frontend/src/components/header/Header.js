@@ -9,7 +9,7 @@ function Header(props) {
     return (
         <>
             <header className={headerCss.header}>
-                <NavLink to={'/reports'}><div className={headerCss.logo}>Kin News</div></NavLink>
+                <NavLink to={'/reports'}><div className={headerCss.logo}>Kin TxT</div></NavLink>
                 <nav>
                     <h3><NavLink to={'/tape'}>TAPE</NavLink></h3>
                     <h3><NavLink to={'/reports'}>REPORTS</NavLink></h3>
