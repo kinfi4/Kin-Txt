@@ -11,3 +11,10 @@ run:
 
 logs:
 	docker compose logs -f 
+
+stop:
+	docker compose stop
+
+restart:
+	docker compose stop
+	docker compose up -d
