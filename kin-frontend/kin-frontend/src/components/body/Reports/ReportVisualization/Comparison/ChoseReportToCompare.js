@@ -1,9 +1,11 @@
 import React from 'react';
+import {connect} from "react-redux";
+import {NavLink} from "react-router-dom";
+
 import TapeCss from "../../../Tape/Tape.module.css";
 import ComparisonCss from "./ChoseComparisonReport.module.css"
-import {connect} from "react-redux";
+
 import {setComparisonReports} from "../../../../../redux/reducers/comparisonReducer";
-import {NavLink} from "react-router-dom";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 
 
@@ -40,16 +42,11 @@ const ChoseReport = ({reportsIdentifiers, reportType, currentReportId, setCompar
     );
 };
 
-
-let mapStateToProps = (state) => {
-    return {}
-}
-
-let mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         setComparisonReports: (firstReportId, secondReportId) => dispatch(setComparisonReports(firstReportId, secondReportId)),
         hideModalWindow: () => dispatch(hideModalWindow),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChoseReport);
+export default connect(null, mapDispatchToProps)(ChoseReport);

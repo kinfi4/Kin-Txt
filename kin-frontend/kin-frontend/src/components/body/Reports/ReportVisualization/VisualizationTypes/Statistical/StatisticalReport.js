@@ -52,15 +52,9 @@ const StatisticalReport = ({showComparisonButton=true, report, ...props}) => {
                 <div className={visualizationCss.header}>
                 <span>
                     {report.name}
-                    <span
-                        style={{
-                            fontSize: "20px",
-                            marginLeft: "20px",
-                            color: "#7b6991",
-                        }}
-                    >
+                    <div className={visualizationCss.totalMessagesCountLabel}>
                         [{transformLargeNumberToReadable(report.totalMessagesCount)} messages processed]
-                    </span>
+                    </div>
                 </span>
 
                     <div className={visualizationCss.reportOptions}>
@@ -68,6 +62,7 @@ const StatisticalReport = ({showComparisonButton=true, report, ...props}) => {
                             className={visualizationCss.exportButton}
                             onMouseEnter={() => setExportOptions({activeExportOptions: true})}
                             onMouseLeave={() => setExportOptions({activeExportOptions: false})}
+                            style={{marginLeft: "30px"}}
                         >
                             EXPORT
                             {renderExportOptions()}

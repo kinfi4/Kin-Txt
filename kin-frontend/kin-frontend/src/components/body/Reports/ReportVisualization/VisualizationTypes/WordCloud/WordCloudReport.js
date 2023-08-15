@@ -33,15 +33,9 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                 <div className={visualizationCss.header}>
                     <span>
                         {report.name}
-                        <span
-                            style={{
-                                fontSize: "20px",
-                                marginLeft: "20px",
-                                color: "#7b6991",
-                            }}
-                        >
+                        <div className={visualizationCss.totalMessagesCountLabel}>
                             [{transformLargeNumberToReadable(report.totalWords)} words processed]
-                        </span>
+                        </div>
                     </span>
 
                     {

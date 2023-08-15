@@ -1,12 +1,12 @@
 .comparisonReportBlock {
-    padding: 10px 5px;
+    padding: 10px 0;
     width: 100%;
     border-radius: 2px;
     border-bottom: solid #7744bb 1px;
-    transition: linear 0.2s;
+    transition: linear 0.15s;
     cursor: pointer;
     color: #f7fdff;
 }
 .comparisonReportBlock:hover {
-    background-color: #897894;
+    color: #7b6991;
 }

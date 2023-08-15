@@ -192,10 +192,16 @@
 .chartsContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: row;
+    overflow: auto;
 
     padding: 30px;
 
     flex-wrap: wrap;
     gap: 20px;
+}
+.totalMessagesCountLabel {
+    font-size: 20px;
+    color: #7b6991;
+    margin-top: 5px;
 }
