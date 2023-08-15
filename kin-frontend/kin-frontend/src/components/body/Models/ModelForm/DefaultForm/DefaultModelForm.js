@@ -12,10 +12,13 @@ import FormInput from "../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
 import {selectStyles} from "../../../Reports/GenerateReportMenu/styles/formStyles";
+import BackLink from "../../../../common/backLink/BackLink";
 
 const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=false}) => {
     return (
         <div className={statsStyles.statsContainer}>
+            <BackLink url={"/models"} />
+
             <h2 className={commonStyles.pageTitle}>{isUpdateForm ? "Update Model" : "Create Model"}</h2>
 
             <ModelValidationMessageBlock

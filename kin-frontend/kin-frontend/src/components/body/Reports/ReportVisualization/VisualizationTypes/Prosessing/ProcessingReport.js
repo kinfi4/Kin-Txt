@@ -1,11 +1,11 @@
 import React from 'react';
 import processingIcon from "../../../../../../images/processing-icon.png";
-import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 
 const ProcessingReport = () => {
     return (
         <>
-            <BackOnStatsPageLink />
+            <BackLink url={"/reports"} />
             <div
                 style={{
                     display: "flex",

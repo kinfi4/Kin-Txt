@@ -9,7 +9,7 @@ import {STATISTICAL_REPORT, STATISTICS_SERVICE_URL} from "../../../../../../conf
 import {downloadFile, transformLargeNumberToReadable} from "../../../../../../utils/utils";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReducer";
-import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 import {ReportBuilder} from "./Charts/ReportBuilder";
 
 
@@ -46,7 +46,7 @@ const StatisticalReport = ({showComparisonButton=true, report, ...props}) => {
 
     return (
         <>
-            <BackOnStatsPageLink top={"120px"} left={"25px"}/>
+            <BackLink url={"/reports"} top={"120px"} left={"25px"}/>
 
             <div className={visualizationCss.visualizationContainer}>
                 <div className={visualizationCss.header}>

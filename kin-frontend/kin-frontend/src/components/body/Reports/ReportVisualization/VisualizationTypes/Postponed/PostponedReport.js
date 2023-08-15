@@ -6,7 +6,7 @@ import {
     deleteReport,
 } from "../../../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";
-import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 
 const PostponedReport = ({report, deleteReport}) => {
     const onDeleteClick = () => {
@@ -18,7 +18,7 @@ const PostponedReport = ({report, deleteReport}) => {
 
     return (
         <>
-            <BackOnStatsPageLink />
+            <BackLink url={"/reports"} />
             <div className={reportsVisualizationCss.postponedContainer}>
                 <div className={visualizationCss.header}>
                 <span>

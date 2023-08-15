@@ -13,7 +13,7 @@ import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReduc
 import SelectFilteredWords from "../../helpers/SelectFilteredWords";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {WORD_CLOUD_REPORT} from "../../../../../../config";
-import BackOnStatsPageLink from "../../../Common/BackOnStatsPageLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 
 
 const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModal, reportsIdentifiers}) => {
@@ -26,7 +26,7 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
 
     return (
         <>
-            <BackOnStatsPageLink top={"120px"} left={"25px"} />
+            <BackLink url={"/reports"} top={"120px"} left={"25px"} />
 
             <div className={visualizationCss.visualizationContainer}>
 

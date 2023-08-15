@@ -12,7 +12,7 @@ import StatisticalReport from "./VisualizationTypes/Statistical/StatisticalRepor
 import ProcessingReport from "./VisualizationTypes/Prosessing/ProcessingReport";
 import WordCloudReport from "./VisualizationTypes/WordCloud/WordCloudReport";
 import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
-import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
+import BackLink from "../../../common/backLink/BackLink";
 import {startLoading, stopLoading} from "../../../../redux/reducers/reportsReducer";
 import APIRequester from "../../../common/apiCalls/APIRequester";
 import {showMessage} from "../../../../utils/messages";
@@ -56,7 +56,7 @@ const ReportVisualization = ({reportId, reportIsLoading, startReportLoading, end
             <div
                 style={{color: "#f3f3f3", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "30px"}}
             >
-                <BackOnStatsPageLink />
+                <BackLink url={"/reports"} />
                 NO REPORT FOUND
             </div>
         )

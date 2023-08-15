@@ -15,7 +15,7 @@ import {
     STATISTICS_SERVICE_URL,
     WORD_CLOUD_REPORT
 } from "../../../../config";
-import BackOnStatsPageLink from "../Common/BackOnStatsPageLink";
+import BackLink from "../../../common/backLink/BackLink";
 import {showMessage} from "../../../../utils/messages";
 import InputModalWindow from "../../../common/inputModalWindow/InputModalWindow";
 import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow";
@@ -144,7 +144,7 @@ const GenerateReportMenu = ({
 
     return (
         <>
-            <BackOnStatsPageLink />
+            <BackLink url={"/reports"} />
 
             <div className={statsCss.generateReportForm}>
                 <div className={statsCss.controls}>

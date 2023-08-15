@@ -8,6 +8,7 @@ import statsCss from "../../../Reports/Statistics.module.css";
 
 import FormInput from "../../../../common/formInputName/FormInput";
 import FormChart from "./Charts/FormChart";
+import BackLink from "../../../../common/backLink/BackLink";
 
 
 const possibleCharts = {
@@ -57,6 +58,8 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallb
 
     return (
         <div className={statsStyles.statsContainer}>
+            <BackLink url={"/models"} />
+
             <h1 className={commonStyles.pageTitle}>{isUpdateForm ? "Update Template" : "Create Template"}</h1>
 
             <div className={styles.upperFormBlock}>
