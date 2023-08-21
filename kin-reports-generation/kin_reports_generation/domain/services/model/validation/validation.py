@@ -4,7 +4,8 @@ from typing import TypeAlias
 from kin_reports_generation.constants import ModelTypes, ModelStatuses
 from kin_reports_generation.domain.entities import ModelEntity
 from kin_reports_generation.domain.services.model.validation.interface import IModelValidation
-from kin_reports_generation.domain.services.model.validation.sklearn_validation.sklearn_validator import SkLearnModelValidator
+from kin_reports_generation.domain.services.model.validation.sklearn_validation import SkLearnModelValidator
+from kin_reports_generation.domain.services.model.validation.keras_validation import KerasModelValidator
 from kin_reports_generation.exceptions import BaseValidationError
 from kin_reports_generation.infrastructure.repositories import ModelRepository
 
@@ -14,6 +15,7 @@ ValidationResult: TypeAlias = tuple[bool, str | None]
 class ModelValidationService(IModelValidation):
     _MODEL_TYPE_VALIDATOR_MAPPING = {
         ModelTypes.SKLEARN: SkLearnModelValidator,
+        ModelTypes.KERAS: KerasModelValidator,
     }
 
     def __init__(self, models_repository: ModelRepository) -> None:

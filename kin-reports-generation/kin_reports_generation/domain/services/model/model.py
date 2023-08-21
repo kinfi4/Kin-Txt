@@ -64,11 +64,13 @@ class ModelService:
 
     def _prepare_model_for_saving(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
         if model.model_type == ModelTypes.SKLEARN:
-            return self._prepare_sk_learn_model_for_validation(username, model)
+            return self._prepare_model_validation_from_model_binaries(username, model)
+        if model.model_type == ModelTypes.KERAS:
+            return self._prepare_model_validation_from_model_binaries(username, model)
 
         raise UnsupportedModelTypeError(f"Model type {model.model_type} is not supported")
 
-    def _prepare_sk_learn_model_for_validation(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
+    def _prepare_model_validation_from_model_binaries(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
         user_models_path = os.path.join(self._models_storing_path, username)
 
         if not os.path.exists(user_models_path):

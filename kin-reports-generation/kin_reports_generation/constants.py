@@ -69,3 +69,4 @@ class ModelStatuses(str, Enum):
 class ModelTypes(str, Enum):
     SKLEARN = "Sklearn Model"
     TENSORFLOW_BERT = "Tensorflow Bert Model"
+    KERAS = "Keras Model"

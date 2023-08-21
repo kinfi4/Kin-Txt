@@ -38,7 +38,7 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
 
     def preprocess_and_lemmatize(self, text: str) -> str:
         text = self.preprocess_text(text)
-        tokens = word_tokenize(text, language='russian')
+        tokens = word_tokenize(text)
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 

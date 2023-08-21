@@ -21,6 +21,8 @@ class PredictorFactory:
 
         if self._model_entity.model_type == ModelTypes.SKLEARN:
             return self._create_sk_learn_predictor(self._model_entity, text_preprocessor)
+        if self._model_entity.model_type == ModelTypes.KERAS:
+            return self._create_keras_predictor(self._model_entity, text_preprocessor)
 
         raise UnsupportedModelTypeError(f"Model type {self._model_entity.model_type} is not supported")
 
@@ -43,3 +45,6 @@ class PredictorFactory:
             model_metadata=model_metadata,
             text_preprocessor=text_preprocessor,
         )
+
+    def _create_keras_predictor(self, model_metadata: ModelEntity, text_preprocessor: TextPreprocessor) -> IPredictor:
+        pass

@@ -6,4 +6,4 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, Ha
 CategoryMapping: TypeAlias = dict[str, str]
 
 # Models
-SupportedVectorizers: TypeAlias = TfidfVectorizer | CountVectorizer | HashingVectorizer
+SkLearnSupportedVectorizers: TypeAlias = TfidfVectorizer | CountVectorizer | HashingVectorizer
