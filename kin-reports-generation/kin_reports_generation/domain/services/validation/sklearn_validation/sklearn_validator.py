@@ -5,8 +5,8 @@ import joblib
 from scipy.sparse import csr_matrix
 
 from kin_reports_generation.domain.entities import ModelEntity
-from kin_reports_generation.domain.services.model.validation.interface import IModelValidation
-from kin_reports_generation.domain.services.model.validation.sklearn_validation.supported_models import (
+from kin_reports_generation.domain.services.validation.interface import IModelValidation
+from kin_reports_generation.domain.services.validation.sklearn_validation.supported_models import (
     SK_SUPPORTED_MODELS,
     SK_SUPPORTED_TOKENIZERS,
 )

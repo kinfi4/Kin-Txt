@@ -1,11 +1,11 @@
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, Response, status
 
-from kin_reports_generation.containers import Container
-from kin_reports_generation.exceptions import UserTemplateNotFoundException
-from kin_reports_generation.views.helpers.auth import get_current_user
-from kin_reports_generation.domain.entities import User, VisualizationTemplate
-from kin_reports_generation.infrastructure.repositories import VisualizationTemplateRepository
+from kin_model_types.containers import Container
+from kin_model_types.exceptions import UserTemplateNotFoundException
+from kin_model_types.views.helpers.auth import get_current_user
+from kin_model_types.domain.entities import User, VisualizationTemplate
+from kin_model_types.infrastructure.repositories import VisualizationTemplateRepository
 
 router = APIRouter(prefix="/visualization-template")
 

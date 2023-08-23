@@ -7,3 +7,6 @@
 [submodule "kin-reports-generation/submodules/kin-news-core"]
 	path = kin-reports-generation/submodules/kin-news-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
+[submodule "kin-model-types/submodules/kin-txt-core"]
+	path = kin-model-types/submodules/kin-txt-core
+	url = git@github.com:kinfi4/Kin-News-Core.git

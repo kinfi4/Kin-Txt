@@ -10,8 +10,8 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
 from kin_reports_generation.domain.entities import ModelEntity
-from kin_reports_generation.domain.services.model.validation.interface import IModelValidation
-from kin_reports_generation.domain.services.model.validation.sklearn_validation.supported_models import (
+from kin_reports_generation.domain.services.validation.interface import IModelValidation
+from kin_reports_generation.domain.services.validation.sklearn_validation.supported_models import (
     KERAS_SUPPORTED_TOKENIZERS,
     KERAS_SUPPORTED_MODELS,
 )

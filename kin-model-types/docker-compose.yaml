@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  model-types-api:
+    build:
+      context: .
+      dockerfile: etc/kin-model-types/Dockerfile
+    image: 'kin-model-types'
+    container_name: 'kin-reports-builder-api'
+    command: bash -c "python -m kin_model_types run-server"
+    env_file:
+      - etc/kin-model-types/env/.dev.env
+    ports:
+      - "8004:8000"
+    networks:
+      - kin-network
+    volumes:
+      - ./kin_model_types:/app/kin_model_types
+      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - /home/kinfi4/compiled-models/kin-news/:/models
+
+  model-types-consumer:
+    build:
+        context: .
+        dockerfile: etc/kin-model-types/Dockerfile
+    image: 'kin-model-types'
+    container_name: 'kin-model-types-consumer'
+    command: bash -c "python -m kin_model_types consume"
+    env_file:
+      - etc/kin-model-types/env/.dev.env
+    networks:
+      - kin-network
+    volumes:
+      - ./kin_model_types:/app/kin_model_types
+      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - /home/kinfi4/compiled-models/kin-news/:/models
+
+networks:
+  kin-network:
+    external:
+      name: kin-network
