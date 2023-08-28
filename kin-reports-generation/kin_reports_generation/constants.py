@@ -1,37 +1,4 @@
 import re
-from enum import Enum, EnumMeta
-from typing import Type
-
-PROJECT_TITLE = "Kin-Reports-Generation"
-PROJECT_DESCRIPTION = "Kin-Reports-Generation is a service for storing, managing user models, templates and for generating user reports using these models."
-
-REPORTS_GENERATION_EXCHANGE = "ReportsGeneration"
-REPORTS_STORING_EXCHANGE = "ReportsStoring"
-MAX_POST_LEN_IN_WORDS = 20
-
-
-class MessageCategories(str, Enum):
-    POLITICAL = "Political"
-    SHELLING = "Shelling"
-    HUMANITARIAN = "Humanitarian"
-    ECONOMICAL = "Economical"
-
-
-class SentimentTypes(str, Enum):
-    POSITIVE = "positive"
-    NEGATIVE = "negative"
-    NEUTRAL = "neutral"
-
-
-class ReportTypes(str, Enum):
-    STATISTICAL = "Statistical"
-    WORD_CLOUD = "WordCloud"
-
-
-class ReportProcessingResult(str, Enum):
-    POSTPONED = "Postponed"
-    READY = "Ready"
-    PROCESSING = "Processing"
 
 
 emoji_regex_compiled = re.compile(
@@ -57,16 +24,3 @@ emoji_regex_compiled = re.compile(
     "]+",
     re.UNICODE
 )
-
-
-class ModelStatuses(str, Enum):
-    VALIDATED = "Validated"
-    VALIDATION_FAILED = "ValidationFailed"
-    VALIDATING = "Validating"
-    CREATED = "Created"
-
-
-class ModelTypes(str, Enum):
-    SKLEARN = "Sklearn Model"
-    TENSORFLOW_BERT = "Tensorflow Bert Model"
-    KERAS = "Keras Model"

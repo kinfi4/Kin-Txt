@@ -4,12 +4,12 @@ services:
   reports-builder-consumer:
     build:
       context: .
-      dockerfile: ./etc/kin-stats/Dockerfile
+      dockerfile: etc/kin-reports-builder/Dockerfile
     image: 'kin-reports-builder'
     container_name: 'kin-reports-builder-consumer'
     command: bash -c "python -m kin_reports_generation consume"
     env_file:
-      - ./etc/kin-stats/env/.dev.env
+      - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
@@ -20,12 +20,12 @@ services:
   celery_worker:
     build:
       context: .
-      dockerfile: ./etc/kin-stats/Dockerfile
+      dockerfile: etc/kin-reports-builder/Dockerfile
     image: 'kin-reports-builder'
     container_name: 'kin-statistics-celery-worker'
     command: bash -c "python -m kin_reports_generation run-tasks"
     env_file:
-      - ./etc/kin-stats/env/.dev.env
+      - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
@@ -34,24 +34,6 @@ services:
       - /home/kinfi4/compiled-models/kin-news/:/models
     depends_on:
       - reports-builder-consumer
-
-  reports-builder-api:
-    build:
-      context: .
-      dockerfile: ./etc/kin-stats/Dockerfile
-    image: 'kin-reports-builder-api'
-    container_name: 'kin-reports-builder-api'
-    command: bash -c "python -m kin_reports_generation run-server"
-    env_file:
-      - ./etc/kin-stats/env/.dev.env
-    ports:
-      - "8004:8000"
-    networks:
-      - kin-network
-    volumes:
-      - ./kin_reports_generation:/app/kin_reports_generation
-      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
-      - /home/kinfi4/compiled-models/kin-news/:/models
 
 networks:
   kin-network:
