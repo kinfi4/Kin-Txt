@@ -7,7 +7,7 @@ PROJECT_DESCRIPTION = "Kin-Statistics is a service for storing and managing stat
 
 LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
 MAX_POST_LEN_IN_WORDS = 20
-REPORTS_GENERATION_EXCHANGE = "ReportsGeneration"
+REPORTS_BUILDER_EXCHANGE = "ReportsBuilder"
 REPORTS_STORING_EXCHANGE = "ReportsStoring"
 
 API_ROUTE_PATH = "/api/statistics/v1"

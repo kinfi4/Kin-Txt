@@ -94,13 +94,12 @@ class ReportsMongoRepository(IReportRepository):
         if dict_report is None:
             return
 
-        # TODO: update logic so it's possible to delete processing reports
-        # if dict_report["processing_status"] == ReportProcessingResult.PROCESSING:
-        #     raise ImpossibleToModifyProcessingReport("You can not delete the report during processing.")
-
         self._reports_collection.delete_one({
             "report_id": report_id
         })
+
+    def report_exists(self, report_id: int) -> bool:
+        return self._reports_collection.count_documents({"report_id": report_id}) > 0
 
     def _map_dict_to_identification_entity(self, dict_report: dict[str, Any]) -> ReportIdentificationEntity:
         return ReportIdentificationEntity(

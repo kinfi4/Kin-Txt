@@ -13,10 +13,10 @@ from kin_statistics_api.domain.entities import (
     ReportFilters,
 )
 from kin_statistics_api.domain.events import GenerateReportRequestOccurred
-from kin_statistics_api.exceptions import ReportAccessForbidden
+from kin_statistics_api.exceptions import ReportAccessForbidden, ReportNotFound
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
 from kin_statistics_api.infrastructure.repositories.access_management import ReportsAccessManagementRepository
-from kin_statistics_api.constants import REPORTS_GENERATION_EXCHANGE, ReportTypes, ReportProcessingResult
+from kin_statistics_api.constants import REPORTS_BUILDER_EXCHANGE, ReportTypes, ReportProcessingResult
 
 
 class ManagingReportsService:
@@ -33,6 +33,10 @@ class ManagingReportsService:
 
     def report_processing_finished(self, username: str, report: BaseReport) -> None:
         self._iam_repository.set_user_finished_report_generation(username)
+
+        if not self._reports_repository.report_exists(report.report_id):
+            return  # that means user has deleted report before it was finished
+
         self.save_report(report)
 
     def start_report_generation(self, user: User, generation_entity: GenerateReportEntity) -> None:
@@ -50,12 +54,16 @@ class ManagingReportsService:
         )
 
         self._events_producer.publish(
-            REPORTS_GENERATION_EXCHANGE,
+            REPORTS_BUILDER_EXCHANGE,
             [generation_event],
         )
 
     def update_report_status(self, report_id: int, new_status: ReportProcessingResult) -> None:
         self._logger.info(f"Updating status for report {report_id} to: {new_status}")
+
+        if not self._reports_repository.report_exists(report_id):
+            return  # that means user has deleted report before it was finished
+
         self._reports_repository.update_report_status(report_id, new_status)
 
     def save_report(self, report: BaseReport) -> None:

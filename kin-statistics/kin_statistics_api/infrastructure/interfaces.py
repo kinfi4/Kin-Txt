@@ -34,3 +34,7 @@ class IReportRepository(ABC):
     @abstractmethod
     def delete_report(self, report_id: int) -> None:
         pass
+
+    @abstractmethod
+    def report_exists(self, report_id: int) -> bool:
+        pass
