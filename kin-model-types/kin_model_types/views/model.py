@@ -39,16 +39,16 @@ def validate_and_save_model(
     return Response(status_code=status.HTTP_201_CREATED)
 
 
-@router.put("/{model_id}")
+@router.put("/{model_code}")
 @inject
 def update_model(
-    model_id: str,
+    model_code: str,
     model: UpdateModelEntity = Depends(UpdateModelEntity.as_form),
     current_user: User = Depends(get_current_user),
     models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
     try:
-        models_service.update_model(current_user.username, model_id, model)
+        models_service.update_model(current_user.username, model_code, model)
     except UnsupportedModelTypeError as error:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
     except UserModelNotFoundException:
@@ -59,28 +59,33 @@ def update_model(
     return Response(status_code=status.HTTP_200_OK)
 
 
-@router.get("/{model_id}", response_model=ModelEntity, status_code=status.HTTP_200_OK)
+@router.get("/{model_code}")
 @inject
 def get_model(
-    model_id: str,
+    model_code: str,
     current_user: User = Depends(get_current_user),
     models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
     try:
-        return models_repository.get_model(model_id, username=current_user.username)
+        model_entity = models_repository.get_model(model_code, username=current_user.username)
     except UserModelNotFoundException:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=model_entity.dict(with_model_names=True, by_alias=True),
+    )
 
-@router.delete("/{model_id}")
+
+@router.delete("/{model_code}")
 @inject
 def delete_model(
-    model_id: str,
+    model_code: str,
     current_user: User = Depends(get_current_user),
     models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
     try:
-        models_repository.delete_model(model_id, username=current_user.username)
+        models_repository.delete_model(model_code, username=current_user.username)
     except UserModelNotFoundException:
         pass
 

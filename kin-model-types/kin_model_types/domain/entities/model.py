@@ -25,6 +25,15 @@ class ModelValidationEntity(BaseModel):
     def get_tokenizer_binaries_path(self, model_storage_path: str) -> str:
         return os.path.join(model_storage_path, self.owner_username, self.code, "tokenizer")
 
+    def dict(self, with_model_names: bool = False, *args, **kwargs):
+        dct = super().dict(*args, **kwargs)
+
+        if with_model_names:
+            dct["modelName"] = f"{self.owner_username}-{self.code}-model"
+            dct["tokenizerName"] = f"{self.owner_username}-{self.code}-tokenizer"
+
+        return dct
+
 
 class ModelEntity(ModelValidationEntity):
     model_status: ModelStatuses = Field(..., alias="modelStatus")
@@ -87,6 +96,7 @@ class UpdateModelEntity(CreateModelEntity):
     def as_form(
         cls,
         name: str = Form(...),
+        code: str = Form(...),
         model_type: ModelTypes = Form(..., alias="modelType"),
         category_mapping_string: str = Form(..., alias="categoryMapping"),
         model_data: UploadFile | None = File(None, alias="modelData"),
@@ -97,6 +107,7 @@ class UpdateModelEntity(CreateModelEntity):
 
         return cls(
             name=name,
+            code=code,
             model_type=model_type,
             category_mapping=loaded_category_mapping,
             model_data=model_data,

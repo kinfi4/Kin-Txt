@@ -8,6 +8,7 @@ from kin_model_types.settings import Settings
 from kin_model_types.containers import Container
 from kin_model_types import views
 from kin_model_types.views import api_router
+from kin_model_types.events import handlers
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ def init_containers(settings: Settings) -> Container:
 
     container.wire(
         packages=[views],
+        modules=[handlers],
     )
 
     container.check_dependencies()

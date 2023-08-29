@@ -53,6 +53,8 @@ class ModelRepository:
         self._models_collection.delete_one({"code": model_code, "owner_username": username})
 
     def update_model(self, model_code: str, username: str, model_dict: ModelDict) -> ModelEntity:
+        self._logger.info(f"[ModelRepository] Updating model for user {username}")
+
         returned_model = self._models_collection.find_one_and_update(
             {"code": model_code, "owner_username": username},
             {"$set": model_dict},
