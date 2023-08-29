@@ -1,6 +1,7 @@
 import logging
 from typing import Mapping, TypeAlias
 
+from bson import ObjectId
 from pymongo import MongoClient
 
 from kin_model_types.constants import ModelStatuses
@@ -18,6 +19,8 @@ class ModelRepository:
         self._models_collection = self._reports_generation_db["models"]
 
         self._logger = logging.getLogger(self.__class__.__name__)
+
+        self._models_collection.create_index("code", unique=True)
 
     def get_model(self, model_code: str, username: str) -> ModelEntity:
         model_dict = self._models_collection.find_one(
@@ -43,7 +46,8 @@ class ModelRepository:
         model_dict["model_status"] = ModelStatuses.CREATED
         inserted_id = self._models_collection.insert_one(model_dict).inserted_id
 
-        return self.get_model(str(inserted_id), model.owner_username)
+        model_dict = self._models_collection.find_one({"_id": ObjectId(inserted_id)})
+        return self._map_dict_to_model_entity(model_dict)
 
     def delete_model(self, model_code: str, username: str) -> None:
         self._models_collection.delete_one({"code": model_code, "owner_username": username})
@@ -69,8 +73,6 @@ class ModelRepository:
             name=model_dict["name"],
             model_type=model_dict["model_type"],
             owner_username=model_dict["owner_username"],
-            model_path=model_dict["model_path"],
-            tokenizer_path=model_dict["tokenizer_path"],
             category_mapping=model_dict["category_mapping"],
             model_status=model_dict["model_status"],
             validation_message=model_dict.get("validation_message"),

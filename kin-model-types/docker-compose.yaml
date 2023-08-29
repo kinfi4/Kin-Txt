@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: etc/kin-model-types/Dockerfile
     image: 'kin-model-types'
-    container_name: 'kin-reports-builder-api'
+    container_name: 'kin-model-types-api'
     command: bash -c "python -m kin_model_types run-server"
     env_file:
       - etc/kin-model-types/env/.dev.env

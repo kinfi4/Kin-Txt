@@ -47,15 +47,8 @@ class ModelService:
             While the second element is the model entity that needs to be validated or None if model doesn't need validation.
         """
 
-        old_model = self._models_repository.get_model(model_code, username)
-
         if model.models_has_changed:
             model_to_save = self._prepare_model_for_saving(username, model)
-
-            if not model_to_save.model_path:
-                model_to_save.model_path = old_model.model_path
-            if not model_to_save.tokenizer_path:
-                model_to_save.tokenizer_path = old_model.tokenizer_path
 
             model_to_validate = self._models_repository.update_model(model_code, username, model_to_save.dict())
 
@@ -75,39 +68,12 @@ class ModelService:
         self._models_repository.update_model(model_code, username, update_dict)
 
     def _prepare_model_for_saving(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
-        if model.model_type == ModelTypes.SKLEARN:
-            return self._prepare_model_validation_from_model_binaries(username, model)
-        if model.model_type == ModelTypes.KERAS:
-            return self._prepare_model_validation_from_model_binaries(username, model)
-
-        raise UnsupportedModelTypeError(f"Model type {model.model_type} is not supported")
-
-    def _prepare_model_validation_from_model_binaries(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
-        user_models_path = os.path.join(self._models_storing_path, username)
-
-        if not os.path.exists(user_models_path):
-            os.makedirs(user_models_path)
-
-        if model.model_data is not None:
-            model_file_path = os.path.join(user_models_path, model.code)
-            with open(model_file_path, "wb") as file:
-                file.write(model.model_data.file.read())
-        else:
-            model_file_path = ""
-
-        if model.tokenizer_data is not None:
-            tokenizer_file_path = os.path.join(user_models_path, f"tokenizer_{model.code}")
-            with open(tokenizer_file_path, "wb") as file:
-                file.write(model.tokenizer_data.file.read())
-        else:
-            tokenizer_file_path = ""
+        model.save_model_binaries(self._models_storing_path, username)
 
         return ModelValidationEntity(
-            name=model.name,
             code=model.code,
+            name=model.name,
             model_type=model.model_type,
-            owner_username=username,
-            model_path=model_file_path,
-            tokenizer_path=tokenizer_file_path,
             category_mapping=model.category_mapping,
+            owner_username=username,
         )

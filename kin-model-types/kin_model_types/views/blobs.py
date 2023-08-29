@@ -2,6 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import Depends, APIRouter, Response, status
 from starlette.responses import FileResponse
 
+from kin_model_types import Settings
 from kin_model_types.containers import Container
 from kin_model_types.domain.entities import User
 from kin_model_types.exceptions import UserModelNotFoundException
@@ -23,10 +24,12 @@ def get_model_binaries(
     except UserModelNotFoundException:
         return Response(status_code=status.HTTP_404_NOT_FOUND, content="Model not found")
 
-    if not model.model_path:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST, content="Model doesn't have binaries")
-
-    return FileResponse(model.model_path, media_type="application/octet-stream", filename=f"{model_code}.pt")
+    models_storage_path = Settings().models_storage_path
+    return FileResponse(
+        model.get_model_binaries_path(models_storage_path),
+        media_type="application/octet-stream",
+        filename=f"{model_code}",
+    )
 
 
 @router.get("/get-tokenizer-binaries/{model_code}")
@@ -41,7 +44,9 @@ def get_model_binaries(
     except UserModelNotFoundException:
         return Response(status_code=status.HTTP_404_NOT_FOUND, content="Tokenizer not found")
 
-    if not model.tokenizer_path:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST, content="Tokenizer doesn't have binaries")
-
-    return FileResponse(model.model_path, media_type="application/octet-stream", filename=f"tokenizer-{model_code}.pt")
+    models_storage_path = Settings().models_storage_path
+    return FileResponse(
+        model.get_tokenizer_binaries_path(models_storage_path),
+        media_type="application/octet-stream",
+        filename=f"tokenizer-{model_code}",
+    )

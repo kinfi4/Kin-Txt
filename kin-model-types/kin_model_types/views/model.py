@@ -1,6 +1,7 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends, APIRouter, status
 from fastapi.responses import Response, JSONResponse
+from pymongo.errors import DuplicateKeyError
 
 from kin_model_types.containers import Container
 from kin_model_types.domain.entities import User, ModelEntity, CreateModelEntity, UpdateModelEntity
@@ -30,6 +31,8 @@ def validate_and_save_model(
 ):
     try:
         models_service.validate_model(current_user.username, model)
+    except DuplicateKeyError:
+        return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "Model with this code already exists."})
     except BaseValidationError:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
