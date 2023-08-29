@@ -1,13 +1,14 @@
 import React, {useEffect} from "react";
+import {connect} from "react-redux";
+
 import APIRequester from "../../../../common/apiCalls/APIRequester";
-import {ModelTypes, REPORTS_BUILDER_URL} from "../../../../../config";
+import {ModelTypes, MODEL_TYPES_URL} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import {validateFormData} from "../common/FormDataValidation";
-import {connect} from "react-redux";
 
-const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
+const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
     const [data, setData] = React.useState({
         modelType: ModelTypes.SKLEARN_MODEL,
         modelFile: null,
@@ -18,13 +19,13 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
         modelName: null,
         tokenizerName: null,
         validationMessage: null,
-        id: modelId,
+        code: "",
     });
 
     useEffect(() => {
-        const requester = new APIRequester(REPORTS_BUILDER_URL);
+        const requester = new APIRequester(MODEL_TYPES_URL);
 
-        requester.get(`/models/${modelId}`).then((response) => {
+        requester.get(`/models/${modelCode}`).then((response) => {
             setData({
                 ...data,
                 modelType: response.data.modelType,
@@ -37,16 +38,18 @@ const ModelUpdateForm = ({modelId, onModelSavingCallback}) => {
                         value: Number(value[0]), categoryName: value[1]
                     })
                 ),
-                modelName: response.data.modelPath.split("/").pop(),
-                tokenizerName: response.data.tokenizerPath.split("/").pop(),
+                modelName: response.data.modelName,
+                tokenizerName: response.data.tokenizerName,
                 validationMessage: response.data.validationMessage,
-                id: modelId,
+                code: response.data.code,
             });
         }).catch((error) => {
             if(error.response && error.response.status === 404) {
                 showMessage([{message: "Model not found", type: 'danger'}]);
                 return;
             }
+
+            console.log(error)
 
             showMessage([{message: "Something went wrong during model loading.", type: 'danger'}]);
         });

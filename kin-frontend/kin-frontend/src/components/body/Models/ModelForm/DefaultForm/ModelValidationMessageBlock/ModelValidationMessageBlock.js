@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./ValidationMessageStyles.module.css";
 import {ModelStatuses} from "../../../../../../config";
 import {IoMdDoneAll} from "react-icons/io";
-import {MdSmsFailed} from "react-icons/md";
+import {MdSmsFailed, MdCreateNewFolder} from "react-icons/md";
 
 const validationResultToMessageMapping = {
     [ModelStatuses.VALIDATION_FAILED]: {
@@ -14,6 +14,11 @@ const validationResultToMessageMapping = {
         styleClass: styles.validationPassed,
         text: "Model validation passed.",
         icon: <IoMdDoneAll />
+    },
+    [ModelStatuses.CREATED]: {
+        styleClass: styles.validationHasntStarted,
+        text: "Model validation hasn't started...",
+        icon: <MdCreateNewFolder />
     }
 }
 

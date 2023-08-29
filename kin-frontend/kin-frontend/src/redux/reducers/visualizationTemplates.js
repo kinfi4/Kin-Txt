@@ -1,4 +1,4 @@
-import {REPORTS_BUILDER_URL} from "../../config";
+import {MODEL_TYPES_URL} from "../../config";
 import APIRequester from "../../components/common/apiCalls/APIRequester";
 
 let initialState = {
@@ -9,14 +9,14 @@ const TEMPLATES_LOADED = "TEMPLATES_LOADED";
 
 
 export const loadUserTemplates = () => async (dispatch) => {
-    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     const response = await apiRequester.get(`/visualization-template`);
     dispatch({type: TEMPLATES_LOADED, templates: response.data});
 }
 
 export const deleteTemplate = (templateId) => async (dispatch) => {
-    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     const response = await apiRequester.delete(`/visualization-template/${templateId}`);
 
@@ -26,7 +26,7 @@ export const deleteTemplate = (templateId) => async (dispatch) => {
 }
 
 export const createTemplate = (templateData) => async (dispatch) => {
-    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     const response = await apiRequester.post(`/visualization-template`, templateData);
 
@@ -37,7 +37,7 @@ export const createTemplate = (templateData) => async (dispatch) => {
 }
 
 export const updateTemplate = (templateId, templateData) => async (dispatch) => {
-    const apiRequester = new APIRequester(REPORTS_BUILDER_URL, dispatch);
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     const response = await apiRequester.put(`/visualization-template/${templateId}`, templateData);
 

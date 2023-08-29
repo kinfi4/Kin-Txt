@@ -3,7 +3,7 @@ import TemplateDefaultForm from "../TemplateDefaultForm/TemplateDefaultForm";
 import {updateTemplate} from "../../../../../redux/reducers/visualizationTemplates";
 import {connect} from "react-redux";
 import APIRequester from "../../../../common/apiCalls/APIRequester";
-import {REPORTS_BUILDER_URL} from "../../../../../config";
+import {MODEL_TYPES_URL} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 
 
@@ -11,7 +11,7 @@ const TemplateUpdateForm = ({templateId, updateTemplate}) => {
     const [data, setData] = React.useState({name: "", charts: []});
 
     useEffect(() => {
-        const requester = new APIRequester(REPORTS_BUILDER_URL);
+        const requester = new APIRequester(MODEL_TYPES_URL);
 
         requester.get(`/visualization-template/${templateId}`).then((response) => {
             setData({

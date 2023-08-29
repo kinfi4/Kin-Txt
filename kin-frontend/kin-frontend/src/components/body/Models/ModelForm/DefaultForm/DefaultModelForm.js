@@ -88,6 +88,23 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                             onChange={(event) => setData({...data, name: event.target.value})}
                         />
                     </div>
+                    {!isUpdateForm && (
+                        <div className={formStyles.formInputContainer}>
+                            <label
+                                id="modelName"
+                                className={statsCss.generateReportFormLabel}
+                            >
+                                Enter the model code:
+                            </label>
+
+                            <FormInput
+                                placeholder="Model code"
+                                id="modelCode"
+                                value={data.code}
+                                onChange={(event) => setData({...data, code: event.target.value})}
+                            />
+                        </div>
+                    )}
                     {/*Generate model button*/}
                     <div className={formStyles.formInputContainer}>
                         <div

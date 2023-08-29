@@ -38,7 +38,9 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
 
         return (
             <tr>
-                <td>{name}</td>
+                <td>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}>{name}</Link>
+                </td>
                 <td className={modelsCss.controlsContainer}>
                     <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}><AiFillEdit /></Link>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>

@@ -1,8 +1,9 @@
 import React from "react";
+import {connect} from "react-redux";
+
 import {ModelTypes} from "../../../../../config";
 import {validateFormData} from "../common/FormDataValidation";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
-import {connect} from "react-redux";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 
 const ModelCreateForm = ({createModel}) => {
@@ -12,6 +13,7 @@ const ModelCreateForm = ({createModel}) => {
         tokenizerFile: null,
         categoryMapping: [{value: 0, categoryName: "First Category"}, {value: 1, categoryName: "Second Category"}],
         name: "",
+        code: "",
     });
 
     const onCreateButtonClick = () => {
@@ -39,4 +41,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(() => {}, mapDispatchToProps)(ModelCreateForm);
+export default connect(() => new Object(), mapDispatchToProps)(ModelCreateForm);

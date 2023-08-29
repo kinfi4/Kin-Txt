@@ -21,3 +21,6 @@
 .validationFailed {
     color: crimson;
 }
+.validationHasntStarted {
+    color: #a6a6a6;
+}

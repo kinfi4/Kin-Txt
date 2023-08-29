@@ -58,7 +58,7 @@ const TemplateDefaultForm = ({isUpdateForm=false, data, setData, onCreationCallb
 
     return (
         <div className={statsStyles.statsContainer}>
-            <BackLink url={"/models"} />
+            <BackLink url={"/templates"} />
 
             <h1 className={commonStyles.pageTitle}>{isUpdateForm ? "Update Template" : "Create Template"}</h1>
 

@@ -1,6 +1,7 @@
 import axios from "axios";
+
 import {FETCH_ERROR} from "./channelsReducer";
-import {REPORTS_BUILDER_URL} from "../../config";
+import {MODEL_TYPES_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -16,7 +17,7 @@ const MODELS_LOADED = "MODELS_LOADED";
 export const loadUserModels = () => (dispatch) => {
     const token = localStorage.getItem("token")
 
-    axios.get(REPORTS_BUILDER_URL + "/models", {
+    axios.get(MODEL_TYPES_URL + "/models", {
         headers: {
             "Authorization": `Token ${token}`,
         }
@@ -31,7 +32,7 @@ export const loadUserModels = () => (dispatch) => {
 export const deleteModel = (modelId) => (dispatch) => {
     const token = localStorage.getItem("token")
 
-    axios.delete(REPORTS_BUILDER_URL + "/models/" + modelId, {
+    axios.delete(MODEL_TYPES_URL + "/models/" + modelId, {
         headers: {
             "Authorization": `Token ${token}`,
         }
@@ -49,6 +50,7 @@ export const validateAndSaveModel = (model, updating=false) => (dispatch) => {
     const formData = new FormData();
     formData.append("modelType", model.modelType);
     formData.append("name", model.name);
+    formData.append("code", model.code);
 
     if (updating && (model.modelFile || model.tokenizerFile)) {
         formData.append("modelsHasChanged", "true");
@@ -71,13 +73,13 @@ export const validateAndSaveModel = (model, updating=false) => (dispatch) => {
     let resultMethod = "POST";
 
     if (updating) {
-        resultUrl = "/models/" + model.id;
+        resultUrl = "/models/" + model.code;
         resultMethod = "PUT";
     }
 
     axios({
         method: resultMethod,
-        url: REPORTS_BUILDER_URL + resultUrl,
+        url: MODEL_TYPES_URL + resultUrl,
         data: formData,
         headers: {
             "Authorization": `Token ${token}`,

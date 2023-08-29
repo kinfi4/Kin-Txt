@@ -27,18 +27,18 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
 
     let {path, _} = useRouteMatch();
 
-    const ModelCell = ({name, id, status, deleteModel}) => {
+    const ModelCell = ({name, code, status, deleteModel}) => {
         const onDeleteClick = () => {
             let userConfirm = window.confirm("Are you sure to delete this model?");
             if (userConfirm) {
-                deleteModel(id);
+                deleteModel(code);
             }
         }
 
         return (
             <tr>
                 <td>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}>{name}</Link>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>
                 </td>
                 <td
                     className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
@@ -46,7 +46,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                     <div className={selectReportMenuCss.circle}></div> {status}
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}><AiFillEdit /></Link>
+                    <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit /></Link>
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>
             </tr>
@@ -74,7 +74,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                                 {
                                     modelsList.map((model, index) =>
                                         <ModelCell
-                                            id={model.id}
+                                            code={model.code}
                                             name={model.name}
                                             status={model.modelStatus}
                                             deleteModel={deleteModel}
