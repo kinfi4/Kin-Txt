@@ -32,7 +32,7 @@ async def collect_posts(config: LoadPostsConfig) -> None:
             message: Message
             async for message in client.iter_messages(entity, offset_date=config.start_date, reverse=True):
                 from random import random
-                if random() < 0.95:
+                if random() < 0.9:
                     continue
 
                 if not message.text:

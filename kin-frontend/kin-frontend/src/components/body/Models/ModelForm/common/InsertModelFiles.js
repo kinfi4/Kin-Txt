@@ -1,6 +1,6 @@
 import React from 'react';
 import {ModelTypes} from "../../../../../config";
-import SkLearnInputBinariesForm from "./InsertBinariesForms/SkLearnInputBinariesForm";
+import InputBinariesForm from "./InsertBinariesForms/InputBinariesForm";
 
 const InsertModelBinaries = ({
     modelType,
@@ -10,7 +10,7 @@ const InsertModelBinaries = ({
     tokenizerName=null
 }) => {
     if (modelType === ModelTypes.SKLEARN_MODEL) {
-        return <SkLearnInputBinariesForm
+        return <InputBinariesForm
             modelName={modelName}
             tokenizerName={tokenizerName}
             onModelFileChange={onModelFileChange}

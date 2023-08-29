@@ -4,7 +4,7 @@ import statsCss from "../../../../Reports/Statistics.module.css";
 import Spinner from "../FileLoadingSpinner/Spinner";
 import {fi} from "date-fns/locale";
 
-const SkLearnInputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onTokenizerFileChange}) => {
+const InputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onTokenizerFileChange}) => {
     modelName = modelName ? modelName : "Choose a file with scikit-learn model";
     tokenizerName = tokenizerName ? tokenizerName : "Choose a file with scikit-learn tokenizer";
 
@@ -50,4 +50,4 @@ const SkLearnInputBinariesForm = ({modelName, tokenizerName, onModelFileChange, 
     );
 };
 
-export default SkLearnInputBinariesForm;
+export default InputBinariesForm;
