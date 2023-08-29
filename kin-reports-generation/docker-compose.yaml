@@ -15,7 +15,7 @@ services:
     volumes:
       - ./kin_reports_generation:/app/kin_reports_generation
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
-      - /home/kinfi4/compiled-models/kin-news/:/models
+      - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
   celery_worker:
     build:
@@ -31,7 +31,7 @@ services:
     volumes:
       - ./kin_reports_generation:/app/kin_reports_generation
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
-      - /home/kinfi4/compiled-models/kin-news/:/models
+      - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:
       - reports-builder-consumer
 
