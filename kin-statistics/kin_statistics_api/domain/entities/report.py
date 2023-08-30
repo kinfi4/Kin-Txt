@@ -32,7 +32,7 @@ class BaseReport(BaseModel):
 
         return value
 
-    def dict(self, with_serialization=False, **kwargs: Any) -> dict[str, Any]:
+    def dict(self, with_serialization=True, **kwargs: Any) -> dict[str, Any]:
         model_dict = super().dict(**kwargs)
 
         if with_serialization:

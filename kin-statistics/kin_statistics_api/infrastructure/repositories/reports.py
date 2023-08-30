@@ -11,7 +11,7 @@ from kin_statistics_api.domain.entities import (
 )
 from kin_statistics_api.exceptions import ImpossibleToModifyProcessingReport, ReportNotFound
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
-from kin_statistics_api.constants import ReportProcessingResult, ReportTypes
+from kin_statistics_api.constants import ReportProcessingResult, ReportTypes, ITEMS_PER_PAGE
 
 
 class ReportsMongoRepository(IReportRepository):
@@ -30,22 +30,9 @@ class ReportsMongoRepository(IReportRepository):
 
     def get_report_names(self, report_ids: list[int], apply_filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
         filters = {"report_id": {"$in": report_ids}}
+        filters.update(self._build_mongo_filters(apply_filters))
 
-        if apply_filters is not None:
-            if apply_filters.name is not None:
-                filters["name"] = {"$regex": f".*{apply_filters.name}.*", "$options": "i"}
-            if apply_filters.date_from is not None:
-                if "date" not in filters:
-                    filters["date"] = {}
-                filters["date"]["$gte"] = apply_filters.date_from
-            if apply_filters.date_to is not None:
-                if "date" not in filters:
-                    filters["date"] = {}
-                filters["date"]["$lte"] = apply_filters.date_to
-            if apply_filters.processing_status is not None:
-                filters["processing_status"] = apply_filters.processing_status
-
-        dict_reports = self._reports_collection.find(filters)
+        dict_reports = self._reports_collection.find(filters).skip(apply_filters.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
         return [
             self._map_dict_to_identification_entity(report_dict)
@@ -101,6 +88,11 @@ class ReportsMongoRepository(IReportRepository):
     def report_exists(self, report_id: int) -> bool:
         return self._reports_collection.count_documents({"report_id": report_id}) > 0
 
+    def get_total_reports_count(self, filters: ReportFilters | None) -> int:
+        mongo_filters = self._build_mongo_filters(filters)
+
+        return self._reports_collection.count_documents(mongo_filters)
+
     def _map_dict_to_identification_entity(self, dict_report: dict[str, Any]) -> ReportIdentificationEntity:
         return ReportIdentificationEntity(
             report_id=dict_report["report_id"],
@@ -115,3 +107,24 @@ class ReportsMongoRepository(IReportRepository):
             return WordCloudReport.from_dict(dict(dict_report))
 
         return StatisticalReport.from_dict(dict(dict_report))
+
+    def _build_mongo_filters(self, apply_filters: ReportFilters | None) -> dict[str, Any]:
+        if apply_filters is None:
+            return {}
+
+        filters: dict[str, Any] = {}
+
+        if apply_filters.name is not None:
+            filters["name"] = {"$regex": f".*{apply_filters.name}.*", "$options": "i"}
+        if apply_filters.date_from is not None:
+            if "date" not in filters:
+                filters["date"] = {}
+            filters["date"]["$gte"] = apply_filters.date_from
+        if apply_filters.date_to is not None:
+            if "date" not in filters:
+                filters["date"] = {}
+            filters["date"]["$lte"] = apply_filters.date_to
+        if apply_filters.processing_status is not None:
+            filters["processing_status"] = apply_filters.processing_status
+
+        return filters

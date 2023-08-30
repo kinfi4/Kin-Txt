@@ -13,7 +13,6 @@ from kin_statistics_api.views.helpers.auth import get_current_user
 
 _logger = logging.getLogger(__name__)
 
-
 router = APIRouter(prefix="/reports")
 
 
@@ -26,7 +25,7 @@ def get_reports(
 ):
     report_identities = reports_service.get_user_reports_names(current_user.username, filters=filters)
 
-    return JSONResponse(content={"reports": [report.dict(by_alias=True, with_serialization=True) for report in report_identities]})
+    return JSONResponse(content=report_identities.dict(by_alias=True))
 
 
 @router.post("")

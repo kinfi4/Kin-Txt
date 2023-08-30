@@ -1,7 +1,9 @@
+import math
 import logging
 from datetime import datetime
 
 from kin_news_core.messaging import AbstractEventProducer
+from kin_news_core.pagination import PaginatedDataEntity
 
 from kin_statistics_api.domain.entities import (
     ReportIdentificationEntity,
@@ -17,6 +19,7 @@ from kin_statistics_api.exceptions import ReportAccessForbidden, ReportNotFound
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
 from kin_statistics_api.infrastructure.repositories.access_management import ReportsAccessManagementRepository
 from kin_statistics_api.constants import REPORTS_BUILDER_EXCHANGE, ReportTypes, ReportProcessingResult
+from kin_statistics_api.constants import ITEMS_PER_PAGE
 
 
 class ManagingReportsService:
@@ -71,11 +74,18 @@ class ManagingReportsService:
 
         self._reports_repository.save_user_report(report)
 
-    def get_user_reports_names(self, username: str, filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
+    def get_user_reports_names(self, username: str, filters: ReportFilters | None = None) -> PaginatedDataEntity[ReportIdentificationEntity]:
         user_reports_ids = self._iam_repository.get_user_report_ids(username)
         self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
 
-        return self._reports_repository.get_report_names(user_reports_ids, apply_filters=filters)
+        report_entities = self._reports_repository.get_report_names(user_reports_ids, apply_filters=filters)
+        total_reports_count = self._reports_repository.get_total_reports_count(filters=filters)
+
+        return PaginatedDataEntity(
+            data=report_entities,
+            total_pages=math.ceil(total_reports_count / ITEMS_PER_PAGE),
+            page=filters.page if filters else 0,
+        )
 
     def set_report_name(self, username: str, report_name: str, report_id: int) -> ReportIdentificationEntity:
         self._check_user_access(username, report_ids=[report_id])

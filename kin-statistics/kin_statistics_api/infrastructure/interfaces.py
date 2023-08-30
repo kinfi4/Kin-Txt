@@ -38,3 +38,7 @@ class IReportRepository(ABC):
     @abstractmethod
     def report_exists(self, report_id: int) -> bool:
         pass
+
+    @abstractmethod
+    def get_total_reports_count(self, filters: ReportFilters | None) -> int:
+        pass

@@ -10,6 +10,8 @@ MAX_POST_LEN_IN_WORDS = 20
 REPORTS_BUILDER_EXCHANGE = "ReportsBuilder"
 REPORTS_STORING_EXCHANGE = "ReportsStoring"
 
+ITEMS_PER_PAGE = 8
+
 API_ROUTE_PATH = "/api/statistics/v1"
 
 
