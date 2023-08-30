@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 
 import {
+    REPORT_STATUS_CREATED,
     REPORT_STATUS_POSTPONED,
     REPORT_STATUS_PROCESSING,
     STATISTICS_SERVICE_URL,
@@ -65,7 +66,7 @@ const ReportVisualization = ({reportId, reportIsLoading, startReportLoading, end
     if (report.processingStatus === REPORT_STATUS_POSTPONED) {
         return <PostponedReport report={report} />;
     }
-    if (report.processingStatus === REPORT_STATUS_PROCESSING) {
+    if (report.processingStatus === REPORT_STATUS_PROCESSING || report.processingStatus === REPORT_STATUS_CREATED) {
         return <ProcessingReport report={report} />;
     }
 

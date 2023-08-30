@@ -7,7 +7,7 @@ import commonStyles from "../../../../common/CommonStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
 import {ModelTypes} from "../../../../../config";
-import InsertModelBinaries from "../common/InsertModelBinaries";
+import InsertModelFiles from "../common/InsertModelFiles";
 import FormInput from "../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
@@ -64,7 +64,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                     </div>
                     {/*Input model*/}
                     <div className={formStyles.formInputContainer}>
-                        <InsertModelBinaries
+                        <InsertModelFiles
                             modelType={data.modelType}
                             onModelFileChange={(file) => setData({...data, modelFile: file})}
                             onTokenizerFileChange={(file) => setData({...data, tokenizerFile: file})}

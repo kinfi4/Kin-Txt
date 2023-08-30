@@ -1,15 +1,16 @@
-import React from 'react';
+import React from "react";
+
 import {ModelTypes} from "../../../../../config";
 import InputBinariesForm from "./InsertBinariesForms/InputBinariesForm";
 
-const InsertModelBinaries = ({
+const InsertModelFiles = ({
     modelType,
     onModelFileChange,
     onTokenizerFileChange,
     modelName=null,
     tokenizerName=null
 }) => {
-    if (modelType === ModelTypes.SKLEARN_MODEL) {
+    if (modelType === ModelTypes.SKLEARN_MODEL || modelType === ModelTypes.KERAS) {
         return <InputBinariesForm
             modelName={modelName}
             tokenizerName={tokenizerName}
@@ -25,4 +26,4 @@ const InsertModelBinaries = ({
     );
 };
 
-export default InsertModelBinaries;
+export default InsertModelFiles;

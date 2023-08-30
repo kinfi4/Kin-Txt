@@ -34,7 +34,7 @@ const initialGenerateReportState = {
     reportType: STATISTICAL_REPORT,
     channels: [],
     templateId: "",
-    modelId: "",
+    modelCode: "",
     name: "",
 }
 
@@ -102,7 +102,7 @@ const GenerateReportMenu = ({
             channelList: data.channels,
             fromDate: data.startDate.toISOString(),
             toDate: data.endDate.toISOString(),
-            modelId: data.modelId,
+            modelCode: data.modelCode,
             templateId: data.templateId,
             reportName: data.name,
         };
@@ -137,7 +137,7 @@ const GenerateReportMenu = ({
             reportType: response.data.reportType,
             channels: response.data.channelList,
             templateId: response.data.templateId,
-            modelId: response.data.modelId,
+            modelCode: response.data.modelCode,
             name: response.data.reportName,
         });
     }
@@ -233,7 +233,7 @@ const GenerateReportMenu = ({
 
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label
-                            id="modelId"
+                            id="modelCode"
                             className={statsCss.generateReportFormLabel}
                         >
                             Model:
@@ -241,10 +241,10 @@ const GenerateReportMenu = ({
 
                         <Select
                             isSearchable={true}
-                            name="modelId"
-                            value={{value: data.modelId, label: userModels.find(model => model.id === data.modelId)?.name}}
-                            onChange={newValue => setData({...data, modelId: newValue.value})}
-                            options={[...userModels.map(model => ({value: model.id, label: model.name}))]}
+                            name="modelCode"
+                            value={{value: data.modelCode, label: userModels.find(model => model.code === data.modelCode)?.name}}
+                            onChange={newValue => setData({...data, modelCode: newValue.value})}
+                            options={[...userModels.map(model => ({value: model.code, label: model.name}))]}
                             styles={selectStyles}
                         />
                     </div>

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
-import {STATISTICS_SERVICE_URL} from "../../../../../config";
-import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
+import {AiFillDelete} from "react-icons/ai";
+
 import TapeCss from "../../../Tape/Tape.module.css";
 import GenerateReportCss from "../styles/GenerateReport.module.css";
+
+import {STATISTICS_SERVICE_URL} from "../../../../../config";
+import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {showMessage} from "../../../../../utils/messages";
-import {AiFillDelete} from "react-icons/ai";
 import APIRequester from "../../../../common/apiCalls/APIRequester";
 
 const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) => {
@@ -65,13 +66,10 @@ const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) =
     );
 };
 
-let mapStateToProps = (state) => {
-    return {}
-}
-let mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         hideModalWindow: () => dispatch(hideModalWindow),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SelectTemplateModalWindow);
+export default connect(() => null, mapDispatchToProps)(SelectTemplateModalWindow);
