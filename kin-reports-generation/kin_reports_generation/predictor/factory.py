@@ -9,12 +9,12 @@ from kin_news_core.reports_building.exceptions import UnsupportedModelTypeError
 from kin_reports_generation.predictor.preprocessing.service import TextPreprocessor
 from kin_reports_generation.predictor.vectorizer.vectorizer_factory import VectorizerFactory
 from kin_reports_generation.settings import Settings
-from kin_reports_generation.mixins import UnpackArchiveMixin
+from kin_reports_generation.mixins import UnpackKerasArchiveMixin
 
 __all__ = ["KinTxtDefaultPredictorFactory"]
 
 
-class KinTxtDefaultPredictorFactory(UnpackArchiveMixin, IPredictorFactory):
+class KinTxtDefaultPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
     def create_predictor(self, model_entity: ModelEntity) -> IPredictor:
         text_preprocessor = self.create_text_preprocessor(model_entity)
 

@@ -44,8 +44,6 @@ class KinTxtDefaultValidationService(BaseValidatorFactory):
         model_data = self._model_type_service.get_model_binaries(model.owner_username, model.code)
         tokenizer_data = self._model_type_service.get_tokenizer_binaries(model.owner_username, model.code)
 
-        print("GOT BOTH MODEL AND TOKENIZER DATA")
-
         user_model_storage_path = model.get_model_directory_path(self._model_storage_path)
         if not os.path.exists(user_model_storage_path):
             os.makedirs(user_model_storage_path)

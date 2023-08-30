@@ -8,16 +8,17 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 
 from kin_news_core.reports_building.domain.entities import ModelEntity
+from kin_news_core.reports_building.domain.services.validation.base_validator import BaseValidator
 from kin_news_core.reports_building.exceptions import (
     UnableToLoadModelError,
     UnsupportedClassifierException,
     UnsupportedTokenizerException,
     UnableToLoadTokenizerError,
     ModelUnsupportedPredictionError,
-    ModelPredictionError,
+    ModelPredictionError, BaseValidationError,
 )
-from kin_news_core.reports_building.types import CategoryMapping
-from kin_reports_generation.mixins import UnpackArchiveMixin
+from kin_news_core.reports_building.types import CategoryMapping, ValidationResult
+from kin_reports_generation.mixins import UnpackKerasArchiveMixin
 
 from kin_reports_generation.validation.keras_validation.supported_models import (
     KERAS_SUPPORTED_TOKENIZERS,
@@ -25,13 +26,21 @@ from kin_reports_generation.validation.keras_validation.supported_models import 
 )
 
 
-class KerasModelValidator(UnpackArchiveMixin):
+class KerasModelValidator(BaseValidator, UnpackKerasArchiveMixin):
     def __init__(self, model_storage_path: str) -> None:
         self._model_storage_path = model_storage_path
 
         self._logger = logging.getLogger(self.__class__.__name__)
 
-    def validate_model(self, model_entity: ModelEntity) -> None:
+    def validate_model(self, model: ModelEntity) -> ValidationResult:
+        try:
+            self._validate_model(model)
+        except BaseValidationError as error:
+            return False, str(error)
+
+        return True, None
+
+    def _validate_model(self, model_entity: ModelEntity) -> None:
         self._unpack_archive_if_needed(model_entity.get_model_binaries_path(self._model_storage_path))
 
         try:
@@ -40,7 +49,7 @@ class KerasModelValidator(UnpackArchiveMixin):
         except Exception as error:
             self._logger.error(f"[KerasModelValidator] Unable to load model, with message: {str(error)}")
             raise UnableToLoadModelError(
-                f"Unable to load sklearn model from file. "
+                f"Unable to load keras model from file. "
                 f"Please make sure, that model you've provided is a valid keras file or an archive of keras model. "
             )
 

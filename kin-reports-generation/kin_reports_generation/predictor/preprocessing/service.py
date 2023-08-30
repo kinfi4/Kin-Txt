@@ -23,15 +23,12 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
         self._morph = morph if morph else MorphAnalyzer()
         self._vectorizer = vectorizer
 
-        self._russian_stop_words = self._init_stop_words(stop_words_path)
-
     def preprocess_text(self, text: str) -> str:
         text = text.lower()
         text = self.remove_html_tags(text)
         text = self.remove_links(text)
         text = self.remove_emoji(text)
         text = self.remove_punctuation(text)
-        text = self.remove_stop_words(text, self._russian_stop_words)
         text = self.remove_extra_spaces(text)
 
         return text
@@ -42,9 +39,10 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
 
         return ' '.join((self._morph.parse(word)[0].normal_form for word in tokens))
 
-    def vectorize(self, texts: Iterable[str]) -> csr_matrix:
-        texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
-        texts = texts.apply(self.preprocess_and_lemmatize)
+    def vectorize(self, texts: Iterable[str], preprocess: bool = False) -> csr_matrix | list:
+        if preprocess:
+            texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
+            texts = texts.apply(self.preprocess_and_lemmatize)
 
         return self._vectorizer.vectorize(texts)
 
@@ -75,7 +73,3 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
     @staticmethod
     def remove_extra_spaces(text: str) -> str:
         return re.sub(r' +', ' ', text)
-
-    def _init_stop_words(self, stop_words_file_path: str) -> list[str]:
-        with open(stop_words_file_path) as stop_words_file:
-            return json.load(stop_words_file)

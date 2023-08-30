@@ -6,5 +6,5 @@ from scipy.sparse import csr_matrix
 
 class ITextVectorizer(ABC):
     @abstractmethod
-    def vectorize(self, texts: Iterable[str]) -> csr_matrix:
+    def vectorize(self, texts: Iterable[str]) -> csr_matrix | list:
         pass

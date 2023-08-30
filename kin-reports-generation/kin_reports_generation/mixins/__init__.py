@@ -1,1 +1,1 @@
-from .unpack_archive import UnpackArchiveMixin
+from .unpack_archive import UnpackKerasArchiveMixin
