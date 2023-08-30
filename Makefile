@@ -7,6 +7,7 @@ run-services:
 	cd kin-news && make run-silent
 	cd kin-reports-generation && make run-silent
 	cd kin-api-gateway && make run-silent
+	cd kin-model-types && make run-silent
 
 run: | run-infra run-services
 
@@ -16,3 +17,4 @@ build:
 	cd kin-news && make build
 	cd kin-reports-generation && make build
 	cd kin-api-gateway && make build
+	cd kin-model-types && make build 
