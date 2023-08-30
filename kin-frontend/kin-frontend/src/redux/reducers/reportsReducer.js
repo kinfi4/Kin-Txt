@@ -8,6 +8,7 @@ import {hideModalWindow} from "./modalWindowReducer";
 
 
 const reportsFilters = {
+    page: 0,
     name: "",
     dateFrom: null,
     dateTo: null,
@@ -15,6 +16,7 @@ const reportsFilters = {
 };
 const initialState = {
     reports: [],
+    totalPages: 1,
     loading: false,
     reportsFilters: reportsFilters,
 };
@@ -23,6 +25,7 @@ const REPORTS_LOADED = "REPORTS_LOADED";
 const REPORTS_LOADING = "REPORTS_LOADING";
 const REPORTS_STOP_LOADING = "REPORTS_STOP_LOADING";
 const UPDATE_FILTERS = "UPDATE_FILTERS";
+const UPDATE_REPORTS_PAGE = "UPDATE_REPORTS_PAGE";
 
 
 const reportFiltersToQueryParams = (filters) => {
@@ -33,29 +36,37 @@ const reportFiltersToQueryParams = (filters) => {
     let queryParams = "";
 
     if (filters.name) {
-        queryParams += `&name=${filters.name}`
+        queryParams += `&name=${filters.name}`;
     }
     if (filters.dateFrom) {
-        queryParams += `&dateFrom=${filters.dateFrom}`
+        queryParams += `&dateFrom=${filters.dateFrom}`;
     }
     if (filters.dateTo) {
-        queryParams += `&dateTo=${filters.dateTo}`
+        queryParams += `&dateTo=${filters.dateTo}`;
     }
     if (filters.processingStatus) {
-        queryParams += `&processingStatus=${filters.processingStatus}`
+        queryParams += `&processingStatus=${filters.processingStatus}`;
+    }
+    if (filters.page) {
+        queryParams += `&page=${filters.page}`;
     }
 
     return queryParams;
 }
 
 
-export const updateFilters = (name, dateFrom, dateTo, processingStatus) => (dispatch, getState) => {
-    dispatch({type: UPDATE_FILTERS, name, dateFrom, dateTo, processingStatus});
+export const updateFilters = (page, name, dateFrom, dateTo, processingStatus) => (dispatch, getState) => {
+    dispatch({type: UPDATE_FILTERS, page, name, dateFrom, dateTo, processingStatus});
 
     dispatch(fetchUserReports());
 };
 
-export let fetchUserReports = () => async (dispatch, getState) => {
+export const updateReportsPage = (page) => (dispatch, getState) => {
+    dispatch({type: UPDATE_REPORTS_PAGE, page});
+    dispatch(fetchUserReports());
+}
+
+export const fetchUserReports = () => async (dispatch, getState) => {
     const filters = getState().reportsReducer.reportsFilters;
 
     let queryParams = reportFiltersToQueryParams(filters);
@@ -65,13 +76,13 @@ export let fetchUserReports = () => async (dispatch, getState) => {
 
     try {
         const response = await apiRequester.get(`/reports${queryParams}`);
-        dispatch({type: REPORTS_LOADED, reports: response.data.reports});
+        dispatch({type: REPORTS_LOADED, reports: response.data.data, totalPages: response.data.totalPages});
     } catch (error) {
         dispatch({type: REPORTS_STOP_LOADING})
     }
 }
 
-export let generateReport = (data) => async (dispatch) => {
+export const generateReport = (data) => async (dispatch) => {
     if(!data.channels.length) {
         showMessage([{message: "You didn't specify any channel!", type: "danger"}])
         return;
@@ -97,7 +108,7 @@ export let generateReport = (data) => async (dispatch) => {
     }
 }
 
-export let updateReportName = (reportId, reportName) => async (dispatch) => {
+export const updateReportName = (reportId, reportName) => async (dispatch) => {
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, dispatch);
 
     const response = await apiRequester.put(`/reports/${reportId}`, {name: reportName});
@@ -109,7 +120,7 @@ export let updateReportName = (reportId, reportName) => async (dispatch) => {
     }
 }
 
-export let deleteReport = (reportId) => async (dispatch) => {
+export const deleteReport = (reportId) => async (dispatch) => {
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, dispatch);
     const response = await apiRequester.delete(`/reports/${reportId}`);
 
@@ -130,7 +141,7 @@ export const stopLoading = () => (dispatch) => {
 export let reportsReducer = (state=initialState, action) => {
     switch (action.type){
         case REPORTS_LOADED:
-            return {...state, reports: action.reports}
+            return {...state, reports: action.reports, totalPages: action.totalPages}
         case REPORTS_LOADING:
             return {...state, loading: true}
         case REPORTS_STOP_LOADING:
@@ -140,10 +151,19 @@ export let reportsReducer = (state=initialState, action) => {
                 ...state,
                 reportsFilters: {
                     ...state.reportsFilters,
+                    page: action.page,
                     name: action.name,
                     dateFrom: action.dateFrom,
                     dateTo: action.dateTo,
                     processingStatus: action.processingStatus,
+                }
+            }
+        case UPDATE_REPORTS_PAGE:
+            return {
+                ...state,
+                reportsFilters: {
+                    ...state.reportsFilters,
+                    page: action.page,
                 }
             }
         default:

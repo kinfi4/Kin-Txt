@@ -7,14 +7,15 @@ import commonStyles from "../../../common/CommonStyles.module.css";
 import {
     deleteReport,
     fetchUserReports,
-    updateReportName
+    updateReportName, updateReportsPage
 } from "../../../../redux/reducers/reportsReducer";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
 import ReportFilters from "./ReportFilters/ReportFilters";
+import Pagination from "../../../common/pagination/Pagination";
 
 
-const SelectReportMenu = ({reportNames, fetchUserReports, ...props}) => {
+const SelectReportMenu = ({reportNames, fetchUserReports, currentPage, updatePage, totalPages, ...props}) => {
     useEffect(() => {
         fetchUserReports();
     }, []);
@@ -46,6 +47,12 @@ const SelectReportMenu = ({reportNames, fetchUserReports, ...props}) => {
                     }
                     </tbody>
                 </table>
+
+                <Pagination
+                    currentPage={currentPage}
+                    setPage={updatePage}
+                    totalPages={totalPages}
+                />
             </div>
         </>
     );
@@ -53,11 +60,14 @@ const SelectReportMenu = ({reportNames, fetchUserReports, ...props}) => {
 
 let mapStateToProps = (state) => {
     return {
+        currentPage: state.reportsReducer.reportsFilters.page,
+        totalPages: state.reportsReducer.totalPages,
         reportNames: state.reportsReducer.reports,
     }
 }
 let mapDispatchToProps = (dispatch) => {
     return {
+        updatePage: (page) => dispatch(updateReportsPage(page)),
         fetchUserReports: () => dispatch(fetchUserReports()),
         updateReportName: (reportId, reportName) => dispatch(updateReportName(reportId, reportName)),
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),

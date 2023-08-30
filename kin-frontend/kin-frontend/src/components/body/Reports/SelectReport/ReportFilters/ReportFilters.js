@@ -7,10 +7,10 @@ import reportFiltersCss from "./ReportFilters.module.css";
 import {updateFilters} from "../../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";
 
-const ReportFilters = ({updateFilters, reportNameFilter, dateFromFilter, dateToFilter, statusFilter}) => {
+const ReportFilters = ({page, updateFilters, reportNameFilter, dateFromFilter, dateToFilter, statusFilter}) => {
     const onReportNameFilterChange = (event) => {
         const reportName = event.target.value;
-        updateFilters(reportName, dateFromFilter, dateToFilter, statusFilter);
+        updateFilters(page, reportName, dateFromFilter, dateToFilter, statusFilter);
     }
 
     let {path, url} = useRouteMatch();
@@ -41,6 +41,7 @@ const ReportFilters = ({updateFilters, reportNameFilter, dateFromFilter, dateToF
 
 const mapStateToProps = (state) => {
     return {
+        page: state.reportsReducer.page,
         reportNameFilter: state.reportsReducer.reportsFilters.name,
         dateFromFilter: state.reportsReducer.reportsFilters.dateFrom,
         dateToFilter: state.reportsReducer.reportsFilters.dateTo,
