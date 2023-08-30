@@ -17,7 +17,7 @@ def _cast_string_to_date(date_string: str) -> date:
 
 class GenerateReportEntity(BaseModel):
     name: str = Field(..., max_length=80)
-    model_id: str = Field(..., alias="modelId")
+    model_code: str = Field(..., alias="modelCode")
     template_id: str | None = Field(..., alias="templateId")
     start_date: date = Field(..., alias="startDate")
     end_date: date = Field(..., alias="endDate")

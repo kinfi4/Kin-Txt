@@ -14,7 +14,7 @@ class GenerationTemplate(BaseModel):
     to_date: datetime = Field(..., alias="toDate")
     report_type: ReportTypes = Field(..., alias="reportType")
     template_id: str = Field(..., alias="templateId")
-    model_id: str = Field(..., alias="modelId")
+    model_code: str = Field(..., alias="modelCode")
     report_name: str = Field(..., alias="reportName")
 
     class Config:

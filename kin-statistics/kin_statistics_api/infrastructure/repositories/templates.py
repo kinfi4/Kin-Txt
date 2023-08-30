@@ -61,7 +61,7 @@ class TemplatesRepository:
             to_date=template_dict["to_date"],
             report_type=template_dict["report_type"],
             template_id=template_dict["template_id"],
-            model_id=template_dict["model_id"],
+            model_code=template_dict["model_code"],
             report_name=template_dict["report_name"],
         )
 
