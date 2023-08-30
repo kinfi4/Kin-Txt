@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 
 
 emoji_regex_compiled = re.compile(
@@ -24,3 +25,8 @@ emoji_regex_compiled = re.compile(
     "]+",
     re.UNICODE
 )
+
+
+class Languages(Enum):
+    UKRAINIAN = "uk"
+    RUSSIAN = "ru"
