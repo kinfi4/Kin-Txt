@@ -18,9 +18,9 @@ from kin_news_core.reports_building.exceptions import (
     ModelPredictionError, BaseValidationError,
 )
 from kin_news_core.reports_building.types import CategoryMapping, ValidationResult
-from kin_reports_generation.mixins import UnpackKerasArchiveMixin
+from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
-from kin_reports_generation.validation.keras_validation.supported_models import (
+from kin_generic_builder.validation.keras_validation.supported_models import (
     KERAS_SUPPORTED_TOKENIZERS,
     KERAS_SUPPORTED_MODELS,
 )

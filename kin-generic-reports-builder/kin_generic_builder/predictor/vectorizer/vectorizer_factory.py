@@ -4,8 +4,8 @@ import pickle
 from kin_news_core.reports_building.constants import ModelTypes
 from kin_news_core.reports_building.domain.entities import ModelEntity
 
-from kin_reports_generation.predictor.vectorizer.types import SklearnVectorizer, KerasVectorizer
-from kin_reports_generation.predictor.vectorizer.interface import ITextVectorizer
+from kin_generic_builder.predictor.vectorizer.types import SklearnVectorizer, KerasVectorizer
+from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 
 
 class VectorizerFactory:

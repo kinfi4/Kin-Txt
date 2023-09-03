@@ -8,7 +8,7 @@ from kin_news_core.reports_building.domain.services.validation.base_validator im
 from kin_news_core.reports_building.types import CategoryMapping, ValidationResult
 from kin_news_core.reports_building.domain.entities import ModelEntity
 
-from kin_reports_generation.validation.sklearn_validation.supported_models import (
+from kin_generic_builder.validation.sklearn_validation.supported_models import (
     SK_SUPPORTED_MODELS,
     SK_SUPPORTED_TOKENIZERS,
 )

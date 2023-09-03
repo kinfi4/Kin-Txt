@@ -2,9 +2,9 @@ from typing import Iterable
 
 from scipy.sparse import csr_matrix
 
-from kin_reports_generation.types import SkLearnSupportedVectorizers
+from kin_generic_builder.types import SkLearnSupportedVectorizers
 
-from kin_reports_generation.predictor.vectorizer.interface import ITextVectorizer
+from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 
 
 class SklearnVectorizer(ITextVectorizer):

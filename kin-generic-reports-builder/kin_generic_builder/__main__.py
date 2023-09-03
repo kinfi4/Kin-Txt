@@ -3,11 +3,11 @@ import click
 from kin_news_core.messaging.rabbit.dtos import Subscription
 from kin_news_core.reports_building import run_celery, run_consumer
 
-from kin_reports_generation.constants import GENERALE_EXCHANGE
-from kin_reports_generation.events.handlers import handle_delete_event
-from kin_reports_generation.predictor.factory import KinTxtDefaultPredictorFactory
-from kin_reports_generation.validation.factory import get_validator_factory
-from kin_reports_generation.events import ModelDeleted
+from kin_generic_builder.constants import GENERALE_EXCHANGE
+from kin_generic_builder.events.handlers import handle_delete_event
+from kin_generic_builder.predictor.factory import KinTxtDefaultPredictorFactory
+from kin_generic_builder.validation.factory import get_validator_factory
+from kin_generic_builder.events import ModelDeleted
 
 
 @click.group()

@@ -10,5 +10,5 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 RUN python -c "import nltk; nltk.download('punkt')"
 
-COPY ./kin_reports_generation/ /app/kin_reports_generation
+COPY ./kin_generic_builder/ /app/kin_generic_builder
 COPY ./submodules/kin-news-core/kin_news_core /app/kin_news_core

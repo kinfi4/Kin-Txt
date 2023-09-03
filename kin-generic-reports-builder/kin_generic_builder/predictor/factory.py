@@ -6,10 +6,10 @@ from kin_news_core.reports_building.domain.entities import ModelEntity
 from kin_news_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
 from kin_news_core.reports_building.exceptions import UnsupportedModelTypeError
 
-from kin_reports_generation.predictor.preprocessing.service import TextPreprocessor
-from kin_reports_generation.predictor.vectorizer.vectorizer_factory import VectorizerFactory
-from kin_reports_generation.settings import Settings
-from kin_reports_generation.mixins import UnpackKerasArchiveMixin
+from kin_generic_builder.predictor.preprocessing.service import TextPreprocessor
+from kin_generic_builder.predictor.vectorizer.vectorizer_factory import VectorizerFactory
+from kin_generic_builder.settings import Settings
+from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
 __all__ = ["KinTxtDefaultPredictorFactory"]
 
@@ -38,7 +38,7 @@ class KinTxtDefaultPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
         return model_type in (ModelTypes.SKLEARN, ModelTypes.KERAS)
 
     def _create_sk_learn_predictor(self, model_metadata: ModelEntity, text_preprocessor: TextPreprocessor) -> IPredictor:
-        from kin_reports_generation.predictor.predictor_types.sklearn_predictor import SkLearnPredictor
+        from kin_generic_builder.predictor.predictor_types.sklearn_predictor import SkLearnPredictor
 
         model = joblib.load(model_metadata.get_model_binaries_path(Settings().model_storage_path))
 
@@ -49,7 +49,7 @@ class KinTxtDefaultPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
         )
 
     def _create_keras_predictor(self, model_metadata: ModelEntity, text_preprocessor: TextPreprocessor) -> IPredictor:
-        from kin_reports_generation.predictor.predictor_types.keras_predictor import KerasPredictor
+        from kin_generic_builder.predictor.predictor_types.keras_predictor import KerasPredictor
 
         self._unpack_archive_if_needed(model_metadata.get_model_binaries_path(Settings().model_storage_path))
 

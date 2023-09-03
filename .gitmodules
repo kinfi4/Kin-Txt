@@ -10,3 +10,9 @@
 [submodule "kin-model-types/submodules/kin-txt-core"]
 	path = kin-model-types/submodules/kin-txt-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
+[submodule "kin-generic-reports-builder/submodules/kin-news-txt"]
+	path = kin-generic-reports-builder/submodules/kin-news-txt
+	url = git@github.com:kinfi4/Kin-News-Core.git
+[submodule "kin-generic-reports-builder/submodules/kin-txt-core"]
+	path = kin-generic-reports-builder/submodules/kin-txt-core
+	url = git@github.com:kinfi4/Kin-News-Core.git

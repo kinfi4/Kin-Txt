@@ -2,8 +2,8 @@ import os
 import shutil
 import logging
 
-from kin_reports_generation.events import ModelDeleted
-from kin_reports_generation.settings import Settings
+from kin_generic_builder.events import ModelDeleted
+from kin_generic_builder.settings import Settings
 
 _logger = logging.getLogger(__name__)
 

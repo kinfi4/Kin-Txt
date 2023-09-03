@@ -1,39 +1,39 @@
 version: '3'
 
 services:
-  reports-builder-consumer:
+  generic-builder-consumer:
     build:
       context: .
       dockerfile: etc/kin-reports-builder/Dockerfile
-    image: 'kin-reports-builder'
-    container_name: 'kin-reports-builder-consumer'
-    command: bash -c "python -m kin_reports_generation consume"
+    image: 'kin-generic-reports-builder'
+    container_name: 'kin-generic-builder-consumer'
+    command: bash -c "python -m kin_generic_builder consume"
     env_file:
       - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
-      - ./kin_reports_generation:/app/kin_reports_generation
+      - ./kin_generic_builder:/app/kin_generic_builder
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
-  celery_worker:
+  generic-builder-celery-worker:
     build:
       context: .
       dockerfile: etc/kin-reports-builder/Dockerfile
-    image: 'kin-reports-builder'
-    container_name: 'kin-statistics-celery-worker'
-    command: bash -c "python -m kin_reports_generation run-tasks"
+    image: 'kin-generic-reports-builder'
+    container_name: 'kin-generic-builder-celery-worker'
+    command: bash -c "python -m kin_generic_builder run-tasks"
     env_file:
       - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
-      - ./kin_reports_generation:/app/kin_reports_generation
+      - ./kin_generic_builder:/app/kin_generic_builder
       - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:
-      - reports-builder-consumer
+      - generic-builder-consumer
 
 networks:
   kin-network:

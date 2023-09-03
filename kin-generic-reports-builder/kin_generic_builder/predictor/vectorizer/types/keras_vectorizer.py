@@ -2,7 +2,7 @@ from typing import Iterable
 
 from keras.preprocessing.text import Tokenizer
 
-from kin_reports_generation.predictor.vectorizer.interface import ITextVectorizer
+from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 
 
 class KerasVectorizer(ITextVectorizer):

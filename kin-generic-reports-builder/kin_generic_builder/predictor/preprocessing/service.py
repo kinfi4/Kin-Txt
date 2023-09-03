@@ -12,9 +12,9 @@ from scipy.sparse.csr import csr_matrix
 
 from kin_news_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
-from kin_reports_generation.predictor.vectorizer.interface import ITextVectorizer
-from kin_reports_generation.constants import emoji_regex_compiled
-from kin_reports_generation.constants import Languages
+from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
+from kin_generic_builder.constants import emoji_regex_compiled
+from kin_generic_builder.constants import Languages
 
 
 class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
