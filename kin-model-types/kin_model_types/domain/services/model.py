@@ -1,10 +1,10 @@
 import os
 import logging
 
-from kin_model_types.events.events import ModelValidationRequestOccurred
+from kin_model_types.events.events import ModelValidationRequestOccurred, ModelDeleted
 from kin_news_core.messaging import AbstractEventProducer
 
-from kin_model_types.constants import ModelTypes
+from kin_model_types.constants import ModelTypes, GENERALE_EXCHANGE
 from kin_model_types.domain.entities import (
     ModelValidationEntity,
     CreateModelEntity,
@@ -66,6 +66,15 @@ class ModelService:
         }
 
         self._models_repository.update_model(model_code, username, update_dict)
+
+    def delete_model(self, username: str, model_code: str) -> None:
+        self._logger.info(f"[ModelService] Deleting model {model_code} for user {username}")
+        self._models_repository.delete_model(model_code, username)
+
+        self._events_publisher.publish(
+            GENERALE_EXCHANGE,
+            [ModelDeleted(code=model_code, username=username)],
+        )
 
     def _prepare_model_for_saving(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
         model.save_model_binaries(self._models_storing_path, username)

@@ -7,6 +7,7 @@ PROJECT_DESCRIPTION = "Kin-Model-Types is a service for storing, managing user m
 
 REPORTS_BUILDER_EXCHANGE = "ReportsBuilder"
 MODEL_TYPES_EXCHANGE = "ModelTypes"
+GENERALE_EXCHANGE = "General"
 
 
 class ModelStatuses(str, Enum):

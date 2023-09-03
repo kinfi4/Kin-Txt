@@ -82,10 +82,10 @@ def get_model(
 def delete_model(
     model_code: str,
     current_user: User = Depends(get_current_user),
-    models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
+    models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
     try:
-        models_repository.delete_model(model_code, username=current_user.username)
+        models_service.delete_model(username=current_user.username, model_code=model_code)
     except UserModelNotFoundException:
         pass
 

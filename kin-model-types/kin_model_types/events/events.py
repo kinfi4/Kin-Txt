@@ -17,3 +17,8 @@ class ModelValidationFinished(BasicEvent):
     username: str
     validation_passed: bool
     message: str = None
+
+
+class ModelDeleted(BasicEvent):
+    code: str
+    username: str

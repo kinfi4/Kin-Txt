@@ -4,6 +4,7 @@ from typing import Mapping, TypeAlias
 from bson import ObjectId
 from pymongo import MongoClient
 
+from kin_model_types import Settings
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.domain.entities import ModelEntity, ModelValidationEntity
 from kin_model_types.exceptions.base import UserModelNotFoundException
@@ -50,6 +51,7 @@ class ModelRepository:
         return self._map_dict_to_model_entity(model_dict)
 
     def delete_model(self, model_code: str, username: str) -> None:
+        self.get_model(model_code, username).delete_binaries(Settings().models_storage_path)
         self._models_collection.delete_one({"code": model_code, "owner_username": username})
 
     def update_model(self, model_code: str, username: str, model_dict: ModelDict) -> ModelEntity:

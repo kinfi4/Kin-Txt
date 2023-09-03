@@ -7,7 +7,6 @@ from kin_news_core.exceptions import AuthenticationFailedError
 from kin_model_types.domain.entities import User
 from kin_model_types.settings import Settings
 
-
 INTERNAL_URLS = [
     "/api/model-types/v1/model",
     "/api/model-types/v1/blobs/get-model-binaries",

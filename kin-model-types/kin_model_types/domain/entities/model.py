@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 
 from fastapi import UploadFile, Form, File
 from pydantic import BaseModel, Field
@@ -24,6 +25,9 @@ class ModelValidationEntity(BaseModel):
 
     def get_tokenizer_binaries_path(self, model_storage_path: str) -> str:
         return os.path.join(model_storage_path, self.owner_username, self.code, "tokenizer")
+
+    def delete_binaries(self, model_storage_path: str) -> None:
+        shutil.rmtree(os.path.join(model_storage_path, self.owner_username, self.code), ignore_errors=True)
 
     def dict(self, with_model_names: bool = False, *args, **kwargs):
         dct = super().dict(*args, **kwargs)
