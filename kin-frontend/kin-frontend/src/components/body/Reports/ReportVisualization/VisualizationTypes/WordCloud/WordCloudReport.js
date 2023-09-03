@@ -16,7 +16,7 @@ import {WORD_CLOUD_REPORT} from "../../../../../../config";
 import BackLink from "../../../../../common/backLink/BackLink";
 
 
-const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModal, reportsIdentifiers}) => {
+const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModal}) => {
     const colors = ['#408f5e', '#2F6B9A', '#82a6c2', '#BA97B4', '#2CA884', '#E39E21', '#00C6B5', '#BF8520'];
     const [filters, setFilters] = useState({channelFilter: "All Channels", categoryFilter: "All"});
 
@@ -46,7 +46,6 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                                     showModal(
                                         <ChoseReportToCompare
                                             reportType={WORD_CLOUD_REPORT}
-                                            reportsIdentifiers={reportsIdentifiers}
                                             currentReportId={report.reportId}
                                         />,
                                         500,
@@ -124,7 +123,6 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
 let mapStateToProps = (state) => {
     return {
         wordsList: state.wordsCloudReducer.wordsList,
-        reportsIdentifiers: state.reportsReducer.reports,
     }
 }
 

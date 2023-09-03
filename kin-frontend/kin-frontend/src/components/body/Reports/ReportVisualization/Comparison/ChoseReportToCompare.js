@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {NavLink} from "react-router-dom";
 
@@ -7,9 +7,25 @@ import ComparisonCss from "./ChoseComparisonReport.module.css"
 
 import {setComparisonReports} from "../../../../../redux/reducers/comparisonReducer";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
+import {STATISTICS_SERVICE_URL} from "../../../../../config";
+import APIRequester from "../../../../common/apiCalls/APIRequester";
 
 
-const ChoseReport = ({reportsIdentifiers, reportType, currentReportId, setComparisonReports, hideModalWindow}) => {
+const ChoseReport = ({reportType, currentReportId, setComparisonReports, hideModalWindow}) => {
+    const [reportsIdentifiers, setReports] = React.useState([]);
+
+    useEffect(() => {
+        const requestReports = async () => {
+            const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
+            const response = await apiRequester.get(`/reports?reportType=${reportType}&processingStatus=Ready`);
+            return response.data.data;
+        }
+
+        requestReports().then(r => setReports(r));
+    }, []);
+
+    console.log(reportsIdentifiers)
+
     function onChoseReport (reportId) {
         hideModalWindow();
         setComparisonReports(currentReportId, reportId);
@@ -21,9 +37,9 @@ const ChoseReport = ({reportsIdentifiers, reportType, currentReportId, setCompar
             <>
                 {
                     reportsIdentifiers.map((reportIdentifier, idx) => {
-                        if (reportIdentifier.reportId !== currentReportId && reportIdentifier.processingStatus === "Ready" && reportIdentifier.reportType === reportType) {
+                        if (reportIdentifier.reportId !== currentReportId) {
                             return (
-                                <NavLink to={"/reports/compare"}>
+                                <NavLink to={"/reports/compare"} key={idx}>
                                     <div
                                         key={idx}
                                         className={`${ComparisonCss.comparisonReportBlock}`}
@@ -49,4 +65,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(ChoseReport);
+export default connect(() => new Object(), mapDispatchToProps)(ChoseReport);

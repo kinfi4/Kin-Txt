@@ -76,6 +76,12 @@ export const fetchUserReports = () => async (dispatch, getState) => {
 
     try {
         const response = await apiRequester.get(`/reports${queryParams}`);
+
+        if(response.data.data.length === 0 && response.data.totalPages > 0) {
+            dispatch(updateReportsPage(response.data.totalPages - 1));
+            return;
+        }
+
         dispatch({type: REPORTS_LOADED, reports: response.data.data, totalPages: response.data.totalPages});
     } catch (error) {
         dispatch({type: REPORTS_STOP_LOADING})
