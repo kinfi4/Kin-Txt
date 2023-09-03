@@ -45,7 +45,7 @@ const PostponedReport = ({report, deleteReport}) => {
     );
 };
 
-let mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),
     }

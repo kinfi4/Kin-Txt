@@ -5,9 +5,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 95%;
+    width: 85%;
     color: #f7fdff;
     font-weight: bold;
+
+    margin-top: 10px;
 
     text-align: center;
 
@@ -53,7 +55,7 @@
     padding-bottom: 20px;
     z-index: 2;
     width: 100%;
-    min-width: 750px;
+    /*min-width: 750px;*/
 
     margin-top: 45px;
 
@@ -84,10 +86,15 @@
 }
 .visualizationContainer {
     position: relative;
-    width: 70%;
+    width: 85%;
     height: 100%;
 
-    padding: 20px;
+    overflow: auto;
+
+    margin-top: 30px;
+
+    padding: 5px 20px;
+
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
