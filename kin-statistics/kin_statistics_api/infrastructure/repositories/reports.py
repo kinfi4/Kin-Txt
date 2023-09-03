@@ -32,11 +32,14 @@ class ReportsMongoRepository(IReportRepository):
         filters = {"report_id": {"$in": report_ids}}
         filters.update(self._build_mongo_filters(apply_filters))
 
-        dict_reports = self._reports_collection.find(filters).skip(apply_filters.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
+        reports_cursor = self._reports_collection.find(filters)
+
+        if apply_filters.page is not None:
+            reports_cursor = reports_cursor.skip(apply_filters.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
         return [
             self._map_dict_to_identification_entity(report_dict)
-            for report_dict in dict_reports
+            for report_dict in reports_cursor
         ]
 
     def save_user_report(self, report: BaseReport) -> None:
@@ -126,5 +129,7 @@ class ReportsMongoRepository(IReportRepository):
             filters["date"]["$lte"] = apply_filters.date_to
         if apply_filters.processing_status is not None:
             filters["processing_status"] = apply_filters.processing_status
+        if apply_filters.report_type is not None:
+            filters["report_type"] = apply_filters.report_type
 
         return filters
