@@ -2,6 +2,8 @@ import re
 from enum import Enum
 
 
+GENERALE_EXCHANGE = "General"
+
 emoji_regex_compiled = re.compile(
     "["
     u"\U0001F600-\U0001F64F"  # emoticons

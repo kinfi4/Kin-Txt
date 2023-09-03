@@ -1,16 +1,16 @@
 import os
 import re
 import json
-from string import punctuation
 from typing import Iterable
+from string import punctuation
 
 import langid
 import pandas as pd
-from nltk.tokenize import word_tokenize
 from pymorphy2 import MorphAnalyzer
+from nltk.tokenize import word_tokenize
 from scipy.sparse.csr import csr_matrix
 
-from kin_news_core.reports_building.domain.services.predicting.preprocessing.interface import ITextPreprocessor
+from kin_news_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
 from kin_reports_generation.predictor.vectorizer.interface import ITextVectorizer
 from kin_reports_generation.constants import emoji_regex_compiled
