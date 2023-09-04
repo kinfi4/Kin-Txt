@@ -1,6 +1,6 @@
 from fastapi import Header, HTTPException, status, Request
 
-from kin_news_core.auth import decode_jwt_token, decode_kin_token
+from kin_news_core.auth import decode_jwt_token, decode_kin_token, InternalUrl
 from kin_news_core.constants import KIN_TOKEN_PREFIX, USERNAME_HEADER
 from kin_news_core.exceptions import AuthenticationFailedError
 
@@ -8,10 +8,11 @@ from kin_model_types.domain.entities import User
 from kin_model_types.settings import Settings
 
 INTERNAL_URLS = [
-    "/api/model-types/v1/model",
-    "/api/model-types/v1/blobs/get-model-binaries",
-    "/api/model-types/v1/blobs/get-tokenizer-binaries",
-    "/api/model-types/v1/visualization-template",
+    InternalUrl(url="/api/model-types/v1/model", method="GET"),
+    InternalUrl(url="/api/model-types/v1/models/register", method="POST"),
+    InternalUrl(url="/api/model-types/v1/blobs/get-model-binaries", method="GET"),
+    InternalUrl(url="/api/model-types/v1/blobs/get-tokenizer-binaries", method="GET"),
+    InternalUrl(url="/api/model-types/v1/visualization-template", method="GET"),
 ]
 
 
@@ -19,10 +20,7 @@ def get_current_user(request: Request, authorization: str = Header(None)):
     if not authorization:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED)
 
-    if authorization.startswith(KIN_TOKEN_PREFIX) and any([internal_path in request.url.path for internal_path in INTERNAL_URLS]):
-        if request.method != "GET":
-            raise HTTPException(status.HTTP_405_METHOD_NOT_ALLOWED)
-
+    if authorization.startswith(KIN_TOKEN_PREFIX) and any([internal_url.satisfies_request(request) for internal_url in INTERNAL_URLS]):
         try:
             decoded_token = decode_kin_token(authorization)
         except AuthenticationFailedError:

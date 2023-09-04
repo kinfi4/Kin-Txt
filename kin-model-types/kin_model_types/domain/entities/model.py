@@ -118,3 +118,10 @@ class UpdateModelEntity(CreateModelEntity):
             tokenizer_data=tokenizer_data,
             models_has_changed=models_has_changed
         )
+
+
+class CustomModelRegistrationEntity(BaseModel):
+    name: str
+    code: str
+    owner_username: str = Field(..., alias="ownerUsername")
+    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")

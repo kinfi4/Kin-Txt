@@ -8,7 +8,7 @@ from kin_model_types.constants import ModelTypes, GENERALE_EXCHANGE
 from kin_model_types.domain.entities import (
     ModelValidationEntity,
     CreateModelEntity,
-    UpdateModelEntity,
+    UpdateModelEntity, CustomModelRegistrationEntity,
 )
 from kin_model_types.exceptions import UnsupportedModelTypeError
 from kin_model_types.infrastructure.repositories import ModelRepository
@@ -29,10 +29,6 @@ class ModelService:
         self._logger = logging.getLogger(__name__)
 
     def validate_model(self, username: str, model: CreateModelEntity) -> None:
-        """
-            This method returns a model entity that needs to be validated.
-        """
-
         model_to_save = self._prepare_model_for_saving(username, model)
         model_to_validate = self._models_repository.save_new_model(model_to_save)
 
@@ -42,11 +38,6 @@ class ModelService:
         )
 
     def update_model(self, username: str, model_code: str, model: UpdateModelEntity) -> None:
-        """
-            This method returns a tuple, with first elements indicating if model needs validation.
-            While the second element is the model entity that needs to be validated or None if model doesn't need validation.
-        """
-
         if model.models_has_changed:
             model_to_save = self._prepare_model_for_saving(username, model)
 
@@ -74,6 +65,24 @@ class ModelService:
         self._events_publisher.publish(
             GENERALE_EXCHANGE,
             [ModelDeleted(code=model_code, username=username)],
+        )
+
+    def register_custom_model(self, model_entity: CustomModelRegistrationEntity) -> None:
+        self._logger.info(f"[ModelService] Registering custom model {model_entity.code} for user {model_entity.owner_username}")
+
+        model_to_save = ModelValidationEntity(
+            code=model_entity.code,
+            name=model_entity.name,
+            model_type=ModelTypes.CUSTOM,
+            category_mapping=model_entity.category_mapping,
+            owner_username=model_entity.owner_username,
+        )
+
+        model_to_validate = self._models_repository.save_new_model(model_to_save)
+
+        self._events_publisher.publish(
+            REPORTS_BUILDER_EXCHANGE,
+            [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
         )
 
     def _prepare_model_for_saving(self, username: str, model: CreateModelEntity) -> ModelValidationEntity:
