@@ -2,6 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from kin_news_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
 
 
@@ -16,6 +17,7 @@ class GenerationTemplate(BaseModel):
     template_id: str = Field(..., alias="templateId")
     model_code: str = Field(..., alias="modelCode")
     report_name: str = Field(..., alias="reportName")
+    datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
 
     class Config:
         allow_population_by_field_name = True

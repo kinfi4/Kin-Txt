@@ -4,6 +4,7 @@ from typing import Any, Union
 from pydantic import BaseModel, Field, ValidationError, root_validator, validator
 
 from kin_news_core.constants import DEFAULT_DATE_FORMAT
+from kin_news_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
 from kin_statistics_api.settings import Settings
 
@@ -23,6 +24,7 @@ class GenerateReportEntity(BaseModel):
     end_date: date = Field(..., alias="endDate")
     channel_list: list[str] = Field(..., alias="channels")
     report_type: ReportTypes = Field(..., alias="reportType")
+    datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
 
     @validator("channel_list", pre=True, allow_reuse=True)
     def validate_channels(cls, channels: list[str]) -> list[str]:
