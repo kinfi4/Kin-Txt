@@ -13,7 +13,7 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_generic_builder:/app/kin_generic_builder
+      - ./kin_news_classification:/app/kin_news_classification
       - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
@@ -29,7 +29,7 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_generic_builder:/app/kin_generic_builder
+      - ./kin_news_classification:/app/kin_news_classification
       - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:

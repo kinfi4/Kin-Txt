@@ -1,3 +1,4 @@
+from kin_news_classification.predictor.predictor import NewsTypePredictor
 from kin_news_core.reports_building.constants import ModelTypes
 from kin_news_core.reports_building.domain.entities import ModelEntity, CustomModelRegistrationEntity
 from kin_news_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
@@ -19,7 +20,7 @@ class KinBertNewsClassificator(IPredictorFactory):
     )
 
     def create_predictor(self, model_entity: ModelEntity) -> IPredictor:
-        raise NotImplemented("Bert model is not implemented yet")
+        return NewsTypePredictor()
 
     def is_handling(self, model_type: ModelTypes, model_code: str) -> bool:
         return model_type == ModelTypes.CUSTOM and model_code == self.model_type.code
