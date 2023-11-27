@@ -8,3 +8,7 @@ class UserModelNotFoundException(EntityNotFoundException):
 
 class UserTemplateNotFoundException(EntityNotFoundException):
     pass
+
+
+class ImpossibleToUpdateCustomModelException(Exception):
+    pass

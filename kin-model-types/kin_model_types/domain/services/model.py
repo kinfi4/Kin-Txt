@@ -10,7 +10,7 @@ from kin_model_types.domain.entities import (
     CreateModelEntity,
     UpdateModelEntity, CustomModelRegistrationEntity,
 )
-from kin_model_types.exceptions import UnsupportedModelTypeError
+from kin_model_types.exceptions import UnsupportedModelTypeError, ImpossibleToUpdateCustomModelException
 from kin_model_types.infrastructure.repositories import ModelRepository
 from kin_model_types.constants import REPORTS_BUILDER_EXCHANGE
 
@@ -38,6 +38,11 @@ class ModelService:
         )
 
     def update_model(self, username: str, model_code: str, model: UpdateModelEntity) -> None:
+        current_model = self._models_repository.get_model(model_code, username)
+
+        if current_model.model_type == ModelTypes.CUSTOM:
+            raise ImpossibleToUpdateCustomModelException(f"Impossible to update custom model {model_code}")
+
         if model.models_has_changed:
             model_to_save = self._prepare_model_for_saving(username, model)
 
