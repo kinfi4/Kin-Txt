@@ -6,7 +6,7 @@ from pymongo import MongoClient
 
 from kin_model_types import Settings
 from kin_model_types.constants import ModelStatuses
-from kin_model_types.domain.entities import ModelEntity, ModelValidationEntity
+from kin_model_types.domain.entities import ModelEntity, ModelValidationEntity, ModelFilters
 from kin_model_types.exceptions.base import UserModelNotFoundException
 from kin_model_types.types import CategoryMapping
 
@@ -33,8 +33,16 @@ class ModelRepository:
 
         return self._map_dict_to_model_entity(model_dict)
 
-    def get_user_models(self, username: str) -> list[ModelEntity]:
-        models_dicts = self._models_collection.find({"owner_username": username})
+    def get_user_models(self, username: str, filters: ModelFilters | None = None) -> list[ModelEntity]:
+        self._logger.info(f"[ModelRepository] Getting models for user {username} with filters {filters}")
+
+        filters_dict = {"owner_username": username}
+
+        if filters:
+            filters_dict.update(filters.dict(exclude_none=True))
+
+        models_dicts = self._models_collection.find(filters_dict)
+
         return [
             self._map_dict_to_model_entity(model_dict)
             for model_dict in models_dicts

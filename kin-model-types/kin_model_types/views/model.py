@@ -4,7 +4,14 @@ from fastapi.responses import Response, JSONResponse
 from pymongo.errors import DuplicateKeyError
 
 from kin_model_types.containers import Container
-from kin_model_types.domain.entities import User, ModelEntity, CreateModelEntity, UpdateModelEntity, CustomModelRegistrationEntity
+from kin_model_types.domain.entities import (
+    ModelFilters,
+    User,
+    ModelEntity,
+    CreateModelEntity,
+    UpdateModelEntity,
+    CustomModelRegistrationEntity,
+)
 from kin_model_types.views.helpers.auth import get_current_user
 from kin_model_types.domain.services.model import ModelService
 from kin_model_types.infrastructure.repositories import ModelRepository
@@ -15,17 +22,17 @@ from kin_model_types.exceptions import (
     ImpossibleToUpdateCustomModelException,
 )
 
-
 router = APIRouter(prefix="/models")
 
 
 @router.get("", response_model=list[ModelEntity])
 @inject
 def get_user_models(
+    filters: ModelFilters = Depends(),
     current_user: User = Depends(get_current_user),
     models_repository: ModelRepository = Depends(Provide[Container.repositories.model_repository]),
 ):
-    return models_repository.get_user_models(current_user.username)
+    return models_repository.get_user_models(current_user.username, filters)
 
 
 @router.post("")

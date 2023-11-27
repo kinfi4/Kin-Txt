@@ -10,6 +10,10 @@ from kin_model_types.types import CategoryMapping
 from kin_model_types.constants import ModelTypes
 
 
+class ModelFilters(BaseModel):
+    model_status: ModelStatuses | None = Field(None, alias="modelStatus")
+
+
 class ModelValidationEntity(BaseModel):
     name: str
     code: str
