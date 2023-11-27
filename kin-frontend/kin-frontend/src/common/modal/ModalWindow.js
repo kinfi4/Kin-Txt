@@ -1,7 +1,7 @@
 import React from "react";
 import s from './ModalWindow.module.css'
 import {connect} from "react-redux";
-import {hideModalWindow} from "../../../redux/reducers/modalWindowReducer";
+import {hideModalWindow} from "../../redux/reducers/modalWindowReducer";
 
 let ModalWindow = (props) => {
     return (

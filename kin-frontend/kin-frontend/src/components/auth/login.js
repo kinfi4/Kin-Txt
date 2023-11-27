@@ -2,10 +2,10 @@ import React from "react";
 import authCss from "./auth.module.css"
 import {connect} from "react-redux";
 import {login} from "../../redux/reducers/authReducer";
-import Input from "../common/input/Input";
+import Input from "../../common/input/Input";
 import {useState} from "react";
 import {NavLink} from "react-router-dom";
-import Button from "../common/button/Button";
+import Button from "../../common/button/Button";
 
 function Login(props) {
     const [details, setDetails] = useState({username: "", password: ""})

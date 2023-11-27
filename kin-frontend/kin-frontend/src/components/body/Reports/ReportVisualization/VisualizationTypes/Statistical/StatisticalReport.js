@@ -9,7 +9,7 @@ import {STATISTICAL_REPORT, STATISTICS_SERVICE_URL} from "../../../../../../conf
 import {downloadFile, transformLargeNumberToReadable} from "../../../../../../utils/utils";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReducer";
-import BackLink from "../../../../../common/backLink/BackLink";
+import BackLink from "../../../../../../common/backLink/BackLink";
 import {ReportBuilder} from "./Charts/ReportBuilder";
 
 

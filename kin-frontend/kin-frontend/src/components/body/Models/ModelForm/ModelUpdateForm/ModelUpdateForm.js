@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 
-import APIRequester from "../../../../common/apiCalls/APIRequester";
+import APIRequester from "../../../../../common/apiCalls/APIRequester";
 import {ModelTypes, MODEL_TYPES_URL} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";

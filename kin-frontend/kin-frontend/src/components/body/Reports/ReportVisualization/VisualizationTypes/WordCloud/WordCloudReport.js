@@ -13,7 +13,7 @@ import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReduc
 import SelectFilteredWords from "../../helpers/SelectFilteredWords";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {WORD_CLOUD_REPORT} from "../../../../../../config";
-import BackLink from "../../../../../common/backLink/BackLink";
+import BackLink from "../../../../../../common/backLink/BackLink";
 
 
 const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModal}) => {

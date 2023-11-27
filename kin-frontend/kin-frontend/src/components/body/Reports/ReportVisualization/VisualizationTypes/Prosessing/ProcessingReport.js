@@ -1,6 +1,6 @@
 import React from 'react';
 import processingIcon from "../../../../../../images/processing-icon.png";
-import BackLink from "../../../../../common/backLink/BackLink";
+import BackLink from "../../../../../../common/backLink/BackLink";
 
 const ProcessingReport = () => {
     return (

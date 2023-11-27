@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 
-import commonStyles from "../../common/CommonStyles.module.css";
+import commonStyles from "../../../common/CommonStyles.module.css";
 import selectReportMenuCss from "../Reports/SelectReport/SelectReportMenu.module.css";
 import mainPageCss from "../MainPage.module.css";
 import statisticsCss from "../Reports/Statistics.module.css";

@@ -12,10 +12,10 @@ import PostponedReport from "./VisualizationTypes/Postponed/PostponedReport";
 import StatisticalReport from "./VisualizationTypes/Statistical/StatisticalReport";
 import ProcessingReport from "./VisualizationTypes/Prosessing/ProcessingReport";
 import WordCloudReport from "./VisualizationTypes/WordCloud/WordCloudReport";
-import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
-import BackLink from "../../../common/backLink/BackLink";
+import LoadingSpinner from "../../../../common/spiner/LoadingSpinner";
+import BackLink from "../../../../common/backLink/BackLink";
 import {startLoading, stopLoading} from "../../../../redux/reducers/reportsReducer";
-import APIRequester from "../../../common/apiCalls/APIRequester";
+import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {showMessage} from "../../../../utils/messages";
 
 const ReportVisualization = ({reportId, reportIsLoading, startReportLoading, endReportLoading}) => {

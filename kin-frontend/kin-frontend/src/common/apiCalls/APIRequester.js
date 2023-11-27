@@ -1,6 +1,6 @@
 import axios from "axios";
-import {LOGOUT} from "../../../redux/reducers/authReducer";
-import {FETCH_ERROR} from "../../../redux/reducers/channelsReducer";
+import {LOGOUT} from "../../redux/reducers/authReducer";
+import {FETCH_ERROR} from "../../redux/reducers/channelsReducer";
 
 
 export default class APIRequester {
@@ -13,10 +13,17 @@ export default class APIRequester {
         axios.defaults.xsrfCookieName = "csrftoken";
     }
 
-    async get(path) {
+    async get(path, params=null) {
         try {
-            return  await axios.get(
-                this.url + path,
+            let url = this.url + path;
+
+            const urlParams = "?" + new URLSearchParams(params).toString();
+            if(urlParams.length > 1) {
+                url += urlParams;
+            }
+
+            return await axios.get(
+                url,
                 {headers: this._buildHeaders()},
             );
         } catch (error) {

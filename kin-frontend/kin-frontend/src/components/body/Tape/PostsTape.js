@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react';
-import LoadingSpinner from "../../common/spiner/LoadingSpinner";
+import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
 import {fetchNextPosts} from "../../../redux/reducers/postsReducer";
 import {connect} from "react-redux";
 import Post from "./Post/Post";

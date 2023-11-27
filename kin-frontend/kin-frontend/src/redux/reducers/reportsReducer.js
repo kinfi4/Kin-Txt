@@ -3,7 +3,7 @@ import {NEWS_SERVICE_URL, REPORT_STATUS_POSTPONED, STATISTICS_SERVICE_URL} from 
 import {FETCH_ERROR} from "./channelsReducer";
 import {showMessage} from "../../utils/messages";
 import {translateDateToString} from "../../utils/utils";
-import APIRequester from "../../components/common/apiCalls/APIRequester";
+import APIRequester from "../../common/apiCalls/APIRequester";
 import {hideModalWindow} from "./modalWindowReducer";
 
 

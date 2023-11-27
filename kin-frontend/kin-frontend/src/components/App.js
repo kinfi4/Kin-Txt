@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import {ReactNotifications} from "react-notifications-component";
 
 import Header from "./header/Header";
-import ModalWindow from "./common/modal/ModalWindow";
+import ModalWindow from "../common/modal/ModalWindow";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import Statistics from "./body/Reports/Reports";

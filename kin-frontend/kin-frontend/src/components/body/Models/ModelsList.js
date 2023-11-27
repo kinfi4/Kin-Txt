@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
-import commonStyles from "../../common/CommonStyles.module.css";
+import commonStyles from "../../../common/CommonStyles.module.css";
 import selectReportMenuCss from "../Reports/SelectReport/SelectReportMenu.module.css";
 import mainPageCss from "../MainPage.module.css";
 import statisticsCss from "../Reports/Statistics.module.css";

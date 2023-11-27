@@ -3,16 +3,16 @@ import Select from "react-select";
 
 import formStyles from "./../ModelFormStyles.module.css";
 import statsStyles from "../../../Reports/Statistics.module.css";
-import commonStyles from "../../../../common/CommonStyles.module.css";
+import commonStyles from "../../../../../common/CommonStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
 import {ModelTypes} from "../../../../../config";
 import InsertModelFiles from "../common/InsertModelFiles";
-import FormInput from "../../../../common/formInputName/FormInput";
+import FormInput from "../../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
 import {selectStyles} from "../../../Reports/GenerateReportMenu/styles/formStyles";
-import BackLink from "../../../../common/backLink/BackLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 
 const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=false}) => {
     return (

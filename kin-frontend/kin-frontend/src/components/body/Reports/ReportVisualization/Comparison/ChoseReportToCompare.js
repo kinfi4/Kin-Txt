@@ -8,7 +8,7 @@ import ComparisonCss from "./ChoseComparisonReport.module.css"
 import {setComparisonReports} from "../../../../../redux/reducers/comparisonReducer";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {STATISTICS_SERVICE_URL} from "../../../../../config";
-import APIRequester from "../../../../common/apiCalls/APIRequester";
+import APIRequester from "../../../../../common/apiCalls/APIRequester";
 
 
 const ChoseReport = ({reportType, currentReportId, setComparisonReports, hideModalWindow}) => {

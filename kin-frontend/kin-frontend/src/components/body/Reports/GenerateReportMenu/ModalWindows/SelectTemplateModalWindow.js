@@ -8,7 +8,7 @@ import GenerateReportCss from "../styles/GenerateReport.module.css";
 import {STATISTICS_SERVICE_URL} from "../../../../../config";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
 import {showMessage} from "../../../../../utils/messages";
-import APIRequester from "../../../../common/apiCalls/APIRequester";
+import APIRequester from "../../../../../common/apiCalls/APIRequester";
 
 const SelectTemplateModalWindow = ({choseTemplate, hideModalWindow, ...props}) => {
     const [templates, setTemplates] = useState([]);

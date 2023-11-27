@@ -5,7 +5,7 @@ import StatisticalReport from "../Reports/ReportVisualization/VisualizationTypes
 import {WORD_CLOUD_REPORT} from "../../../config";
 import WordCloudReport from "../Reports/ReportVisualization/VisualizationTypes/WordCloud/WordCloudReport";
 import {setNullComparisonReports} from "../../../redux/reducers/comparisonReducer";
-import LoadingSpinner from "../../common/spiner/LoadingSpinner";
+import LoadingSpinner from "../../../common/spiner/LoadingSpinner";
 
 const ComparisonWindow = ({firstReport, secondReport, reportsAreLoading, setNullComparisonReports}) => {
     useEffect(() => {

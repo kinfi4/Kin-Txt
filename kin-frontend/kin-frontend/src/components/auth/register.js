@@ -1,11 +1,11 @@
 import React from "react";
-import Input from "../common/input/Input";
+import Input from "../../common/input/Input";
 import {NavLink} from "react-router-dom";
 import authCss from "./auth.module.css";
 import {useState} from "react";
 import {register} from "../../redux/reducers/authReducer";
 import {connect} from "react-redux";
-import Button from "../common/button/Button";
+import Button from "../../common/button/Button";
 
 
 function Register(props) {

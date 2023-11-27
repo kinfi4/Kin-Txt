@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 
 import selectReportMenuCss from "./SelectReportMenu.module.css"
-import commonStyles from "../../../common/CommonStyles.module.css";
+import commonStyles from "../../../../common/CommonStyles.module.css";
 
 import {
     deleteReport,
@@ -12,7 +12,7 @@ import {
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
 import ReportFilters from "./ReportFilters/ReportFilters";
-import Pagination from "../../../common/pagination/Pagination";
+import Pagination from "../../../../common/pagination/Pagination";
 
 
 const SelectReportMenu = ({reportNames, fetchUserReports, currentPage, updatePage, totalPages, ...props}) => {

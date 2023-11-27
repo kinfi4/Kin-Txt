@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import selectReportMenuCss from "../SelectReportMenu.module.css";
 import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
-import Input from "../../../../common/input/Input";
+import Input from "../../../../../common/input/Input";
 import reportFiltersCss from "./ReportFilters.module.css";
 import {updateFilters} from "../../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";

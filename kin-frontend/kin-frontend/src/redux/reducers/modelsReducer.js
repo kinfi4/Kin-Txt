@@ -3,6 +3,7 @@ import axios from "axios";
 import {FETCH_ERROR} from "./channelsReducer";
 import {MODEL_TYPES_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
+import APIRequester from "../../common/apiCalls/APIRequester";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -14,29 +15,23 @@ let initialState = {
 const MODELS_LOADED = "MODELS_LOADED";
 
 
-export const loadUserModels = () => (dispatch) => {
-    const token = localStorage.getItem("token")
+export const loadUserModels = (filters=null) => (dispatch) => {
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
-    axios.get(MODEL_TYPES_URL + "/models", {
-        headers: {
-            "Authorization": `Token ${token}`,
-        }
-    }).then(res => {
+    const URL = "/models";
+
+    apiRequester.get(URL, filters).then(res => {
         dispatch({type: MODELS_LOADED, models: res.data})
     }).catch(err => {
         console.log(err.response.data.errors)
         dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
-    });
+    })
 };
 
 export const deleteModel = (modelId) => (dispatch) => {
-    const token = localStorage.getItem("token")
+    const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
-    axios.delete(MODEL_TYPES_URL + "/models/" + modelId, {
-        headers: {
-            "Authorization": `Token ${token}`,
-        }
-    }).then(res => {
+    apiRequester.delete("/models/" + modelId).then(res => {
         dispatch(loadUserModels())
     }).catch(err => {
         console.log(err.response.data.errors)

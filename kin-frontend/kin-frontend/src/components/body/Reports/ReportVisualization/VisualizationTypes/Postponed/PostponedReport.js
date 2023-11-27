@@ -6,7 +6,7 @@ import {
     deleteReport,
 } from "../../../../../../redux/reducers/reportsReducer";
 import {connect} from "react-redux";
-import BackLink from "../../../../../common/backLink/BackLink";
+import BackLink from "../../../../../../common/backLink/BackLink";
 
 const PostponedReport = ({report, deleteReport}) => {
     const onDeleteClick = () => {

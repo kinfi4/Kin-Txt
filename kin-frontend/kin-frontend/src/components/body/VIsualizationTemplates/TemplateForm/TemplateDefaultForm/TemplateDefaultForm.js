@@ -1,14 +1,14 @@
 import React from "react";
 
 import statsStyles from "../../../Reports/Statistics.module.css";
-import commonStyles from "../../../../common/CommonStyles.module.css";
+import commonStyles from "../../../../../common/CommonStyles.module.css";
 import styles from "./DefaultFormStyles.module.css";
 import formStyles from "../../../Models/ModelForm/ModelFormStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
-import FormInput from "../../../../common/formInputName/FormInput";
+import FormInput from "../../../../../common/formInputName/FormInput";
 import FormChart from "./Charts/FormChart";
-import BackLink from "../../../../common/backLink/BackLink";
+import BackLink from "../../../../../common/backLink/BackLink";
 
 
 const possibleCharts = {

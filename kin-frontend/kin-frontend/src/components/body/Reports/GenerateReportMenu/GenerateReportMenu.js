@@ -16,16 +16,16 @@ import {
     STATISTICS_SERVICE_URL,
     WORD_CLOUD_REPORT
 } from "../../../../config";
-import BackLink from "../../../common/backLink/BackLink";
+import BackLink from "../../../../common/backLink/BackLink";
 import {showMessage} from "../../../../utils/messages";
-import InputModalWindow from "../../../common/inputModalWindow/InputModalWindow";
+import InputModalWindow from "../../../../common/inputModalWindow/InputModalWindow";
 import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow";
 import {loadUserTemplates} from "../../../../redux/reducers/visualizationTemplates";
 import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
-import APIRequester from "../../../common/apiCalls/APIRequester";
+import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {selectStyles, multiSelectStyles} from "./styles/formStyles";
-import FormInput from "../../../common/formInputName/FormInput";
-import commonStyles from "../../../common/CommonStyles.module.css";
+import FormInput from "../../../../common/formInputName/FormInput";
+import commonStyles from "../../../../common/CommonStyles.module.css";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -54,7 +54,7 @@ const GenerateReportMenu = ({
 
     useEffect(() => {
         loadUserTemplates();
-        loadUserModels();
+        loadUserModels({modelStatus: "Validated"});
     }, []);
 
     const handleChannelsListChange = async (selectedOptions, action) => {
@@ -344,7 +344,7 @@ const mapDispatchToProps = (dispatch) => {
         sendGenerationRequest: (data) => dispatch(generateReport(data)),
         showModalWindow: (content, width, height) => dispatch(showModalWindow(content, width, height)),
         hideModalWindow: () => dispatch(hideModalWindow),
-        loadUserModels: () => dispatch(loadUserModels()),
+        loadUserModels: (modelFilters) => dispatch(loadUserModels(modelFilters)),
         loadUserTemplates: () => dispatch(loadUserTemplates()),
     }
 }

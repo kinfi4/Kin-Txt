@@ -1,5 +1,5 @@
 import React from "react";
-import statsCss from "../../body/Reports/Statistics.module.css";
+import statsCss from "../../components/body/Reports/Statistics.module.css";
 import {IoIosArrowRoundBack} from "react-icons/io"
 import {Link} from "react-router-dom";
 

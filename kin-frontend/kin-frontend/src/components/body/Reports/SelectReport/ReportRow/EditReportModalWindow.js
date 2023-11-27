@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import TapeCss from "../../../Tape/Tape.module.css";
-import Input from "../../../../common/input/Input";
-import Button from "../../../../common/button/Button";
+import Input from "../../../../../common/input/Input";
+import Button from "../../../../../common/button/Button";
 
 const EditReportModalWindow = (props) => {
     let [data, setData] = useState({reportName: props.reportName});

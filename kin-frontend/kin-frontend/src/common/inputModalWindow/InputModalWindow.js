@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import TapeCss from "../../body/Tape/Tape.module.css";
+import TapeCss from "../../components/body/Tape/Tape.module.css";
 import Input from "../input/Input";
 import Button from "../button/Button";
 
