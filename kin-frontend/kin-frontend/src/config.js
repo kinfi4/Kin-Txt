@@ -24,6 +24,7 @@ export const REQUEST_IS_TOO_EARLY_STATUS_CODE = 425
 export const ModelTypes = {
     SKLEARN_MODEL: "Sklearn Model",
     KERAS: "Keras Model",
+    CUSTOM: "Custom Model",
 }
 
 export const ModelStatuses = {
@@ -31,4 +32,10 @@ export const ModelStatuses = {
     VALIDATION_FAILED: "ValidationFailed",
     VALIDATING: "Validating",
     CREATED: "Created"
+}
+
+export const DatasourceTypes = {
+    TELEGRAM: "telegram",
+    TWITTER: "twitter",
+    CUSTOM: "custom",
 }

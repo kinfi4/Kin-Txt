@@ -19,7 +19,12 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
         <div className={statsStyles.statsContainer}>
             <BackLink url={"/models"} />
 
-            <h2 className={commonStyles.pageTitle}>{isUpdateForm ? "Update Model" : "Create Model"}</h2>
+            <h2
+                className={commonStyles.pageTitle}
+                style={{marginBottom: "100px"}}
+            >
+                {isUpdateForm ? "Update Model" : "Create Model"}
+            </h2>
 
             <ModelValidationMessageBlock
                 validationStatus={data.modelStatus}

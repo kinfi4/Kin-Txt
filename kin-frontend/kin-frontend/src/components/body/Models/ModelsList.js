@@ -9,7 +9,7 @@ import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 import {deleteModel, loadUserModels} from "../../../redux/reducers/modelsReducer";
-import {ModelStatuses} from "../../../config";
+import {ModelStatuses, ModelTypes} from "../../../config";
 
 let modelStatusToStatusClass = {
     [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
@@ -27,7 +27,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
 
     let {path, _} = useRouteMatch();
 
-    const ModelCell = ({name, code, status, deleteModel}) => {
+    const ModelCell = ({name, code, status, modelType, deleteModel}) => {
         const onDeleteClick = () => {
             let userConfirm = window.confirm("Are you sure to delete this model?");
             if (userConfirm) {
@@ -38,7 +38,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
         return (
             <tr>
                 <td>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>
+                    {modelType === ModelTypes.CUSTOM ? name : <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>}
                 </td>
                 <td
                     className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
@@ -46,7 +46,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                     <div className={selectReportMenuCss.circle}></div> {status}
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit /></Link>
+                    {modelType === ModelTypes.CUSTOM ? "" : <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit /></Link>}
                     <span onClick={onDeleteClick}><AiFillDelete /></span>
                 </td>
             </tr>
@@ -77,6 +77,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                                             code={model.code}
                                             name={model.name}
                                             status={model.modelStatus}
+                                            modelType={model.modelType}
                                             deleteModel={deleteModel}
                                             key={index}
                                         />

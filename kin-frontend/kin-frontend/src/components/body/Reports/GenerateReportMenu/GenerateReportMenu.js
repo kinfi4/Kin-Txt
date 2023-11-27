@@ -10,6 +10,7 @@ import mainPageCss from "../../MainPage.module.css";
 import {hideModalWindow, showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import {generateReport} from "../../../../redux/reducers/reportsReducer";
 import {
+    DatasourceTypes,
     NEWS_SERVICE_URL,
     STATISTICAL_REPORT,
     STATISTICS_SERVICE_URL,
@@ -24,6 +25,7 @@ import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
 import APIRequester from "../../../common/apiCalls/APIRequester";
 import {selectStyles, multiSelectStyles} from "./styles/formStyles";
 import FormInput from "../../../common/formInputName/FormInput";
+import commonStyles from "../../../common/CommonStyles.module.css";
 
 
 const ACTION_CREATE_OPTION = "create-option";
@@ -36,6 +38,7 @@ const initialGenerateReportState = {
     templateId: "",
     modelCode: "",
     name: "",
+    datasource: DatasourceTypes.TELEGRAM,
 }
 
 const GenerateReportMenu = ({
@@ -145,6 +148,8 @@ const GenerateReportMenu = ({
     return (
         <>
             <BackLink url={"/reports"} />
+
+            <h2 className={commonStyles.pageTitle}>Generate Report</h2>
 
             <div className={statsCss.generateReportForm}>
                 <div className={statsCss.controls}>
@@ -269,6 +274,24 @@ const GenerateReportMenu = ({
                             />
                         </div>
                     }
+
+                    <div className={statsCss.generateReportFormFieldContainer}>
+                        <label
+                            id="datasource"
+                            className={statsCss.generateReportFormLabel}
+                        >
+                            Datasource:
+                        </label>
+
+                        <Select
+                            isSearchable={true}
+                            name="datasource"
+                            value={{value: data.datasource, label: data.datasource}}
+                            onChange={newValue => setData({...data, datasource: newValue.value})}
+                            options={Object.entries(DatasourceTypes).map(item => ({value: item[1], label: item[1]}))}
+                            styles={selectStyles}
+                        />
+                    </div>
 
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label
