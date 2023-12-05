@@ -5,7 +5,7 @@ from kin_news_core.reports_building import run_celery, run_consumer
 
 from kin_generic_builder.constants import GENERALE_EXCHANGE
 from kin_generic_builder.events.handlers import handle_delete_event
-from kin_generic_builder.predictor.factory import KinTxtDefaultPredictorFactory
+from kin_generic_builder.predictor.factory import KinTxtGenericPredictorFactory
 from kin_generic_builder.validation.factory import get_validator_factory
 from kin_generic_builder.events import ModelDeleted
 
@@ -18,7 +18,7 @@ def cli():
 @cli.command()
 def run_tasks():
     run_celery(
-        predictor_factory=KinTxtDefaultPredictorFactory(),
+        predictor_factory=KinTxtGenericPredictorFactory(),
         validator_factory=get_validator_factory()
     )
 
@@ -26,7 +26,7 @@ def run_tasks():
 @cli.command()
 def consume():
     run_consumer(
-        predictor_factory=KinTxtDefaultPredictorFactory(),
+        predictor_factory=KinTxtGenericPredictorFactory(),
         validator_factory=get_validator_factory(),
         additional_subscriptions=[
             Subscription(

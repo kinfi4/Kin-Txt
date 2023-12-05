@@ -11,10 +11,12 @@ from kin_generic_builder.predictor.vectorizer.vectorizer_factory import Vectoriz
 from kin_generic_builder.settings import Settings
 from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
-__all__ = ["KinTxtDefaultPredictorFactory"]
+__all__ = ["KinTxtGenericPredictorFactory"]
 
 
-class KinTxtDefaultPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
+class KinTxtGenericPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
+    model_type = "GenericModel"
+
     def create_predictor(self, model_entity: ModelEntity) -> IPredictor:
         text_preprocessor = self.create_text_preprocessor(model_entity)
 

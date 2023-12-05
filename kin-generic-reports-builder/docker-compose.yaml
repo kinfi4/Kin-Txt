@@ -14,7 +14,7 @@ services:
       - kin-network
     volumes:
       - ./kin_generic_builder:/app/kin_generic_builder
-      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
   generic-builder-celery-worker:
@@ -30,7 +30,7 @@ services:
       - kin-network
     volumes:
       - ./kin_generic_builder:/app/kin_generic_builder
-      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:
       - generic-builder-consumer

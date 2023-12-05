@@ -9,7 +9,7 @@ from kin_news_core.reports_building.domain.services.validation.base_validator im
 from kin_news_core.reports_building.domain.services.validation.factory_interface import BaseValidatorFactory
 from kin_news_core.reports_building.infrastructure.services import ModelTypesService
 
-from kin_generic_builder import Settings
+from kin_generic_builder.settings import Settings
 from kin_generic_builder.validation.sklearn_validation import SkLearnModelValidator
 from kin_generic_builder.validation.keras_validation import KerasModelValidator
 
