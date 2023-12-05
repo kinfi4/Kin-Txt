@@ -13,8 +13,28 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_generic_builder:/app/kin_generic_builder
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_generic_builder:/app/kin_generic_builder
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
+      - /home/kinfi4/compiled-models-builders/kin-news/:/models
+
+  generic-builder-api:
+    build:
+      context: .
+      dockerfile: etc/kin-reports-builder/Dockerfile
+    image: 'kin-generic-reports-builder'
+    container_name: 'kin-generic-builder-api'
+    command: bash -c "python -m kin_generic_builder run-server"
+    env_file:
+      - etc/kin-reports-builder/env/.dev.env
+    networks:
+      - kin-network
+    volumes:
+      - ./src/kin_generic_builder:/app/kin_generic_builder
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
   generic-builder-celery-worker:
@@ -29,8 +49,10 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_generic_builder:/app/kin_generic_builder
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_generic_builder:/app/kin_generic_builder
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:
       - generic-builder-consumer

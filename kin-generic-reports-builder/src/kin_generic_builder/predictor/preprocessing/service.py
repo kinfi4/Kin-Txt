@@ -10,7 +10,7 @@ from pymorphy2 import MorphAnalyzer
 from nltk.tokenize import word_tokenize
 from scipy.sparse.csr import csr_matrix
 
-from kin_news_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
+from kin_txt_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
 from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 from kin_generic_builder.constants import emoji_regex_compiled

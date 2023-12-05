@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
 
-from kin_news_core.reports_building.domain.entities import ModelEntity
-from kin_news_core.reports_building.domain.services.predicting import IPredictor
+from kin_txt_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.services.predicting import IPredictor
 from kin_generic_builder.predictor.preprocessing.service import TextPreprocessor
 
 

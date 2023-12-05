@@ -2,12 +2,12 @@ import os
 import logging
 from typing import Type
 
-from kin_news_core.reports_building.constants import ModelTypes
-from kin_news_core.reports_building.settings import Settings as DefaultSettings
-from kin_news_core.reports_building.domain.entities import ModelEntity
-from kin_news_core.reports_building.domain.services.validation.base_validator import BaseValidator
-from kin_news_core.reports_building.domain.services.validation.factory_interface import BaseValidatorFactory
-from kin_news_core.reports_building.infrastructure.services import ModelTypesService
+from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.settings import Settings as DefaultSettings
+from kin_txt_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.services.validation.base_validator import BaseValidator
+from kin_txt_core.reports_building.domain.services.validation.factory_interface import BaseValidatorFactory
+from kin_txt_core.reports_building.infrastructure.services import ModelTypesService
 
 from kin_generic_builder.settings import Settings
 from kin_generic_builder.validation.sklearn_validation import SkLearnModelValidator

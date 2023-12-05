@@ -2,7 +2,7 @@ from typing import Protocol
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer, HashingVectorizer
 
-from kin_news_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.entities import ModelEntity
 
 SkLearnSupportedVectorizers = CountVectorizer | TfidfVectorizer | HashingVectorizer
 

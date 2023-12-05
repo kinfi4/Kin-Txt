@@ -4,15 +4,15 @@ import random
 import joblib
 from scipy.sparse import csr_matrix
 
-from kin_news_core.reports_building.domain.services.validation.base_validator import BaseValidator
-from kin_news_core.reports_building.types import CategoryMapping, ValidationResult
-from kin_news_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.services.validation.base_validator import BaseValidator
+from kin_txt_core.reports_building.types import CategoryMapping, ValidationResult
+from kin_txt_core.reports_building.domain.entities import ModelEntity
 
 from kin_generic_builder.validation.sklearn_validation.supported_models import (
     SK_SUPPORTED_MODELS,
     SK_SUPPORTED_TOKENIZERS,
 )
-from kin_news_core.reports_building.exceptions import (
+from kin_txt_core.reports_building.exceptions import (
     UnableToLoadModelError,
     UnsupportedClassifierException,
     UnsupportedTokenizerException,

@@ -2,6 +2,10 @@ import re
 from enum import Enum
 
 
+PROJECT_TITLE = "Kin-Generic-Builder"
+PROJECT_DESCRIPTION = "Kin-Generic-Builder is a service for building generic models."
+
+
 GENERALE_EXCHANGE = "General"
 
 emoji_regex_compiled = re.compile(

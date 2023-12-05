@@ -1,6 +1,6 @@
 import logging
 
-from kin_news_core.reports_building.settings import Settings
+from kin_txt_core.reports_building.settings import Settings
 
 
 logging.basicConfig(

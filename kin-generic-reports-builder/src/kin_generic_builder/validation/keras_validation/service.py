@@ -7,9 +7,9 @@ from keras.models import load_model
 from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 
-from kin_news_core.reports_building.domain.entities import ModelEntity
-from kin_news_core.reports_building.domain.services.validation.base_validator import BaseValidator
-from kin_news_core.reports_building.exceptions import (
+from kin_txt_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.services.validation.base_validator import BaseValidator
+from kin_txt_core.reports_building.exceptions import (
     UnableToLoadModelError,
     UnsupportedClassifierException,
     UnsupportedTokenizerException,
@@ -17,7 +17,7 @@ from kin_news_core.reports_building.exceptions import (
     ModelUnsupportedPredictionError,
     ModelPredictionError, BaseValidationError,
 )
-from kin_news_core.reports_building.types import CategoryMapping, ValidationResult
+from kin_txt_core.reports_building.types import CategoryMapping, ValidationResult
 from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
 from kin_generic_builder.validation.keras_validation.supported_models import (

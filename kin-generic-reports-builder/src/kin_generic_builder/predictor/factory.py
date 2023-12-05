@@ -1,10 +1,10 @@
 import joblib
 from keras.models import load_model
 
-from kin_news_core.reports_building.constants import ModelTypes
-from kin_news_core.reports_building.domain.entities import ModelEntity
-from kin_news_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
-from kin_news_core.reports_building.exceptions import UnsupportedModelTypeError
+from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
+from kin_txt_core.reports_building.exceptions import UnsupportedModelTypeError
 
 from kin_generic_builder.predictor.preprocessing.service import TextPreprocessor
 from kin_generic_builder.predictor.vectorizer.vectorizer_factory import VectorizerFactory

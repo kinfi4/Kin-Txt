@@ -1,8 +1,8 @@
 import joblib
 import pickle
 
-from kin_news_core.reports_building.constants import ModelTypes
-from kin_news_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.domain.entities import ModelEntity
 
 from kin_generic_builder.predictor.vectorizer.types import SklearnVectorizer, KerasVectorizer
 from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
