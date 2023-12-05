@@ -17,8 +17,8 @@ export default class APIRequester {
         try {
             let url = this.url + path;
 
-            const urlParams = "?" + new URLSearchParams(params).toString();
-            if(urlParams.length > 1) {
+            if(params !== null) {
+                const urlParams = "?" + new URLSearchParams(params).toString();
                 url += urlParams;
             }
 
