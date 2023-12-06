@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import {FETCH_ERROR} from "./channelsReducer";
-import {MODEL_TYPES_URL} from "../../config";
+import {GENERIC_REPORTS_BUILDER_URL, MODEL_TYPES_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
 import APIRequester from "../../common/apiCalls/APIRequester";
 
@@ -13,6 +13,7 @@ let initialState = {
 };
 
 const MODELS_LOADED = "MODELS_LOADED";
+const MODEL_VALIDATION_STARTED = "MODEL_VALIDATION_STARTED";
 
 
 export const loadUserModels = (filters=null) => (dispatch) => {
@@ -32,37 +33,38 @@ export const deleteModel = (modelId) => (dispatch) => {
     const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     apiRequester.delete("/models/" + modelId).then(res => {
-        dispatch(loadUserModels())
+        dispatch(loadUserModels());
     }).catch(err => {
-        console.log(err.response.data.errors)
-        dispatch({type: FETCH_ERROR, errors: err.response.data.errors})
+        console.log(err.response.data.errors);
+        dispatch({type: FETCH_ERROR, errors: err.response.data.errors});
     });
 };
 
-export const validateAndSaveModel = (model, updating=false) => (dispatch) => {
+export const validateAndSaveModel = (model, setInitialState, updating=false) => async (dispatch) => {
     const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("modelType", model.modelType);
-    formData.append("name", model.name);
-    formData.append("code", model.code);
+    const data = {
+        modelType: model.modelType,
+        name: model.name,
+        code: model.code,
+    };
 
     if (updating && (model.modelFile || model.tokenizerFile)) {
-        formData.append("modelsHasChanged", "true");
+        data["updateModelFiles"] = "true";
     }
 
     if (model.modelFile) {
-        formData.append("modelData", model.modelFile);
+        data["originalModelFileName"] = model.modelFile.name;
     }
     if (model.tokenizerFile) {
-        formData.append("tokenizerData", model.tokenizerFile);
+        data["originalTokenizerFileName"] = model.tokenizerFile.name;
     }
 
     const categoryMappingsAsDict = model.categoryMapping.reduce((acc, curr) => {
         acc[curr.value] = curr.categoryName;
         return acc;
     }, {});
-    formData.append("categoryMapping", JSON.stringify(categoryMappingsAsDict));
+    data["categoryMapping"] = JSON.stringify(categoryMappingsAsDict);
 
     let resultUrl = "/models";
     let resultMethod = "POST";
@@ -72,21 +74,37 @@ export const validateAndSaveModel = (model, updating=false) => (dispatch) => {
         resultMethod = "PUT";
     }
 
-    axios({
-        method: resultMethod,
-        url: MODEL_TYPES_URL + resultUrl,
-        data: formData,
-        headers: {
-            "Authorization": `Token ${token}`,
-            "Content-Type": "multipart/form-data",
-        }
-    }).then(res => {
-        window.location.replace("/models");
+    try {
+        const response = await axios({
+            method: resultMethod,
+            url: MODEL_TYPES_URL + resultUrl,
+            data: data,
+            headers: {
+                "Authorization": `Token ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+
+        setInitialState();
+        dispatch(loadUserModels());
         showMessage([{message: "Model validation has started...", type: "success"}]);
-    }).catch(err => {
-        console.log(err.response.data.errors);
-        dispatch({type: FETCH_ERROR, errors: err.response.data.errors});
-    });
+    } catch (error) {
+        console.log(error.response.data.errors);
+        dispatch(deleteModelBinaries(model.code));
+        dispatch({type: FETCH_ERROR, errors: error.response.data.errors});
+    }
+}
+
+const deleteModelBinaries = (modelCode) => async (dispatch) => {
+    const apiRequester = new APIRequester(GENERIC_REPORTS_BUILDER_URL, dispatch);
+
+    console.log("Sending request to delete model binaries for model code: " + modelCode);
+
+    const response = await apiRequester.delete("/blobs/delete/" + modelCode)
+
+    if(response.status !== 204) {
+        dispatch({type: FETCH_ERROR, errors: response.data.errors})
+    }
 }
 
 export default function modelsReducer(state = initialState, action) {
@@ -100,7 +118,3 @@ export default function modelsReducer(state = initialState, action) {
             return state;
     }
 }
-
-
-
-

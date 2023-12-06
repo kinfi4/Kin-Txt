@@ -1,9 +1,21 @@
 import React from 'react';
-import styles from "../InsertModel.module.css";
-import statsCss from "../../../../Reports/Statistics.module.css";
+
 import Spinner from "../FileLoadingSpinner/Spinner";
 
-const InputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onTokenizerFileChange}) => {
+import styles from "../InsertModel.module.css";
+import statsCss from "../../../../Reports/Statistics.module.css";
+
+const InputBinariesForm = ({
+    modelName,
+    tokenizerName,
+    onModelFileChange,
+    onTokenizerFileChange,
+    modelFileUploadProgress,
+    tokenizerFileUploadProgress,
+}) => {
+    const modelIsSet = modelName !== null;
+    const tokenizerIsSet = tokenizerName !== null;
+
     modelName = modelName ? modelName : "Choose a file with model";
     tokenizerName = tokenizerName ? tokenizerName : "Choose a file with tokenizer";
 
@@ -28,7 +40,7 @@ const InputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onToken
                     Model File:
                 </label>
                 <input type="file" id="file" className={styles.fileInput} onChange={handleFileChange(onModelFileChange)} />
-                <label htmlFor="file" className={styles.fileLabel}>
+                <label htmlFor="file" className={`${styles.fileLabel} ${modelIsSet ? styles.inputFileSelected : ''}`}>
                     {loading ? <Spinner /> : modelName}
                 </label>
             </div>
@@ -41,7 +53,7 @@ const InputBinariesForm = ({modelName, tokenizerName, onModelFileChange, onToken
                 </label>
 
                 <input type="file" id="file" className={styles.fileInput} onChange={handleFileChange(onTokenizerFileChange)} />
-                <label htmlFor="file" className={styles.fileLabel}>
+                <label htmlFor="file" className={`${styles.fileLabel} ${tokenizerIsSet ? styles.inputFileSelected : ''}`}>
                     {loading ? <Spinner /> : tokenizerName}
                 </label>
             </div>

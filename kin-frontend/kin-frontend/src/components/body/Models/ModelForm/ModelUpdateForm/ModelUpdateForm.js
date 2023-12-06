@@ -8,19 +8,24 @@ import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import {validateFormData} from "../common/FormDataValidation";
 
+
+const initialState = {
+    modelType: ModelTypes.SKLEARN_MODEL,
+    modelFile: null,
+    tokenizerFile: null,
+    categoryMapping: [],
+    name: "",
+    modelStatus: null,
+    modelName: null,
+    tokenizerName: null,
+    validationMessage: null,
+    code: "",
+}
+
 const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
-    const [data, setData] = React.useState({
-        modelType: ModelTypes.SKLEARN_MODEL,
-        modelFile: null,
-        tokenizerFile: null,
-        categoryMapping: [],
-        name: "",
-        modelStatus: null,
-        modelName: null,
-        tokenizerName: null,
-        validationMessage: null,
-        code: "",
-    });
+    const [data, setData] = React.useState(initialState);
+    const setInitialState = () => setData(initialState);
+
 
     useEffect(() => {
         const requester = new APIRequester(MODEL_TYPES_URL);
@@ -38,8 +43,8 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                         value: Number(value[0]), categoryName: value[1]
                     })
                 ),
-                modelName: response.data.modelName,
-                tokenizerName: response.data.tokenizerName,
+                modelName: response.data.originalModelFileName,
+                tokenizerName: response.data.originalTokenizerFileName,
                 validationMessage: response.data.validationMessage,
                 code: response.data.code,
             });
@@ -62,7 +67,7 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
             return;
         }
 
-        onModelSavingCallback(data);
+        onModelSavingCallback(data, setInitialState);
     }
 
 
@@ -78,7 +83,7 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
 
 const mapDispatchToProp = (dispatch) => {
     return {
-        onModelSavingCallback: (model) => dispatch(validateAndSaveModel(model, true)),
+        onModelSavingCallback: (model, setInitialState) => dispatch(validateAndSaveModel(model, setInitialState, true)),
     };
 }
 

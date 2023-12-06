@@ -7,16 +7,6 @@ export const validateFormData = (data, isUpdate=false) => {
         return false;
     }
 
-    if(!data.modelFile && !isUpdate) {
-        showMessage([{message: `No model file selected`, type: 'danger'}]);
-        return false;
-    }
-
-    if(!data.tokenizerFile && !isUpdate) {
-        showMessage([{message: `No tokenizer file selected`, type: 'danger'}]);
-        return false;
-    }
-
     if(!data.name) {
         showMessage([{message: `No model name provided`, type: 'danger'}]);
         return false;

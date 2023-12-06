@@ -30,8 +30,12 @@
     border: 2px solid #24B382;
     border-radius: 5px;
     transition: background-color 0.3s;
+    overflow: hidden;
 }
 .fileInput:hover + .fileLabel {
     background-color: #3a749a;
     cursor: pointer;
+}
+.inputFileSelected {
+    background-color: #144a6e;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Select from "react-select";
 
 import formStyles from "./../ModelFormStyles.module.css";
@@ -6,15 +6,84 @@ import statsStyles from "../../../Reports/Statistics.module.css";
 import commonStyles from "../../../../../common/CommonStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
-import {ModelTypes} from "../../../../../config";
+import {BinariesTypes, GENERIC_REPORTS_BUILDER_URL, ModelTypes} from "../../../../../config";
 import InsertModelFiles from "../common/InsertModelFiles";
 import FormInput from "../../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
 import {selectStyles} from "../../../Reports/GenerateReportMenu/styles/formStyles";
 import BackLink from "../../../../../common/backLink/BackLink";
+import {ModelBinariesUploadService} from "../common/uploadModelBinaries/ModelBinariesUploadService";
+import {showMessage} from "../../../../../utils/messages";
+
 
 const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=false}) => {
+    const [modelFileUploadProgress, setModelFileUploadProgress] = React.useState(0);
+    const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] = React.useState(0);
+
+    const handleModelValidationStart = async () => {
+        if(!data.modelFile && !isUpdateForm) {
+            showMessage([{message: `No model file selected`, type: 'danger'}]);
+            return;
+        }
+
+        if(!data.tokenizerFile && !isUpdateForm) {
+            showMessage([{message: `No tokenizer file selected`, type: 'danger'}]);
+            return;
+        }
+
+        const binariesUploadService = new ModelBinariesUploadService(
+            GENERIC_REPORTS_BUILDER_URL,
+            1024 * 1024 * 5,  // 5MB
+            data.code,  // we need to pass the code of the future model as well, so the server knows where to save the files
+        );
+
+        if(data.modelFile) {
+            const success = await binariesUploadService.uploadBlob(
+                data.modelFile,
+                "/blobs/upload",
+                BinariesTypes.MODEL,
+                setModelFileUploadProgress,
+            );
+
+            if(!success) {
+                showMessage([{message: `Error while uploading model file...`, type: 'danger'}]);
+                return;
+            }
+        }
+
+        if(data.tokenizerFile) {
+            const success = await binariesUploadService.uploadBlob(
+                data.tokenizerFile,
+                "/blobs/upload",
+                BinariesTypes.TOKENIZER,
+                setTokenizerFileUploadProgress,
+            );
+
+            if(!success) {
+                showMessage([{message: `Error while uploading tokenizer file...`, type: 'danger'}]);
+                return;
+            }
+        }
+
+        onModelSavingCallback();
+    }
+
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            // Standard for most browsers
+            e.preventDefault();
+            // For some older browsers
+            e.returnValue = '';
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
     return (
         <div className={statsStyles.statsContainer}>
             <BackLink url={"/models"} />
@@ -75,6 +144,8 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                             onTokenizerFileChange={(file) => setData({...data, tokenizerFile: file})}
                             modelName={data.modelFile ? data.modelFile.name : null}
                             tokenizerName={data.tokenizerFile ? data.tokenizerFile.name : null}
+                            modelFileUploadProgress={modelFileUploadProgress}
+                            tokenizerFileUploadProgress={tokenizerFileUploadProgress}
                         />
                     </div>
                     {/*Select model name*/}
@@ -113,7 +184,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                     {/*Generate model button*/}
                     <div className={formStyles.formInputContainer}>
                         <div
-                            onClick={onModelSavingCallback}
+                            onClick={handleModelValidationStart}
                             className={formStyles.createModelButton}
                         >
                             Validate and Save

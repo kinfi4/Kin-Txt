@@ -8,7 +8,9 @@ const InsertModelFiles = ({
     onModelFileChange,
     onTokenizerFileChange,
     modelName=null,
-    tokenizerName=null
+    tokenizerName=null,
+    modelFileUploadProgress,
+    tokenizerFileUploadProgress,
 }) => {
     if (modelType === ModelTypes.SKLEARN_MODEL || modelType === ModelTypes.KERAS) {
         return <InputBinariesForm
@@ -16,6 +18,8 @@ const InsertModelFiles = ({
             tokenizerName={tokenizerName}
             onModelFileChange={onModelFileChange}
             onTokenizerFileChange={onTokenizerFileChange}
+            modelFileUploadProgress={modelFileUploadProgress}
+            tokenizerFileUploadProgress={tokenizerFileUploadProgress}
         />
     }
 
