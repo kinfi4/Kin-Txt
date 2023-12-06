@@ -38,7 +38,7 @@ def get_user_models(
 @router.post("")
 @inject
 def validate_and_save_model(
-    model: CreateModelEntity = Depends(CreateModelEntity.as_form),
+    model: CreateModelEntity,
     current_user: User = Depends(get_current_user),
     models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
@@ -73,7 +73,7 @@ def register_custom_user_model(
 @inject
 def update_model(
     model_code: str,
-    model: UpdateModelEntity = Depends(UpdateModelEntity.as_form),
+    model: UpdateModelEntity,
     current_user: User = Depends(get_current_user),
     models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
 ):
@@ -105,7 +105,7 @@ def get_model(
 
     return JSONResponse(
         status_code=status.HTTP_200_OK,
-        content=model_entity.dict(with_model_names=True, by_alias=True),
+        content=model_entity.dict(by_alias=True),
     )
 
 
