@@ -1,4 +1,3 @@
-import os
 import logging
 from typing import Type
 
@@ -33,28 +32,9 @@ class KinTxtDefaultValidationService(BaseValidatorFactory):
         self._logger = logging.getLogger(__name__)
 
     def create_validator(self, model: ModelEntity) -> BaseValidator:
-        self.__preload_model_binaries(model)
         model_type_validator = self._MODEL_TYPE_VALIDATOR_MAPPING[model.model_type]
 
         return model_type_validator(self._model_storage_path)
-
-    def __preload_model_binaries(self, model: ModelEntity) -> None:
-        self._logger.info(f"[ModelService] Preloading model binaries for {model.code}")
-
-        model_data = self._model_type_service.get_model_binaries(model.owner_username, model.code)
-        tokenizer_data = self._model_type_service.get_tokenizer_binaries(model.owner_username, model.code)
-
-        user_model_storage_path = model.get_model_directory_path(self._model_storage_path)
-        if not os.path.exists(user_model_storage_path):
-            os.makedirs(user_model_storage_path)
-
-        model_path = model.get_model_binaries_path(self._model_storage_path)
-        with open(model_path, "wb") as model_file:
-            model_file.write(model_data)
-
-        tokenizer_path = model.get_tokenizer_binaries_path(self._model_storage_path)
-        with open(tokenizer_path, "wb") as tokenizer_file:
-            tokenizer_file.write(tokenizer_data)
 
 
 def get_validator_factory() -> KinTxtDefaultValidationService:

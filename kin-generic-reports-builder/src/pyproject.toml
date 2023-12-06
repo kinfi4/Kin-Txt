@@ -21,6 +21,7 @@ fastapi = "^0.104.1"
 uvicorn = "^0.24.0.post1"
 pymorphy2 = "^0.9.1"
 langid = "^1.1.6"
+python-multipart = "^0.0.6"
 
 
 
