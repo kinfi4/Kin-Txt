@@ -149,9 +149,9 @@ const GenerateReportMenu = ({
         <>
             <BackLink url={"/reports"} />
 
-            <h2 className={commonStyles.pageTitle}>Generate Report</h2>
+            <h2 className={commonStyles.formPageTitle}>Generate Report</h2>
 
-            <div className={statsCss.generateReportForm}>
+            <div className={statsCss.generateReportForm} style={{marginTop: "-50px"}}>
                 <div className={statsCss.controls}>
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label

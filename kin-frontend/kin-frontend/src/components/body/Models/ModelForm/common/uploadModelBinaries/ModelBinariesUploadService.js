@@ -10,7 +10,7 @@ export class ModelBinariesUploadService {
         this.modelCode = modelCode;
     }
 
-    async uploadBlob(blob, uploadUrl, blobType, progressCallback) {
+    async uploadBlob(blob, uploadUrl, blobType, progressCallback, mergingStartedCallback) {
         const totalChunks = Math.ceil(blob.size / this.chunkSize);
         const chunkProgress = 100 / totalChunks;
         let chunkNumber = 0;
@@ -21,6 +21,11 @@ export class ModelBinariesUploadService {
 
         const uploadNextChunk = async () => {
             if (end <= blob.size) {
+                if(chunkNumber === totalChunks-1) {  // that means we're uploading the last chunk
+                    console.log("SETTING THE TRUE");
+                    mergingStartedCallback(true);
+                }
+
                 const chunk = blob.slice(start, end);
 
                 const formData = new FormData();
@@ -58,6 +63,7 @@ export class ModelBinariesUploadService {
                 }
             } else {
                 progressCallback(100);
+                mergingStartedCallback(false);
                 return true;
             }
         };

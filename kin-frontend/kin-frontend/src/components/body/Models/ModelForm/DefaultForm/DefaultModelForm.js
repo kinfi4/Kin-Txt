@@ -20,8 +20,16 @@ import {showMessage} from "../../../../../utils/messages";
 const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=false}) => {
     const [modelFileUploadProgress, setModelFileUploadProgress] = React.useState(0);
     const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] = React.useState(0);
+    const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] = React.useState(false);
+    const [validatingUploadedTokenizerFiles, setValidatingUploadedTokenizerFiles] = React.useState(false);
+
+    const blobsAreUploading = modelFileUploadProgress > 0 || tokenizerFileUploadProgress > 0;
 
     const handleModelValidationStart = async () => {
+        if(blobsAreUploading) {
+            return;
+        }
+
         if(!data.modelFile && !isUpdateForm) {
             showMessage([{message: `No model file selected`, type: 'danger'}]);
             return;
@@ -37,36 +45,42 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
             1024 * 1024 * 5,  // 5MB
             data.code,  // we need to pass the code of the future model as well, so the server knows where to save the files
         );
+        let promiseModelUploadSuccess = Promise.resolve(true);
+        let promiseTokenizerUploadSuccess = Promise.resolve(true);
 
         if(data.modelFile) {
-            const success = await binariesUploadService.uploadBlob(
+            promiseModelUploadSuccess = binariesUploadService.uploadBlob(
                 data.modelFile,
                 "/blobs/upload",
                 BinariesTypes.MODEL,
                 setModelFileUploadProgress,
+                setValidatingUploadedModelFiles,
             );
-
-            if(!success) {
-                showMessage([{message: `Error while uploading model file...`, type: 'danger'}]);
-                return;
-            }
         }
 
         if(data.tokenizerFile) {
-            const success = await binariesUploadService.uploadBlob(
+            promiseTokenizerUploadSuccess = binariesUploadService.uploadBlob(
                 data.tokenizerFile,
                 "/blobs/upload",
                 BinariesTypes.TOKENIZER,
                 setTokenizerFileUploadProgress,
+                setValidatingUploadedTokenizerFiles,
             );
-
-            if(!success) {
-                showMessage([{message: `Error while uploading tokenizer file...`, type: 'danger'}]);
-                return;
-            }
         }
 
+        if(!await promiseModelUploadSuccess) {
+            showMessage([{message: `Error while uploading model file...`, type: 'danger'}]);
+            return;
+        }
+        if(!(await promiseTokenizerUploadSuccess)) {
+            showMessage([{message: `Error while uploading tokenizer file...`, type: 'danger'}]);
+            return;
+        }
+
+
         onModelSavingCallback();
+        setModelFileUploadProgress(0);
+        setTokenizerFileUploadProgress(0);
     }
 
     useEffect(() => {
@@ -89,8 +103,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
             <BackLink url={"/models"} />
 
             <h2
-                className={commonStyles.pageTitle}
-                style={{marginBottom: "100px"}}
+                className={commonStyles.formPageTitle}
             >
                 {isUpdateForm ? "Update Model" : "Create Model"}
             </h2>
@@ -146,6 +159,8 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                             tokenizerName={data.tokenizerFile ? data.tokenizerFile.name : null}
                             modelFileUploadProgress={modelFileUploadProgress}
                             tokenizerFileUploadProgress={tokenizerFileUploadProgress}
+                            validatingUploadedModelFiles={validatingUploadedModelFiles}
+                            validatingUploadedTokenizerFiles={validatingUploadedTokenizerFiles}
                         />
                     </div>
                     {/*Select model name*/}
