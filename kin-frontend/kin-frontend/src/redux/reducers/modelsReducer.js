@@ -48,11 +48,7 @@ export const validateAndSaveModel = (model, setInitialState, updating=false) => 
         name: model.name,
         code: model.code,
     };
-
-    if (updating && (model.modelFile || model.tokenizerFile)) {
-        data["updateModelFiles"] = "true";
-    }
-
+    
     if (model.modelFile) {
         data["originalModelFileName"] = model.modelFile.name;
     }

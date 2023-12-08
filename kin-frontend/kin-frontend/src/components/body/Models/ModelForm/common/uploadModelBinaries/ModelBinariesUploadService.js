@@ -22,11 +22,10 @@ export class ModelBinariesUploadService {
         const uploadNextChunk = async () => {
             if (end <= blob.size) {
                 if(chunkNumber === totalChunks-1) {  // that means we're uploading the last chunk
-                    console.log("SETTING THE TRUE");
                     mergingStartedCallback(true);
                 }
 
-                const chunk = blob.slice(start, end);
+                const chunk = blob.slice(start, start + this.chunkSize);
 
                 const formData = new FormData();
                 formData.append("chunk", chunk);

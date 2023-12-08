@@ -23,6 +23,21 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
     const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] = React.useState(false);
     const [validatingUploadedTokenizerFiles, setValidatingUploadedTokenizerFiles] = React.useState(false);
 
+    let modelBlobName = null;
+    if(data.modelFile) {
+        modelBlobName = data.modelFile.name;
+    } else if (data.modelName) {
+        modelBlobName = data.modelName;
+    }
+
+    let tokenizerBlobName = null;
+    if(data.tokenizerFile) {
+        tokenizerBlobName = data.tokenizerFile.name;
+    } else if (data.tokenizerName) {
+        tokenizerBlobName = data.tokenizerName;
+    }
+
+
     const blobsAreUploading = modelFileUploadProgress > 0 || tokenizerFileUploadProgress > 0;
 
     const handleModelValidationStart = async () => {
@@ -85,6 +100,10 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
+            if(data.modelWasUpdated) {
+                return;
+            }
+
             // Standard for most browsers
             e.preventDefault();
             // For some older browsers
@@ -96,7 +115,7 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [data.modelWasUpdated]);
 
     return (
         <div className={statsStyles.statsContainer}>
@@ -155,8 +174,8 @@ const DefaultModelForm = ({data, setData, onModelSavingCallback, isUpdateForm=fa
                             modelType={data.modelType}
                             onModelFileChange={(file) => setData({...data, modelFile: file})}
                             onTokenizerFileChange={(file) => setData({...data, tokenizerFile: file})}
-                            modelName={data.modelFile ? data.modelFile.name : null}
-                            tokenizerName={data.tokenizerFile ? data.tokenizerFile.name : null}
+                            modelName={modelBlobName}
+                            tokenizerName={tokenizerBlobName}
                             modelFileUploadProgress={modelFileUploadProgress}
                             tokenizerFileUploadProgress={tokenizerFileUploadProgress}
                             validatingUploadedModelFiles={validatingUploadedModelFiles}

@@ -20,11 +20,13 @@ const initialState = {
     tokenizerName: null,
     validationMessage: null,
     code: "",
+    modelWasUpdated: false,
 }
 
 const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
     const [data, setData] = React.useState(initialState);
-    const setInitialState = () => setData(initialState);
+
+    const setInitialState = () => setData({...initialState, modelWasUpdated: true});
 
 
     useEffect(() => {
@@ -47,6 +49,7 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                 tokenizerName: response.data.originalTokenizerFileName,
                 validationMessage: response.data.validationMessage,
                 code: response.data.code,
+                modelDataHasChanged: false,
             });
         }).catch((error) => {
             if(error.response && error.response.status === 404) {
@@ -54,7 +57,7 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                 return;
             }
 
-            console.log(error)
+            console.log(error);
 
             showMessage([{message: "Something went wrong during model loading.", type: 'danger'}]);
         });
@@ -68,6 +71,11 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
         }
 
         onModelSavingCallback(data, setInitialState);
+
+        // update after delay in 100ms
+        setTimeout(() => {
+            window.location.href = "/models";
+        }, 20);
     }
 
 
