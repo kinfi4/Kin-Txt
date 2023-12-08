@@ -41,23 +41,12 @@ class ModelService:
         if current_model.model_type == ModelTypes.CUSTOM:
             raise ImpossibleToUpdateCustomModelException(f"Impossible to update custom model {model_code}")
 
-        if model.models_has_changed:
-            model_to_validate = self._models_repository.update_model(model_code, username, model.dict())
+        model_to_validate = self._models_repository.update_model(model_code, username, model.dict(exclude_none=True))
 
-            self._events_publisher.publish(
-                REPORTS_BUILDER_EXCHANGE,
-                [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
-            )
-
-            return None
-
-        update_dict = {
-            "category_mapping": model.category_mapping,
-            "name": model.name,
-            "model_type": model.model_type,
-        }
-
-        self._models_repository.update_model(model_code, username, update_dict)
+        self._events_publisher.publish(
+            REPORTS_BUILDER_EXCHANGE,
+            [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
+        )
 
     def delete_model(self, username: str, model_code: str) -> None:
         self._logger.info(f"[ModelService] Deleting model {model_code} for user {username}")

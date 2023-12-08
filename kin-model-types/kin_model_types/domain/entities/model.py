@@ -52,7 +52,7 @@ class CreateModelEntity(BaseModel):
 
 
 class UpdateModelEntity(CreateModelEntity):
-    models_has_changed: bool = Field(False, alias="modelsHasChanged")
+    pass
 
 
 class CustomModelRegistrationEntity(BaseModel):
