@@ -20,12 +20,13 @@ export class ModelBinariesUploadService {
         const completeUploadUrl = `${this.serviceUrl}${uploadUrl}`;
 
         const uploadNextChunk = async () => {
-            if (end <= blob.size) {
+            if (chunkNumber < totalChunks) {
                 if(chunkNumber === totalChunks-1) {  // that means we're uploading the last chunk
                     mergingStartedCallback(true);
                 }
 
-                const chunk = blob.slice(start, start + this.chunkSize);
+                end = start + this.chunkSize;
+                const chunk = blob.slice(start, end);
 
                 const formData = new FormData();
                 formData.append("chunk", chunk);
@@ -33,6 +34,7 @@ export class ModelBinariesUploadService {
                 formData.append("total_chunks", totalChunks);
                 formData.append("blob_type", blobType);
                 formData.append("model_code", this.modelCode);
+                formData.append("chuck_hash", await this.calculateHash(chunk));
 
                 try {
                     const response = await axios({
@@ -53,7 +55,6 @@ export class ModelBinariesUploadService {
 
                     chunkNumber++;
                     start = end;
-                    end = start + this.chunkSize;
 
                     return await uploadNextChunk();
                 } catch (e) {
@@ -69,4 +70,10 @@ export class ModelBinariesUploadService {
 
         return await uploadNextChunk();
     };
+
+    async calculateHash(file) {
+        const buffer = await file.arrayBuffer();
+        const hash = await crypto.subtle.digest('SHA-256', buffer);
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 }
