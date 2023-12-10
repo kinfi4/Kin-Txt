@@ -18,7 +18,6 @@ from kin_txt_core.reports_building.exceptions import (
     ModelPredictionError, BaseValidationError,
 )
 from kin_txt_core.reports_building.types import CategoryMapping, ValidationResult
-from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
 from kin_generic_builder.validation.keras_validation.supported_models import (
     KERAS_SUPPORTED_TOKENIZERS,
@@ -26,7 +25,7 @@ from kin_generic_builder.validation.keras_validation.supported_models import (
 )
 
 
-class KerasModelValidator(BaseValidator, UnpackKerasArchiveMixin):
+class KerasModelValidator(BaseValidator):
     def __init__(self, model_storage_path: str) -> None:
         self._model_storage_path = model_storage_path
 
@@ -41,7 +40,6 @@ class KerasModelValidator(BaseValidator, UnpackKerasArchiveMixin):
         return True, None
 
     def _validate_model(self, model_entity: ModelEntity) -> None:
-        self._unpack_archive_if_needed(model_entity.get_model_binaries_path(self._model_storage_path))
 
         try:
             model = load_model(model_entity.get_model_binaries_path(self._model_storage_path))

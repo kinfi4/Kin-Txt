@@ -5,6 +5,9 @@ import zipfile
 
 class UnpackKerasArchiveMixin:
     def _unpack_archive_if_needed(self, path: str) -> None:
+        print("THE PATH IS", path)
+        print("THIS IS THE ZIPFILE", zipfile.is_zipfile(path))
+
         if not zipfile.is_zipfile(path):
             return
 
@@ -14,6 +17,9 @@ class UnpackKerasArchiveMixin:
 
             tmp_path = f"{path}-tmp"
             zip_ref.extractall(tmp_path)
+
+            os.remove(path)  # we remove zip archive to place the extracted files in its place
+
             shutil.move(tmp_path, path)
 
             archive_inners = os.listdir(path)
