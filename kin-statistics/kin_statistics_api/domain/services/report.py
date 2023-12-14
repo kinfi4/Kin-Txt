@@ -12,7 +12,7 @@ from kin_statistics_api.domain.entities import (
     GenerateReportEntity,
     BaseReport,
     User,
-    ReportFilters,
+    ReportsFetchSettings,
 )
 from kin_statistics_api.domain.events import GenerateReportRequestOccurred
 from kin_statistics_api.exceptions import ReportAccessForbidden, ReportNotFound
@@ -74,17 +74,17 @@ class ManagingReportsService:
 
         self._reports_repository.save_user_report(report)
 
-    def get_user_reports_names(self, username: str, filters: ReportFilters | None = None) -> PaginatedDataEntity[ReportIdentificationEntity]:
+    def get_user_reports_names(self, username: str, fetch_settings: ReportsFetchSettings | None = None) -> PaginatedDataEntity[ReportIdentificationEntity]:
         user_reports_ids = self._iam_repository.get_user_report_ids(username)
         self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
 
-        report_entities = self._reports_repository.get_report_names(user_reports_ids, apply_filters=filters)
-        total_reports_count = self._reports_repository.get_total_reports_count(filters=filters)
+        report_entities = self._reports_repository.get_report_names(user_reports_ids, apply_settings=fetch_settings)
+        total_reports_count = self._reports_repository.get_total_reports_count(filters=fetch_settings)
 
         return PaginatedDataEntity(
             data=report_entities,
             total_pages=math.ceil(total_reports_count / ITEMS_PER_PAGE),
-            page=filters.page if filters else 0,
+            page=fetch_settings.page if fetch_settings else 0,
         )
 
     def set_report_name(self, username: str, report_name: str, report_id: int) -> ReportIdentificationEntity:

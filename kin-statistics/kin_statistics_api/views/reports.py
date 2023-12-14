@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse, Response
 
 from kin_news_core.exceptions import KinNewsCoreException
 from kin_statistics_api.containers import Container
-from kin_statistics_api.domain.entities import GenerateReportEntity, ReportPutEntity, User, ReportFilters
+from kin_statistics_api.domain.entities import GenerateReportEntity, ReportPutEntity, User, ReportsFetchSettings
 from kin_statistics_api.domain.services import ManagingReportsService, UserService
 from kin_statistics_api.exceptions import ReportAccessForbidden
 from kin_statistics_api.views.helpers.auth import get_current_user
@@ -19,11 +19,11 @@ router = APIRouter(prefix="/reports")
 @router.get("")
 @inject
 def get_reports(
-    filters: ReportFilters = Depends(),
+    fetch_settings: ReportsFetchSettings = Depends(),
     current_user: User = Depends(get_current_user),
     reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
 ):
-    report_identities = reports_service.get_user_reports_names(current_user.username, filters=filters)
+    report_identities = reports_service.get_user_reports_names(current_user.username, fetch_settings=fetch_settings)
 
     return JSONResponse(content=report_identities.dict(by_alias=True))
 

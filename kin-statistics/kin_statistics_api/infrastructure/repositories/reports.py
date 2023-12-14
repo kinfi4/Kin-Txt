@@ -7,7 +7,8 @@ from kin_statistics_api.domain.entities import (
     BaseReport,
     ReportIdentificationEntity,
     StatisticalReport,
-    WordCloudReport, ReportFilters,
+    WordCloudReport,
+    ReportsFetchSettings,
 )
 from kin_statistics_api.exceptions import ImpossibleToModifyProcessingReport, ReportNotFound
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
@@ -28,14 +29,16 @@ class ReportsMongoRepository(IReportRepository):
             {"$set": {"processing_status": status}},
         )
 
-    def get_report_names(self, report_ids: list[int], apply_filters: ReportFilters | None = None) -> list[ReportIdentificationEntity]:
+    def get_report_names(self, report_ids: list[int], apply_settings: ReportsFetchSettings | None = None) -> list[ReportIdentificationEntity]:
         filters = {"report_id": {"$in": report_ids}}
-        filters.update(self._build_mongo_filters(apply_filters))
+        filters.update(self._build_mongo_filters(apply_settings))
 
         reports_cursor = self._reports_collection.find(filters)
 
-        if apply_filters.page is not None:
-            reports_cursor = reports_cursor.skip(apply_filters.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
+        if apply_settings.order_by is not None:
+            reports_cursor = reports_cursor.sort(apply_settings.order_by, -1 if apply_settings.descending else 1)
+        if apply_settings.page is not None:
+            reports_cursor = reports_cursor.skip(apply_settings.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
         return [
             self._map_dict_to_identification_entity(report_dict)
@@ -91,7 +94,7 @@ class ReportsMongoRepository(IReportRepository):
     def report_exists(self, report_id: int) -> bool:
         return self._reports_collection.count_documents({"report_id": report_id}) > 0
 
-    def get_total_reports_count(self, filters: ReportFilters | None) -> int:
+    def get_total_reports_count(self, filters: ReportsFetchSettings | None) -> int:
         mongo_filters = self._build_mongo_filters(filters)
 
         return self._reports_collection.count_documents(mongo_filters)
@@ -111,7 +114,7 @@ class ReportsMongoRepository(IReportRepository):
 
         return StatisticalReport.from_dict(dict(dict_report))
 
-    def _build_mongo_filters(self, apply_filters: ReportFilters | None) -> dict[str, Any]:
+    def _build_mongo_filters(self, apply_filters: ReportsFetchSettings | None) -> dict[str, Any]:
         if apply_filters is None:
             return {}
 

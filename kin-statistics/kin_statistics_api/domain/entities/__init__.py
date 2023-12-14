@@ -7,5 +7,5 @@ from .report import (
     WordCloudReport,
 )
 from .user import User
-from .report_filters import ReportFilters
+from .report_filters import ReportsFetchSettings, OrderByOptions
 from .generation_template import GenerationTemplate
