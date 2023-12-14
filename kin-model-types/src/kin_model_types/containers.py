@@ -3,8 +3,8 @@ from typing import Type, TypeAlias, TypeVar
 from dependency_injector import providers, containers, resources
 from pymongo import MongoClient
 
-from kin_news_core.messaging import AbstractEventSubscriber, AbstractEventProducer
-from kin_news_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
+from kin_txt_core.messaging import AbstractEventSubscriber, AbstractEventProducer
+from kin_txt_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
 
 from kin_model_types.infrastructure.repositories import VisualizationTemplateRepository, ModelRepository
 from kin_model_types.constants import MODEL_TYPES_EXCHANGE

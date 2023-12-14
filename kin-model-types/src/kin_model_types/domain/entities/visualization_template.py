@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, root_validator
 
-from kin_news_core.types.reports import VisualizationDiagramTypes, RawContentTypes
+from kin_txt_core.types.reports import VisualizationDiagramTypes, RawContentTypes
 
 
 class VisualizationTemplate(BaseModel):

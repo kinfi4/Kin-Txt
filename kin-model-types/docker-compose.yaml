@@ -15,8 +15,10 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_model_types:/app/kin_model_types
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_model_types:/app/kin_model_types
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models/kin-news/:/models
 
   model-types-consumer:
@@ -31,8 +33,10 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_model_types:/app/kin_model_types
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_model_types:/app/kin_model_types
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models/kin-news/:/models
 
 networks:

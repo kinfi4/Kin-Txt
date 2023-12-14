@@ -1,4 +1,4 @@
-from kin_news_core.messaging.dtos import BasicEvent
+from kin_txt_core.messaging.dtos import BasicEvent
 
 from kin_model_types.domain.entities import ModelEntity
 

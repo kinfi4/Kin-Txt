@@ -2,7 +2,7 @@ from typing import Optional, TextIO
 
 from requests import JSONDecodeError
 
-from kin_news_core.service_proxy import ServiceProxy, ServiceProxyError
+from kin_txt_core.service_proxy import ServiceProxy, ServiceProxyError
 
 
 class StatisticsService(ServiceProxy):

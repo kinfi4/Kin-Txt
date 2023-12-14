@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "kin-model-types"
+version = "0.1.0"
+description = "Service for storing and managing user models and templates."
+authors = ["kinfi4 <ilyamakarov223@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+
+kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
+
+uvicorn = "0.23.2"
+fastapi = "0.101.1"
+python-multipart = "0.0.6"
+click = "8.1.7"
+pymongo = "^4.6.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,8 +1,8 @@
 from fastapi import Header, HTTPException, status, Request
 
-from kin_news_core.auth import decode_jwt_token, decode_kin_token, InternalUrl
-from kin_news_core.constants import KIN_TOKEN_PREFIX, USERNAME_HEADER
-from kin_news_core.exceptions import AuthenticationFailedError
+from kin_txt_core.auth import decode_jwt_token, decode_kin_token, InternalUrl
+from kin_txt_core.constants import KIN_TOKEN_PREFIX, USERNAME_HEADER
+from kin_txt_core.exceptions import AuthenticationFailedError
 
 from kin_model_types.domain.entities import User
 from kin_model_types.settings import Settings
