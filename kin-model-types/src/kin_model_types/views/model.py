@@ -20,6 +20,7 @@ from kin_model_types.exceptions import (
     UserModelNotFoundException,
     UnsupportedModelTypeError,
     ImpossibleToUpdateCustomModelException,
+    ImpossibleToDeleteCustomModelException,
 )
 
 router = APIRouter(prefix="/models")
@@ -118,6 +119,8 @@ def delete_model(
 ):
     try:
         models_service.delete_model(username=current_user.username, model_code=model_code)
+    except ImpossibleToDeleteCustomModelException:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": "It's impossible to delete built-in model."})
     except UserModelNotFoundException:
         pass
 

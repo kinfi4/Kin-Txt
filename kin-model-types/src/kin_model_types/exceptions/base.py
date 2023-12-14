@@ -12,3 +12,7 @@ class UserTemplateNotFoundException(EntityNotFoundException):
 
 class ImpossibleToUpdateCustomModelException(Exception):
     pass
+
+
+class ImpossibleToDeleteCustomModelException(Exception):
+    pass

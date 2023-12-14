@@ -23,8 +23,8 @@ services:
 
   model-types-consumer:
     build:
-        context: .
-        dockerfile: etc/kin-model-types/Dockerfile
+      context: .
+      dockerfile: etc/kin-model-types/Dockerfile
     image: 'kin-model-types'
     container_name: 'kin-model-types-consumer'
     command: bash -c "python -m kin_model_types consume"

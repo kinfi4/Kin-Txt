@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, validator
 
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.types import CategoryMapping
-from kin_model_types.constants import ModelTypes
+from kin_txt_core.reports_building.constants import ModelTypes
 
 
 class ModelFilters(BaseModel):

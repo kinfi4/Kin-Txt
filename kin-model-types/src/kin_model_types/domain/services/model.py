@@ -1,15 +1,16 @@
 import logging
 
-from kin_model_types.events.events import ModelValidationRequestOccurred, ModelDeleted
 from kin_txt_core.messaging import AbstractEventProducer
+from kin_txt_core.reports_building.constants import ModelTypes
 
-from kin_model_types.constants import ModelTypes, GENERALE_EXCHANGE
+from kin_model_types.events.events import ModelValidationRequestOccurred, ModelDeleted
+from kin_model_types.constants import GENERALE_EXCHANGE
 from kin_model_types.domain.entities import (
     CreateModelEntity,
     UpdateModelEntity,
-    CustomModelRegistrationEntity,
+    CustomModelRegistrationEntity, ModelEntity,
 )
-from kin_model_types.exceptions import ImpossibleToUpdateCustomModelException
+from kin_model_types.exceptions import ImpossibleToUpdateCustomModelException, ImpossibleToDeleteCustomModelException
 from kin_model_types.infrastructure.repositories import ModelRepository
 from kin_model_types.constants import REPORTS_BUILDER_EXCHANGE
 
@@ -38,8 +39,8 @@ class ModelService:
     def update_model(self, username: str, model_code: str, model: UpdateModelEntity) -> None:
         current_model = self._models_repository.get_model(model_code, username)
 
-        if current_model.model_type == ModelTypes.CUSTOM:
-            raise ImpossibleToUpdateCustomModelException(f"Impossible to update custom model {model_code}")
+        if current_model.model_type == ModelTypes.BUILTIN:
+            raise ImpossibleToUpdateCustomModelException(f"Impossible to update built-in model {model_code}")
 
         model_to_validate = self._models_repository.update_model(model_code, username, model.dict(exclude_none=True))
 
@@ -49,6 +50,11 @@ class ModelService:
         )
 
     def delete_model(self, username: str, model_code: str) -> None:
+        model_to_delete = self.get_model(username, model_code)
+
+        if model_to_delete.model_type == ModelTypes.BUILTIN:
+            raise ImpossibleToDeleteCustomModelException(f"Impossible to delete built-in model {model_code}")
+
         self._logger.info(f"[ModelService] Deleting model {model_code} for user {username}")
         self._models_repository.delete_model(model_code, username)
 
@@ -63,7 +69,7 @@ class ModelService:
         model_to_save = CreateModelEntity(
             code=model_entity.code,
             name=model_entity.name,
-            model_type=ModelTypes.CUSTOM,
+            model_type=ModelTypes.BUILTIN,
             category_mapping=model_entity.category_mapping,
         )
 
@@ -73,3 +79,6 @@ class ModelService:
             REPORTS_BUILDER_EXCHANGE,
             [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
         )
+
+    def get_model(self, username: str, model_code: str) -> ModelEntity:
+        return self._models_repository.get_model(model_code, username)
