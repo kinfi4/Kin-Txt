@@ -27,6 +27,12 @@ export const ModelTypes = {
     KERAS: "Keras Model",
 }
 
+export const VisualizationPossibleModelTypes = {
+    BUILTIN: "Built-in Model",
+    SKLEARN_MODEL: "Sklearn Model",
+    KERAS: "Keras Model",
+}
+
 export const ModelStatuses = {
     VALIDATED: "Validated",
     VALIDATION_FAILED: "ValidationFailed",

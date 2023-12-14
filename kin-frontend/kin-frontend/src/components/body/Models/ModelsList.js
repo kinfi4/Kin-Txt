@@ -9,7 +9,7 @@ import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 import {deleteModel, loadUserModels} from "../../../redux/reducers/modelsReducer";
-import {ModelStatuses, ModelTypes} from "../../../config";
+import {ModelStatuses, ModelTypes, VisualizationPossibleModelTypes} from "../../../config";
 
 let modelStatusToStatusClass = {
     [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
@@ -38,16 +38,23 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
         return (
             <tr>
                 <td>
-                    {modelType === ModelTypes.CUSTOM ? name : <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>}
+                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? name :
+                        <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>}
                 </td>
                 <td
                     className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
                 >
-                    <div className={selectReportMenuCss.circle}></div> {status}
+                    <div className={selectReportMenuCss.circle}></div>
+                    {status}
+                </td>
+                <td>
+                    <b>{modelType}</b>
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    {modelType === ModelTypes.CUSTOM ? "" : <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit /></Link>}
-                    <span onClick={onDeleteClick}><AiFillDelete /></span>
+                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? "" :
+                        <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit/></Link>}
+                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? "" :
+                        <span onClick={onDeleteClick}><AiFillDelete/></span>}
                 </td>
             </tr>
         );
@@ -63,8 +70,9 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                         <table className={selectReportMenuCss.reportTable}>
                             <thead>
                                 <tr className={modelsCss.filtersBlock}>
-                                    <th width={"500px"}>Name</th>
-                                    <th width={"250px"}>Status</th>
+                                    <th width={"320px"}>Name</th>
+                                    <th width={"180px"}>Status</th>
+                                    <th width={"200px"}>Model Type</th>
                                     <th>
                                         <Link to={`${path}/create`}><span className={selectReportMenuCss.generateNewItemButton}>Create New Model</span></Link>
                                     </th>
