@@ -1,17 +1,11 @@
 [submodule "kin-news/submodules/kin-news-core"]
 	path = kin-news/submodules/kin-news-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
-[submodule "kin-statistics/submodules/kin-news-core"]
-	path = kin-statistics/submodules/kin-news-core
-	url = git@github.com:kinfi4/Kin-News-Core.git
-[submodule "kin-reports-generation/submodules/kin-news-core"]
-	path = kin-reports-generation/submodules/kin-news-core
+[submodule "kin-statistics/submodules/kin-txt-core"]
+	path = kin-statistics/submodules/kin-txt-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
 [submodule "kin-model-types/submodules/kin-txt-core"]
 	path = kin-model-types/submodules/kin-txt-core
-	url = git@github.com:kinfi4/Kin-News-Core.git
-[submodule "kin-generic-reports-builder/submodules/kin-news-txt"]
-	path = kin-generic-reports-builder/submodules/kin-news-txt
 	url = git@github.com:kinfi4/Kin-News-Core.git
 [submodule "kin-generic-reports-builder/submodules/kin-txt-core"]
 	path = kin-generic-reports-builder/submodules/kin-txt-core

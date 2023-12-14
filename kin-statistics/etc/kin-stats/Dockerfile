@@ -2,16 +2,21 @@ FROM python:3.10
 
 ENV PIP_NO_CACHE_DIR=off \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1
+
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 WORKDIR /app
-COPY ./requirements.txt .
-
-RUN pip install -r requirements.txt
+COPY ./src/pyproject.toml ./src/poetry.lock* /app/
 
 COPY ./etc/kin-stats/migrations/ /app/migrations
 COPY ./etc/kin-stats/alembic.ini /app/alembic.ini
-COPY ./kin_statistics_api/ /app/kin_statistics_api
-COPY ./submodules/kin-news-core/kin_news_core /app/kin_news_core
+COPY ./src/kin_statistics_api/ /app/kin_statistics_api
+COPY ./submodules /submodules
+
+RUN poetry install
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

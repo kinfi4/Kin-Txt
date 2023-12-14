@@ -17,8 +17,11 @@ services:
     volumes:
       - ./etc/kin-stats/migrations:/app/migrations
       - ./etc/kin-stats/alembic.ini:/app/alembic.ini
-      - ./kin_statistics_api:/app/kin_statistics_api
-      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_statistics_api:/app/kin_statistics_api
+      - ./src/setup.cfg:/app/setup.cfg
+      - ./submodules:/submodules
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
 
   statistics-consumer:
     build:
@@ -34,8 +37,11 @@ services:
     volumes:
       - ./etc/kin-stats/migrations:/app/migrations
       - ./etc/kin-stats/alembic.ini:/app/alembic.ini
-      - ./kin_statistics_api:/app/kin_statistics_api
-      - ./submodules/kin-news-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_statistics_api:/app/kin_statistics_api
+      - ./src/setup.cfg:/app/setup.cfg
+      - ./submodules:/submodules
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
 
 networks:
   kin-network:
