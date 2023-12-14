@@ -1,7 +1,7 @@
 import click
 
 from kin_txt_core.messaging.rabbit.dtos import Subscription
-from kin_txt_core.reports_building import run_celery, run_consumer
+from kin_txt_core.reports_building.app import run_celery, run_consumer
 
 from kin_generic_builder.constants import GENERALE_EXCHANGE
 from kin_generic_builder.events.handlers import handle_delete_event

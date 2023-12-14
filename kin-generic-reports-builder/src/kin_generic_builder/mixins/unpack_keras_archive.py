@@ -5,9 +5,6 @@ import zipfile
 
 class UnpackKerasArchiveMixin:
     def _unpack_archive_if_needed(self, path: str) -> None:
-        print("THE PATH IS", path)
-        print("THIS IS THE ZIPFILE", zipfile.is_zipfile(path))
-
         if not zipfile.is_zipfile(path):
             return
 
