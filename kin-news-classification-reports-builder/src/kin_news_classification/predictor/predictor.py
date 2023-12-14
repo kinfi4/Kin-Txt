@@ -1,8 +1,9 @@
-from kin_news_core.reports_building.domain.services.predicting import IPredictor
+from kin_txt_core.datasources.common import ClassificationEntity
+from kin_txt_core.reports_building.domain.services.predicting import IPredictor
 
 
 class NewsTypePredictor(IPredictor):
-    def predict(self, text: str) -> str:
+    def predict(self, entity: ClassificationEntity) -> str:
         return "Political"
 
     def preprocess_text(self, text: str) -> str:

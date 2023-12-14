@@ -1,7 +1,7 @@
 from kin_news_classification.predictor.predictor import NewsTypePredictor
-from kin_news_core.reports_building.constants import ModelTypes
-from kin_news_core.reports_building.domain.entities import ModelEntity, CustomModelRegistrationEntity
-from kin_news_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
+from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.domain.entities import ModelEntity, CustomModelRegistrationEntity
+from kin_txt_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
 
 __all__ = ["KinBertNewsClassificator"]
 

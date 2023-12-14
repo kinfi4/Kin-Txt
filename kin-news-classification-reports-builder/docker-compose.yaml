@@ -13,8 +13,10 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_news_classification:/app/kin_news_classification
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_news_classification:/app/kin_news_classification
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
   news-classification-builder-celery-worker:
@@ -29,8 +31,10 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./kin_news_classification:/app/kin_news_classification
-      - ./submodules/kin-txt-core/kin_news_core:/app/kin_news_core
+      - ./src/kin_news_classification:/app/kin_news_classification
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - ./submodules:/submodules
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
     depends_on:
       - news-classification-builder-consumer

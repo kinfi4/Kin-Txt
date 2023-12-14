@@ -2,12 +2,17 @@ FROM python:3.10
 
 ENV PIP_NO_CACHE_DIR=off \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1
+
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 WORKDIR /app
-COPY ./requirements.txt .
+COPY ./src/pyproject.toml ./src/poetry.lock* /app/
 
-RUN pip install -r requirements.txt
+COPY ./src/kin_news_classification/ /app/kin_news_classification
+COPY ./submodules /submodules
 
-COPY ./kin_news_classification/ /app/kin_news_classification
-COPY ./submodules/kin-txt-core/kin_news_core /app/kin_news_core
+RUN poetry install

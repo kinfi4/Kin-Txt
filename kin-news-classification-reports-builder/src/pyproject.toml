@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "kin news classification reports builder"
+version = "0.1.0"
+description = ""
+authors = ["kinfi4 <ilyamakarov223@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+
+kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
