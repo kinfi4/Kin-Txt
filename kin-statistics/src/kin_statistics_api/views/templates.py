@@ -29,7 +29,7 @@ def get_user_templates(
 
 @router.post("")
 @inject
-def generate_report_request(
+def create_generation_template(
     generation_template: GenerationTemplate,
     current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
@@ -40,7 +40,7 @@ def generate_report_request(
 
 @router.get("/{template_id}", response_model=GenerationTemplate, status_code=status.HTTP_200_OK)
 @inject
-def get_report_details(
+def get_template_details(
     template_id: str,
     current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
@@ -55,7 +55,7 @@ def get_report_details(
 
 @router.delete("/{template_id}")
 @inject
-def delete_report(
+def delete_template(
     template_id: str,
     current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),

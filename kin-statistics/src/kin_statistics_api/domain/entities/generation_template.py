@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from kin_txt_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
+from kin_txt_core.reports_building.constants import ModelTypes
 
 
 class GenerationTemplate(BaseModel):
@@ -18,6 +19,7 @@ class GenerationTemplate(BaseModel):
     model_code: str = Field(..., alias="modelCode")
     report_name: str = Field(..., alias="reportName")
     datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
+    model_type: ModelTypes = Field(..., alias="modelType")
 
     class Config:
         allow_population_by_field_name = True

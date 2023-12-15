@@ -7,6 +7,7 @@ from kin_txt_core.constants import DEFAULT_DATE_FORMAT
 from kin_txt_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
 from kin_statistics_api.settings import Settings
+from kin_txt_core.reports_building.constants import ModelTypes
 
 
 def _cast_string_to_date(date_string: str) -> date:
@@ -25,6 +26,7 @@ class GenerateReportEntity(BaseModel):
     channel_list: list[str] = Field(..., alias="channels")
     report_type: ReportTypes = Field(..., alias="reportType")
     datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
+    model_type: ModelTypes = Field(..., alias="modelType")
 
     @validator("channel_list", pre=True, allow_reuse=True)
     def validate_channels(cls, channels: list[str]) -> list[str]:
