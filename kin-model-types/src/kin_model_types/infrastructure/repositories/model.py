@@ -47,11 +47,11 @@ class ModelRepository:
             for model_dict in models_dicts
         ]
 
-    def save_new_model(self, username: str, model: CreateModelEntity) -> ModelEntity:
+    def save_new_model(self, username: str, model: CreateModelEntity, override_status: ModelStatuses | None = None) -> ModelEntity:
         self._logger.info(f"[ModelRepository] Saving model for user {username}")
 
         model_dict = model.dict()
-        model_dict["model_status"] = ModelStatuses.CREATED
+        model_dict["model_status"] = ModelStatuses.CREATED if override_status is None else override_status
         model_dict["owner_username"] = username
         inserted_id = self._models_collection.insert_one(model_dict).inserted_id
 

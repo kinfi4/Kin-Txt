@@ -9,7 +9,7 @@ from kin_generic_builder.api.views import api_router
 def init_cors(app: FastAPI, settings: Settings):
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=Settings.allowed_hosts,
+        allow_origins=settings.allowed_hosts,
         allow_headers=["*"],
         allow_methods=["*"],
         allow_credentials=True

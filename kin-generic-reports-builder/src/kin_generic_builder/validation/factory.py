@@ -36,6 +36,9 @@ class KinTxtDefaultValidationService(BaseValidatorFactory):
 
         return model_type_validator(self._model_storage_path)
 
+    def is_handling_model_type(self, model_type: ModelTypes, model_code: str) -> bool:
+        return model_type in self._MODEL_TYPE_VALIDATOR_MAPPING.keys()
+
 
 def get_validator_factory() -> KinTxtDefaultValidationService:
     my_settings = Settings()

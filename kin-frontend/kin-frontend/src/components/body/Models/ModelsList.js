@@ -53,8 +53,7 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                 <td className={modelsCss.controlsContainer}>
                     {modelType === VisualizationPossibleModelTypes.BUILTIN ? "" :
                         <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit/></Link>}
-                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? "" :
-                        <span onClick={onDeleteClick}><AiFillDelete/></span>}
+                    <span onClick={onDeleteClick}><AiFillDelete/></span>
                 </td>
             </tr>
         );
