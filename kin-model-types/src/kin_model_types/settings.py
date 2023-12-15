@@ -11,3 +11,4 @@ class Settings(BaseSettings):
     rabbitmq_connection_string: str = Field(..., env="RABBITMQ_CONNECTION_STRING")
 
     models_storage_path: str = Field(..., env="MODELS_STORAGE_PATH")
+    allowed_hosts: list[str] = Field(..., env="ALLOWED_HOSTS")
