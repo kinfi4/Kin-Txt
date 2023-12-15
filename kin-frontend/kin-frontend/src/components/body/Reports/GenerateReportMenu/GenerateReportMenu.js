@@ -13,7 +13,7 @@ import {
     DatasourceTypes,
     NEWS_SERVICE_URL,
     STATISTICAL_REPORT,
-    STATISTICS_SERVICE_URL,
+    STATISTICS_SERVICE_URL, VisualizationPossibleModelTypes,
     WORD_CLOUD_REPORT
 } from "../../../../config";
 import BackLink from "../../../../common/backLink/BackLink";
@@ -39,6 +39,7 @@ const initialGenerateReportState = {
     modelCode: "",
     name: "",
     datasource: DatasourceTypes.TELEGRAM,
+    modelType: VisualizationPossibleModelTypes.SKLEARN_MODEL,
 }
 
 const GenerateReportMenu = ({
@@ -108,6 +109,8 @@ const GenerateReportMenu = ({
             modelCode: data.modelCode,
             templateId: data.templateId,
             reportName: data.name,
+            modelType: data.modelType,
+            datasource: data.datasource,
         };
 
         const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
@@ -142,6 +145,8 @@ const GenerateReportMenu = ({
             templateId: response.data.templateId,
             modelCode: response.data.modelCode,
             name: response.data.reportName,
+            modelType: response.data.modelType,
+            datasource: response.data.datasource,
         });
     }
 
@@ -248,7 +253,11 @@ const GenerateReportMenu = ({
                             isSearchable={true}
                             name="modelCode"
                             value={{value: data.modelCode, label: userModels.find(model => model.code === data.modelCode)?.name}}
-                            onChange={newValue => setData({...data, modelCode: newValue.value})}
+                            onChange={chosenValue => setData({
+                                ...data,
+                                modelCode: chosenValue.value,
+                                modelType: userModels.find(model => model.code === chosenValue.value)?.modelType
+                            })}
                             options={[...userModels.map(model => ({value: model.code, label: model.name}))]}
                             styles={selectStyles}
                         />
