@@ -1,9 +1,20 @@
 .modelFormContainer {
-    width: 100%;
+    width: 50%;
     display: flex;
-    justify-content: center;
     align-content: center;
-    margin-right: 50px;
+    flex-direction: column;
+}
+.basicSettingsContainer {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.advancedSettingsContainer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    width: 100%;
 }
 .formInputContainer {
     display: flex;
@@ -15,8 +26,9 @@
 }
 .blockOfForms {
     display: flex;
-    max-width: 450px;
     flex-direction: column;
+
+    max-width: 600px;
     margin: 20px;
 }
 .createModelButton {

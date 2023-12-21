@@ -16,6 +16,15 @@ const initialState = {
     ],
     name: "",
     code: "",
+    preprocessingConfig: {
+        removeLinks: true,
+        removeEmoji: false,
+        removePunctuation: true,
+        removeExtraSpaces: true,
+        removeHtmlTags: true,
+        lowercase: true,
+        removeStopWords: false,
+    },
 };
 
 const ModelCreateForm = ({createModel}) => {

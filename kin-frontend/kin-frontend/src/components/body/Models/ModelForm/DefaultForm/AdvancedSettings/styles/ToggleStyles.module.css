@@ -1,0 +1,62 @@
+.toggleContainer {
+    font-family: 'Arial', sans-serif;
+    margin: 10px;
+}
+
+.toggleHeader {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    color: whitesmoke;
+
+    transition: linear 0.2s;
+}
+
+.toggleIcon {
+    margin-right: 2px;
+    font-size: 25px;
+
+    transition: transform 0.4s ease;
+}
+
+.expanded {
+    transform: rotate(-90deg);
+}
+
+.toggleTitle {
+    font-weight: bold;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+.toggleContent {
+    animation-fill-mode: forwards;
+    margin-left: 20px;
+    padding: 10px;
+}
+.toggleContentExpanded {
+    animation: slideDown 0.3s ease-out; /* Apply the slide-down animation */
+}
+.toggleContentCollapsing {
+    animation: slideUp 0.2s ease-out forwards;
+}
