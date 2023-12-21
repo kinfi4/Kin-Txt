@@ -1,7 +1,9 @@
 export class BaseChartRenderer {
     constructor(contentType, width, height) {
-        if(new.target === BaseChartRenderer) {
-            throw new TypeError("Cannot construct BaseChartRenderer instances directly");
+        if (new.target === BaseChartRenderer) {
+            throw new TypeError(
+                "Cannot construct BaseChartRenderer instances directly"
+            );
         }
 
         this.width = width;
@@ -9,7 +11,7 @@ export class BaseChartRenderer {
         this.contentType = contentType;
     }
 
-    render(key=null) {
+    render(key = null) {
         throw new Error("Method 'render()' must be implemented.");
     }
 }

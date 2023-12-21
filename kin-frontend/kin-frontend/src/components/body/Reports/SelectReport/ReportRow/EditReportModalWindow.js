@@ -17,11 +17,12 @@ const EditReportModalWindow = (props) => {
 
             <Button
                 text={"Edit"}
-                onClick={(event) => props.updateReportName(props.reportId, data.reportName)}
+                onClick={(event) =>
+                    props.updateReportName(props.reportId, data.reportName)
+                }
             />
         </div>
     );
-}
-
+};
 
 export default EditReportModalWindow;

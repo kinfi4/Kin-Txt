@@ -15,7 +15,7 @@
     padding: 40px 60px;
 
     color: #f7fdff;
-    background-color: #15202B;
+    background-color: #15202b;
     box-shadow: 30px 30px 40px #2b355b;
 
     display: flex;
@@ -24,7 +24,7 @@
     flex-direction: column;
 }
 
-.authContainer{
+.authContainer {
     width: 100%;
     height: 100vh;
 

@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
 
-    box-shadow: 3px 3px 8px rgba(0,0,0,0.75);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.75);
 
     transition: box-shadow 0.3s ease-in-out;
 

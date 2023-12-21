@@ -3,15 +3,18 @@ import React from "react";
 import {BaseChartRenderer} from "../BaseChartRenderer";
 import styles from "../styles.module.css";
 import {
-    Legend, Line,
+    Legend,
+    Line,
     LineChart,
     PolarAngleAxis,
     PolarGrid,
     PolarRadiusAxis,
     Radar,
     RadarChart,
-    ResponsiveContainer, Tooltip,
-    XAxis, YAxis
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
 } from "recharts";
 
 export class MultiLineChartRenderer extends BaseChartRenderer {
@@ -22,29 +25,36 @@ export class MultiLineChartRenderer extends BaseChartRenderer {
         this._data = Object.entries(chartData).map(([date, categories]) => {
             return {
                 date,
-                ...categories
+                ...categories,
             };
         });
 
-        this._categories = Object.keys(this._data[0]).filter(key => key !== "date");
+        this._categories = Object.keys(this._data[0]).filter(
+            (key) => key !== "date"
+        );
 
         this._colors = [
-            '#23886a', '#00C49F', '#FFBB28', '#FF8042',
-            '#41B883', '#E46651', '#00D8FF', '#D7263D',
-            '#F46036', '#2E294E'
+            "#23886a",
+            "#00C49F",
+            "#FFBB28",
+            "#FF8042",
+            "#41B883",
+            "#E46651",
+            "#00D8FF",
+            "#D7263D",
+            "#F46036",
+            "#2E294E",
         ];
     }
 
-    render(key=null) {
+    render(key = null) {
         return (
             <div
                 key={key}
                 className={styles.chartContainer}
                 style={{width: this.width, height: this.height}}
             >
-                <h4>
-                    {this.getChartDescription()}
-                </h4>
+                <h4>{this.getChartDescription()}</h4>
 
                 <ResponsiveContainer width="100%">
                     <LineChart width={600} height={400} data={this._data}>
@@ -53,17 +63,15 @@ export class MultiLineChartRenderer extends BaseChartRenderer {
                         <Tooltip />
                         <Legend />
 
-                        {
-                            this._categories.map((category, idx) => (
-                                <Line
-                                    type="monotone"
-                                    dataKey={category}
-                                    key={idx}
-                                    dot={false}
-                                    stroke={this._colors[idx % this._colors.length]}
-                                />
-                            ))
-                        }
+                        {this._categories.map((category, idx) => (
+                            <Line
+                                type="monotone"
+                                dataKey={category}
+                                key={idx}
+                                dot={false}
+                                stroke={this._colors[idx % this._colors.length]}
+                            />
+                        ))}
                     </LineChart>
                 </ResponsiveContainer>
             </div>

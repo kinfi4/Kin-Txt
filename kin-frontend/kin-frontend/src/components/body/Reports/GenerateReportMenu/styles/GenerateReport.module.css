@@ -1,6 +1,6 @@
-.reportBlock{
+.reportBlock {
     height: fit-content;
-    border-bottom: 2px solid #24B382;
+    border-bottom: 2px solid #24b382;
     transition: linear 0.2s;
     padding: 5px;
 
@@ -9,7 +9,7 @@
     align-items: center;
 }
 .reportBlock * {
-    margin: 0 5px!important;
+    margin: 0 5px !important;
 }
 .reportBlock span {
     width: fit-content;
@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 2px solid #24B382;
+    border-bottom: 2px solid #24b382;
 
     transition: linear 0.2s;
 }
@@ -40,7 +40,7 @@
 .choseTemplateBlock span:last-child {
     font-size: 20px;
 }
-.choseTemplateBlock span:last-child svg{
+.choseTemplateBlock span:last-child svg {
     margin-bottom: 0;
 }
 .choseTemplateBlock span:hover {

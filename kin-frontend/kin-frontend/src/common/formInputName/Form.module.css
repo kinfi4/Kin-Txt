@@ -1,14 +1,14 @@
 .formInput {
     padding: 10px 7px;
     border-radius: 5px;
-    border: 2px solid #24B382;
+    border: 2px solid #24b382;
     background-color: #1d2c3b;
     color: white;
     font-size: 15px;
 }
 .formInput:focus {
     outline: none;
-    border: 2px solid #24B382;
+    border: 2px solid #24b382;
 }
 .formInputContainer {
 }

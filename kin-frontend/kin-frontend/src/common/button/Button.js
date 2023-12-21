@@ -1,6 +1,5 @@
 import React from "react";
-import defaultButtonCss from './Button.module.css'
-
+import defaultButtonCss from "./Button.module.css";
 
 function Button(props) {
     return (
@@ -10,11 +9,10 @@ function Button(props) {
                 onClick={(event) => props.onClick(event)}
                 style={props.styles}
             >
-                { props.text }
+                {props.text}
             </div>
         </>
-    )
+    );
 }
-
 
 export default Button;

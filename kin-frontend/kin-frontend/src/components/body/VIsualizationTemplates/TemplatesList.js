@@ -11,15 +11,17 @@ import statisticsCss from "../Reports/Statistics.module.css";
 import modelsCss from "./../Models/styles/ModelsList.module.css";
 
 import {ModelStatuses} from "../../../config";
-import {deleteTemplate, loadUserTemplates} from "../../../redux/reducers/visualizationTemplates";
+import {
+    deleteTemplate,
+    loadUserTemplates,
+} from "../../../redux/reducers/visualizationTemplates";
 
 let modelStatusToStatusClass = {
     [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
     [ModelStatuses.VALIDATING]: selectReportMenuCss.statusCellProcessing,
     [ModelStatuses.VALIDATION_FAILED]: selectReportMenuCss.statusCellFailed,
     [ModelStatuses.CREATED]: selectReportMenuCss.statusCellProcessing,
-}
-
+};
 
 const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
     useEffect(() => {
@@ -30,20 +32,34 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
 
     const TemplateCell = ({name, id, deleteTemplate}) => {
         const onDeleteClick = () => {
-            let userConfirm = window.confirm("Are you sure to delete this template?");
+            let userConfirm = window.confirm(
+                "Are you sure to delete this template?"
+            );
             if (userConfirm) {
                 deleteTemplate(id);
             }
-        }
+        };
 
         return (
             <tr>
                 <td>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}>{name}</Link>
+                    <Link
+                        className={modelsCss.modelLink}
+                        to={`${path}/edit/${id}`}
+                    >
+                        {name}
+                    </Link>
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    <Link className={modelsCss.modelLink} to={`${path}/edit/${id}`}><AiFillEdit /></Link>
-                    <span onClick={onDeleteClick}><AiFillDelete /></span>
+                    <Link
+                        className={modelsCss.modelLink}
+                        to={`${path}/edit/${id}`}
+                    >
+                        <AiFillEdit />
+                    </Link>
+                    <span onClick={onDeleteClick}>
+                        <AiFillDelete />
+                    </span>
                 </td>
             </tr>
         );
@@ -53,29 +69,37 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
         <>
             <div className={mainPageCss.container}>
                 <div className={statisticsCss.statsContainer}>
-                    <h2 className={commonStyles.pageTitle}>Your Visualization Templates</h2>
+                    <h2 className={commonStyles.pageTitle}>
+                        Your Visualization Templates
+                    </h2>
 
                     <div className={selectReportMenuCss.reportsListContainer}>
                         <table className={selectReportMenuCss.reportTable}>
                             <thead>
-                            <tr className={modelsCss.filtersBlock}>
-                                <th width={"500px"}>Name</th>
-                                <th width={"200px"}>
-                                    <Link to={`${path}/create`}><span className={selectReportMenuCss.generateNewItemButton}>New Template</span></Link>
-                                </th>
-                            </tr>
+                                <tr className={modelsCss.filtersBlock}>
+                                    <th width={"500px"}>Name</th>
+                                    <th width={"200px"}>
+                                        <Link to={`${path}/create`}>
+                                            <span
+                                                className={
+                                                    selectReportMenuCss.generateNewItemButton
+                                                }
+                                            >
+                                                New Template
+                                            </span>
+                                        </Link>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {
-                                templatesList.map((model, index) =>
+                                {templatesList.map((model, index) => (
                                     <TemplateCell
                                         id={model.id}
                                         name={model.name}
                                         deleteTemplate={deleteTemplate}
                                         key={index}
                                     />
-                                )
-                            }
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -85,17 +109,16 @@ const TemplatesList = ({templatesList, deleteTemplate, loadUserTemplates}) => {
     );
 };
 
-
 let mapStateToProps = (state) => {
     return {
         templatesList: state.visualizationTemplatesReducer.templates,
     };
-}
+};
 let mapDispatchToProps = (dispatch) => {
     return {
         loadUserTemplates: () => dispatch(loadUserTemplates()),
         deleteTemplate: (templateId) => dispatch(deleteTemplate(templateId)),
     };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemplatesList);

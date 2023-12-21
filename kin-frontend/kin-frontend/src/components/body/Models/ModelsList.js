@@ -8,38 +8,53 @@ import {Link, NavLink} from "react-router-dom";
 import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";
-import {deleteModel, loadUserModels} from "../../../redux/reducers/modelsReducer";
-import {ModelStatuses, ModelTypes, VisualizationPossibleModelTypes} from "../../../config";
+import {
+    deleteModel,
+    loadUserModels,
+} from "../../../redux/reducers/modelsReducer";
+import {
+    ModelStatuses,
+    ModelTypes,
+    VisualizationPossibleModelTypes,
+} from "../../../config";
 
 let modelStatusToStatusClass = {
     [ModelStatuses.VALIDATED]: selectReportMenuCss.statusCellCompleted,
     [ModelStatuses.VALIDATING]: selectReportMenuCss.statusCellProcessing,
     [ModelStatuses.VALIDATION_FAILED]: selectReportMenuCss.statusCellFailed,
     [ModelStatuses.CREATED]: selectReportMenuCss.statusCellProcessing,
-}
-
+};
 
 const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
     useEffect(() => {
         loadUserModels();
     }, []);
 
-
     let {path, _} = useRouteMatch();
 
     const ModelCell = ({name, code, status, modelType, deleteModel}) => {
         const onDeleteClick = () => {
-            let userConfirm = window.confirm("Are you sure to delete this model?");
+            let userConfirm = window.confirm(
+                "Are you sure to delete this model?"
+            );
             if (userConfirm) {
                 deleteModel(code);
             }
-        }
+        };
 
         return (
             <tr>
                 <td>
-                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? name :
-                        <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}>{name}</Link>}
+                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? (
+                        name
+                    ) : (
+                        <Link
+                            className={modelsCss.modelLink}
+                            to={`${path}/edit/${code}`}
+                        >
+                            {name}
+                        </Link>
+                    )}
                 </td>
                 <td
                     className={`${selectReportMenuCss.statusCell} ${modelStatusToStatusClass[status]} ${selectReportMenuCss.reportRowCell}`}
@@ -51,9 +66,19 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                     <b>{modelType}</b>
                 </td>
                 <td className={modelsCss.controlsContainer}>
-                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? "" :
-                        <Link className={modelsCss.modelLink} to={`${path}/edit/${code}`}><AiFillEdit/></Link>}
-                    <span onClick={onDeleteClick}><AiFillDelete/></span>
+                    {modelType === VisualizationPossibleModelTypes.BUILTIN ? (
+                        ""
+                    ) : (
+                        <Link
+                            className={modelsCss.modelLink}
+                            to={`${path}/edit/${code}`}
+                        >
+                            <AiFillEdit />
+                        </Link>
+                    )}
+                    <span onClick={onDeleteClick}>
+                        <AiFillDelete />
+                    </span>
                 </td>
             </tr>
         );
@@ -73,23 +98,29 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                                     <th width={"180px"}>Status</th>
                                     <th width={"200px"}>Model Type</th>
                                     <th>
-                                        <Link to={`${path}/create`}><span className={selectReportMenuCss.generateNewItemButton}>Create New Model</span></Link>
+                                        <Link to={`${path}/create`}>
+                                            <span
+                                                className={
+                                                    selectReportMenuCss.generateNewItemButton
+                                                }
+                                            >
+                                                Create New Model
+                                            </span>
+                                        </Link>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    modelsList.map((model, index) =>
-                                        <ModelCell
-                                            code={model.code}
-                                            name={model.name}
-                                            status={model.modelStatus}
-                                            modelType={model.modelType}
-                                            deleteModel={deleteModel}
-                                            key={index}
-                                        />
-                                    )
-                                }
+                                {modelsList.map((model, index) => (
+                                    <ModelCell
+                                        code={model.code}
+                                        name={model.name}
+                                        status={model.modelStatus}
+                                        modelType={model.modelType}
+                                        deleteModel={deleteModel}
+                                        key={index}
+                                    />
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -99,17 +130,16 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
     );
 };
 
-
 let mapStateToProps = (state) => {
     return {
-        modelsList: state.modelsReducer.models
+        modelsList: state.modelsReducer.models,
     };
-}
+};
 let mapDispatchToProps = (dispatch) => {
     return {
         loadUserModels: () => dispatch(loadUserModels()),
-        deleteModel: (modelId) => dispatch(deleteModel(modelId))
+        deleteModel: (modelId) => dispatch(deleteModel(modelId)),
     };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModelsList);

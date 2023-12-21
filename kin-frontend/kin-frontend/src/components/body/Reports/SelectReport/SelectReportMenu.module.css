@@ -9,7 +9,7 @@
     transition: linear 0.1s;
 }
 .reportLink:hover {
-    color: #7b6991!important;
+    color: #7b6991 !important;
 }
 .reportControls span {
     cursor: pointer;
@@ -42,7 +42,7 @@
     justify-content: center;
 }
 .generateNewItemButton:hover {
-    color: #7b6991  ;
+    color: #7b6991;
     border: solid 1px #7b6991;
 }
 .reportsListContainer {
@@ -61,7 +61,8 @@
     border-collapse: separate;
     border-spacing: 40px 0;
 }
-.reportTable td:last-child, .reportTable th:last-child{
+.reportTable td:last-child,
+.reportTable th:last-child {
     text-align: right;
 }
 .reportTable td:last-child {

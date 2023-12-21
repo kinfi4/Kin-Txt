@@ -3,39 +3,44 @@ import {NavLink} from "react-router-dom";
 import {logout} from "../../redux/reducers/authReducer";
 import {connect} from "react-redux";
 
-import headerCss from "./Header.module.css"
+import headerCss from "./Header.module.css";
 
 function Header(props) {
     return (
         <>
             <header className={headerCss.header}>
-                <NavLink to={'/reports'}><div className={headerCss.logo}>Kin TxT</div></NavLink>
+                <NavLink to={"/reports"}>
+                    <div className={headerCss.logo}>Kin TxT</div>
+                </NavLink>
                 <nav>
-                    <h3><NavLink to={'/tape'}>TAPE</NavLink></h3>
-                    <h3><NavLink to={'/reports'}>REPORTS</NavLink></h3>
-                    <h3><NavLink to={'/models'}>MODELS</NavLink></h3>
-                    <h3><NavLink to={'/templates'}>TEMPLATES</NavLink></h3>
-
-                    <h3
-                        onClick={(e) => props.logout()}
-                    >
-                        LOG OUT
+                    <h3>
+                        <NavLink to={"/tape"}>TAPE</NavLink>
                     </h3>
+                    <h3>
+                        <NavLink to={"/reports"}>REPORTS</NavLink>
+                    </h3>
+                    <h3>
+                        <NavLink to={"/models"}>MODELS</NavLink>
+                    </h3>
+                    <h3>
+                        <NavLink to={"/templates"}>TEMPLATES</NavLink>
+                    </h3>
+
+                    <h3 onClick={(e) => props.logout()}>LOG OUT</h3>
                 </nav>
             </header>
         </>
-    )
+    );
 }
 
 let mapStateToProps = (state) => {
-    return {}
-}
+    return {};
+};
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        logout: () => dispatch(logout)
-    }
-}
-
+        logout: () => dispatch(logout),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

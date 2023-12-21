@@ -21,45 +21,64 @@ import TemplateUpdateForm from "./body/VIsualizationTemplates/TemplateForm/Templ
 
 import {loadUser} from "../redux/reducers/authReducer";
 
-
 export function Main() {
     return (
         <>
-            <Header/>
+            <Header />
 
             <Switch>
-                <Route exact path={"/reports/compare"} render={() => <ComparisonWindow />} />
-                <Route path={'/reports'} render={() => <Statistics />} />
-                <Route path={'/models/create'} render={() => <ModelCreateForm />} />
-                <Route path={'/models/edit/:code'} render={({match}) => <ModelUpdateForm modelCode={match.params.code} />} />
-                <Route path={'/models'} exact render={() => <ModelsList />} />
-                <Route exact path={'/tape'} render={() => <Tape />} />
-                <Route path={'/templates/create'} render={() => <TemplateCreateForm />} />
-                <Route path={'/templates/edit/:id'} render={({match}) => <TemplateUpdateForm templateId={match.params.id} />} />
-                <Route path={'/templates'} render={() => <TemplatesList />} />
-                <Route path={'/'} render={() => <Statistics />} />
+                <Route
+                    exact
+                    path={"/reports/compare"}
+                    render={() => <ComparisonWindow />}
+                />
+                <Route path={"/reports"} render={() => <Statistics />} />
+                <Route
+                    path={"/models/create"}
+                    render={() => <ModelCreateForm />}
+                />
+                <Route
+                    path={"/models/edit/:code"}
+                    render={({match}) => (
+                        <ModelUpdateForm modelCode={match.params.code} />
+                    )}
+                />
+                <Route path={"/models"} exact render={() => <ModelsList />} />
+                <Route exact path={"/tape"} render={() => <Tape />} />
+                <Route
+                    path={"/templates/create"}
+                    render={() => <TemplateCreateForm />}
+                />
+                <Route
+                    path={"/templates/edit/:id"}
+                    render={({match}) => (
+                        <TemplateUpdateForm templateId={match.params.id} />
+                    )}
+                />
+                <Route path={"/templates"} render={() => <TemplatesList />} />
+                <Route path={"/"} render={() => <Statistics />} />
             </Switch>
         </>
-    )
+    );
 }
 
 function App() {
     useEffect(() => {
-        store.dispatch(loadUser())
-    })
+        store.dispatch(loadUser());
+    });
 
     return (
-      <>
-          <ReactNotifications />
-          <ModalWindow />
+        <>
+            <ReactNotifications />
+            <ModalWindow />
 
-          <Switch>
-              <Route exact path={'/sign-in'} render={() => <Login />} />
-              <Route exact path={'/sign-up'} render={() => <Register />} />
-              <Route path={'/'} render={() => <Main />} />
-          </Switch>
-      </>
-  );
+            <Switch>
+                <Route exact path={"/sign-in"} render={() => <Login />} />
+                <Route exact path={"/sign-up"} render={() => <Register />} />
+                <Route path={"/"} render={() => <Main />} />
+            </Switch>
+        </>
+    );
 }
 
 export default App;

@@ -10,7 +10,6 @@ import FormRadarChart from "./_ChartsVisualizations/FormRadarChart";
 import FormMultiLineChart from "./_ChartsVisualizations/FormMultiLineChart";
 import FormMultiAreaChart from "./_ChartsVisualizations/FormMultiAreaChart";
 
-
 const FormChart = ({chartId, onClick, isSelected}) => {
     const chartDataFactory = new ChartDataFactory();
     const [visualizationCategory, chartType] = chartId.split("__");
@@ -21,7 +20,7 @@ const FormChart = ({chartId, onClick, isSelected}) => {
         data,
         onClick,
         isSelected,
-    }
+    };
 
     if (chartType === "Pie") {
         return <FormPieChart {...params} />;
@@ -51,15 +50,11 @@ const FormChart = ({chartId, onClick, isSelected}) => {
         return <FormRadarChart {...params} />;
     }
 
-    if(chartType === "MultiArea") {
+    if (chartType === "MultiArea") {
         return <FormMultiAreaChart {...params} />;
     }
 
-    return (
-        <div>
-
-        </div>
-    );
+    return <div></div>;
 };
 
 export default FormChart;

@@ -8,7 +8,10 @@ export class ReportBuilder {
 
     generateChartRenderers() {
         this.reportData.visualizationDiagramsList.forEach((diagramType) => {
-            const chartRenderer = ChartRenderersFactory.getRenderer(diagramType, this.reportData.data);
+            const chartRenderer = ChartRenderersFactory.getRenderer(
+                diagramType,
+                this.reportData.data
+            );
             this.chartRenderers.push(chartRenderer);
         });
 
@@ -16,7 +19,7 @@ export class ReportBuilder {
     }
 
     build() {
-        if(!this.chartRenderers.length) {
+        if (!this.chartRenderers.length) {
             throw new Error("No chart renderers were generated!");
         }
 
@@ -26,10 +29,14 @@ export class ReportBuilder {
     organizeChartsOrder() {
         // split charts into small and big
         const smallCharts = this.chartRenderers.filter(
-            chart => chart.width === ChartRenderersFactory.chartConfigs.smallChartWidth
+            (chart) =>
+                chart.width ===
+                ChartRenderersFactory.chartConfigs.smallChartWidth
         );
         const bigCharts = this.chartRenderers.filter(
-            chart => chart.width === ChartRenderersFactory.chartConfigs.largeChartWidth
+            (chart) =>
+                chart.width ===
+                ChartRenderersFactory.chartConfigs.largeChartWidth
         );
 
         // sort small and big charts by content type
@@ -44,7 +51,11 @@ export class ReportBuilder {
 
         // merge small charts with big charts
         const sortedCharts = [];
-        for (let i = 0; i < Math.max(smallChartPairs.length, bigCharts.length); i++) {
+        for (
+            let i = 0;
+            i < Math.max(smallChartPairs.length, bigCharts.length);
+            i++
+        ) {
             if (smallChartPairs[i]) {
                 sortedCharts.push(...smallChartPairs[i]);
             }

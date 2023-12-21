@@ -6,15 +6,17 @@ import {validateFormData} from "../common/FormDataValidation";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 
-
 const initialState = {
     modelType: ModelTypes.SKLEARN_MODEL,
     modelFile: null,
     tokenizerFile: null,
-    categoryMapping: [{value: 0, categoryName: "First Category"}, {value: 1, categoryName: "Second Category"}],
+    categoryMapping: [
+        {value: 0, categoryName: "First Category"},
+        {value: 1, categoryName: "Second Category"},
+    ],
     name: "",
     code: "",
-}
+};
 
 const ModelCreateForm = ({createModel}) => {
     const [data, setData] = React.useState(initialState);
@@ -28,7 +30,7 @@ const ModelCreateForm = ({createModel}) => {
         }
 
         createModel(data, setInitialState);
-    }
+    };
 
     return (
         <DefaultModelForm
@@ -41,8 +43,9 @@ const ModelCreateForm = ({createModel}) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createModel: (model, setInitialState) => dispatch(validateAndSaveModel(model, setInitialState))
-    }
-}
+        createModel: (model, setInitialState) =>
+            dispatch(validateAndSaveModel(model, setInitialState)),
+    };
+};
 
 export default connect(() => new Object(), mapDispatchToProps)(ModelCreateForm);

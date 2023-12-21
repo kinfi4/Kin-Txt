@@ -1,5 +1,5 @@
 import React from "react";
-import authCss from "./auth.module.css"
+import authCss from "./auth.module.css";
 import {connect} from "react-redux";
 import {login} from "../../redux/reducers/authReducer";
 import Input from "../../common/input/Input";
@@ -8,10 +8,10 @@ import {NavLink} from "react-router-dom";
 import Button from "../../common/button/Button";
 
 function Login(props) {
-    const [details, setDetails] = useState({username: "", password: ""})
+    const [details, setDetails] = useState({username: "", password: ""});
     let onLoginSubmit = () => {
-        props.login(details.username, details.password)
-    }
+        props.login(details.username, details.password);
+    };
 
     return (
         <>
@@ -21,14 +21,24 @@ function Login(props) {
 
                     <Input
                         type={"text"}
-                        onChange={(element) => setDetails({...details, username: element.target.value})}
+                        onChange={(element) =>
+                            setDetails({
+                                ...details,
+                                username: element.target.value,
+                            })
+                        }
                         value={details.username}
                         placeholder={"Username"}
                         id={"username"}
                     />
                     <Input
                         type={"password"}
-                        onChange={(element) => setDetails({...details, password: element.target.value})}
+                        onChange={(element) =>
+                            setDetails({
+                                ...details,
+                                password: element.target.value,
+                            })
+                        }
                         value={details.password}
                         placeholder={"Password"}
                         id={"password"}
@@ -38,27 +48,28 @@ function Login(props) {
                         onClick={(event) => onLoginSubmit()}
                         text={"SIGN IN"}
                         styles={{
-                            marginTop: "15px"
+                            marginTop: "15px",
                         }}
                     />
 
-                    <NavLink to={'/sign-up'} className={authCss.formLink}>New to the Kin-News? <br/>Register</NavLink>
+                    <NavLink to={"/sign-up"} className={authCss.formLink}>
+                        New to the Kin-News? <br />
+                        Register
+                    </NavLink>
                 </div>
             </div>
         </>
     );
 }
 
-
 let mapStateToProps = (state) => {
-    return {}
-}
+    return {};
+};
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        login: (username, password) => dispatch(login(username, password))
-    }
-}
-
+        login: (username, password) => dispatch(login(username, password)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

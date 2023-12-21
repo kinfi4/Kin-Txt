@@ -1,4 +1,4 @@
-.estimateForm{
+.estimateForm {
     margin-top: 30px;
 }
 .estimateForm div {
@@ -8,6 +8,6 @@
     cursor: pointer;
     transition: linear 0.1s;
 }
-.active{
+.active {
     color: #7744bb;
 }

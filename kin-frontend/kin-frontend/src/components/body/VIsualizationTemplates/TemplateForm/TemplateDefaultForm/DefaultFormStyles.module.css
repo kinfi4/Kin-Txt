@@ -2,7 +2,7 @@
     width: 75%;
     height: 150px;
 
-    border-bottom: 1px solid #2CA884;
+    border-bottom: 1px solid #2ca884;
 
     margin: 50px 100px 0 100px;
     box-sizing: border-box;
@@ -63,7 +63,7 @@
 }
 .chartCategoryContainer h2 {
     width: 100%;
-    border-bottom: 1px solid #2CA884;
+    border-bottom: 1px solid #2ca884;
     padding-bottom: 10px;
     text-align: left;
 }

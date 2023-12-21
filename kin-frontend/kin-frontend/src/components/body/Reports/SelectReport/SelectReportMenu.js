@@ -1,21 +1,28 @@
-import React, {useEffect} from 'react';
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 
-import selectReportMenuCss from "./SelectReportMenu.module.css"
+import selectReportMenuCss from "./SelectReportMenu.module.css";
 import commonStyles from "../../../../common/CommonStyles.module.css";
 
 import {
     deleteReport,
     fetchUserReports,
-    updateReportName, updateReportsPage
+    updateReportName,
+    updateReportsPage,
 } from "../../../../redux/reducers/reportsReducer";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import ReportBlock from "./ReportRow/ReportBlock";
 import ReportFilters from "./ReportFilters/ReportFilters";
 import Pagination from "../../../../common/pagination/Pagination";
 
-
-const SelectReportMenu = ({reportNames, fetchUserReports, currentPage, updatePage, totalPages, ...props}) => {
+const SelectReportMenu = ({
+    reportNames,
+    fetchUserReports,
+    currentPage,
+    updatePage,
+    totalPages,
+    ...props
+}) => {
     useEffect(() => {
         fetchUserReports();
     }, []);
@@ -25,14 +32,12 @@ const SelectReportMenu = ({reportNames, fetchUserReports, currentPage, updatePag
             <h2 className={commonStyles.pageTitle}>Your Reports</h2>
 
             <div className={selectReportMenuCss.reportsListContainer}>
-
                 <table className={selectReportMenuCss.reportTable}>
                     <thead>
                         <ReportFilters />
                     </thead>
                     <tbody>
-                    {
-                        reportNames.map((el, idx) =>
+                        {reportNames.map((el, idx) => (
                             <ReportBlock
                                 name={el.name}
                                 reportId={el.reportId}
@@ -43,8 +48,7 @@ const SelectReportMenu = ({reportNames, fetchUserReports, currentPage, updatePag
                                 reportProcessingDate={el.generationDate}
                                 key={idx}
                             />
-                        )
-                    }
+                        ))}
                     </tbody>
                 </table>
 
@@ -63,16 +67,18 @@ let mapStateToProps = (state) => {
         currentPage: state.reportsReducer.reportsFilters.page,
         totalPages: state.reportsReducer.totalPages,
         reportNames: state.reportsReducer.reports,
-    }
-}
+    };
+};
 let mapDispatchToProps = (dispatch) => {
     return {
         updatePage: (page) => dispatch(updateReportsPage(page)),
         fetchUserReports: () => dispatch(fetchUserReports()),
-        updateReportName: (reportId, reportName) => dispatch(updateReportName(reportId, reportName)),
+        updateReportName: (reportId, reportName) =>
+            dispatch(updateReportName(reportId, reportName)),
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),
-        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
-    }
-}
+        showModal: (content, width, height) =>
+            dispatch(showModalWindow(content, width, height)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectReportMenu);

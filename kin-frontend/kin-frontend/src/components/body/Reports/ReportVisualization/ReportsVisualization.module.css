@@ -14,8 +14,8 @@
     text-align: center;
 
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
 }
 .postponedContainer img {
     margin-top: 200px;
@@ -73,7 +73,7 @@
 .exportButton {
     position: relative;
     font-size: 15px;
-    background-color: #2CA884;
+    background-color: #2ca884;
     padding: 15px 18px;
     border-radius: 4px;
 
@@ -96,14 +96,14 @@
     padding: 5px 20px;
 
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 
-    gap: 20px
+    gap: 20px;
 }
 .visualizationContainer h1 {
     position: absolute;
@@ -173,18 +173,18 @@
     border: solid black 1px;
     border-radius: 2px;
     padding: 12.5px 20px;
-    width: 220px!important;
+    width: 220px !important;
     color: #f7fdff;
     font-weight: bold;
     cursor: pointer;
     transition: linear 0.1s;
 }
-.filterOutWordsButton div{
+.filterOutWordsButton div {
     display: flex;
     justify-content: left;
     align-items: center;
 }
-.filterOutWordsButton svg{
+.filterOutWordsButton svg {
     font-size: 25px;
 }
 .filterOutWordsButton:hover {

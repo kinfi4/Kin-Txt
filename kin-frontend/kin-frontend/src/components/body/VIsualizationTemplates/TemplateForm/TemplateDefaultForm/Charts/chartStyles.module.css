@@ -11,11 +11,12 @@
 
     transition: linear 0.1s;
 }
-.chartContainer, .chartContainer * {
+.chartContainer,
+.chartContainer * {
     cursor: pointer;
 }
 .chartContainer:hover {
-    border: 1px solid #2CA884;
+    border: 1px solid #2ca884;
 }
 .active {
     background-color: #3b6056;

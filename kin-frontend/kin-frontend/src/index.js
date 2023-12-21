@@ -8,17 +8,15 @@ import ReactDOM from "react-dom";
 
 import store from "./redux/store";
 
-
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
-                <App/>
+                <App />
             </BrowserRouter>
         </Provider>
     </React.StrictMode>,
     document.getElementById("root")
 );
-
 
 reportWebVitals();

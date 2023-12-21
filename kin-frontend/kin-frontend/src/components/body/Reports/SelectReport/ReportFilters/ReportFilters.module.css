@@ -1,4 +1,4 @@
-.filtersContainer th:first-child{
+.filtersContainer th:first-child {
     padding-top: 20px;
 }
 .filtersContainer th div:first-child {
@@ -7,4 +7,3 @@
 .filtersContainer th {
     font-size: 18px;
 }
-

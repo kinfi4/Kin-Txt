@@ -8,36 +8,41 @@ const validationResultToMessageMapping = {
     [ModelStatuses.VALIDATION_FAILED]: {
         styleClass: styles.validationFailed,
         text: "Model validation failed.",
-        icon: <MdSmsFailed />
+        icon: <MdSmsFailed />,
     },
     [ModelStatuses.VALIDATED]: {
         styleClass: styles.validationPassed,
         text: "Model validation passed.",
-        icon: <IoMdDoneAll />
+        icon: <IoMdDoneAll />,
     },
     [ModelStatuses.CREATED]: {
         styleClass: styles.validationHasntStarted,
         text: "Model validation hasn't started...",
-        icon: <MdCreateNewFolder />
-    }
-}
-
+        icon: <MdCreateNewFolder />,
+    },
+};
 
 const ModelValidationMessageBlock = ({validationStatus, validationMessage}) => {
-    if(!validationStatus) {
-        return <></>
+    if (!validationStatus) {
+        return <></>;
     }
-    
+
     const valResult = validationResultToMessageMapping[validationStatus];
 
     return (
         <div className={styles.validationResultsContainer}>
-            <div className={`${styles.validationResult} ${valResult.styleClass}`}>
+            <div
+                className={`${styles.validationResult} ${valResult.styleClass}`}
+            >
                 {valResult.icon} {valResult.text}
             </div>
-            {
-                validationMessage ? <div><b>Details:</b> <i>{validationMessage}</i></div> : <></>
-            }
+            {validationMessage ? (
+                <div>
+                    <b>Details:</b> <i>{validationMessage}</i>
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 };

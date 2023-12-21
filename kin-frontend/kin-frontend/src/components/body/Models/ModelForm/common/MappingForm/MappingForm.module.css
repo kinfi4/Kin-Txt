@@ -10,12 +10,12 @@
 .inputMappingContainer input {
     background-color: #1d2c3b;
     color: white;
-    border: 2px solid #24B382;
+    border: 2px solid #24b382;
     border-radius: 5px;
     padding: 5px 8px;
     font-size: 15px;
 }
-.inputMappingContainer input:focus{
+.inputMappingContainer input:focus {
     outline: none;
 }
 .deleteMappingButton {
@@ -24,19 +24,19 @@
     transition: linear 0.1s;
 }
 .deleteMappingButton:hover {
-    color: #24B382;
+    color: #24b382;
 }
 .addMappingButton {
     color: white;
     cursor: pointer;
     transition: linear 0.1s;
     padding: 10px 9px;
-    background-color: #24B382;
+    background-color: #24b382;
     width: fit-content;
     font-weight: bold;
     border-radius: 2px;
 }
 .addMappingButton:hover {
     color: #1d2c3b;
-    background-color: #24B382;
+    background-color: #24b382;
 }

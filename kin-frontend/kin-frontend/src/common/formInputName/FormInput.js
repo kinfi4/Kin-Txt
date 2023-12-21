@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./Form.module.css";
 
-
 const FormInput = ({id, value, placeholder, onChange, style, ...props}) => {
     return (
         <input

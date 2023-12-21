@@ -4,10 +4,12 @@ import {
     Pie,
     PieChart,
     PolarAngleAxis,
-    PolarGrid, PolarRadiusAxis, Radar,
+    PolarGrid,
+    PolarRadiusAxis,
+    Radar,
     RadarChart,
     ResponsiveContainer,
-    Tooltip
+    Tooltip,
 } from "recharts";
 
 import styles from "../styles.module.css";
@@ -20,25 +22,33 @@ export class RadarChartRenderer extends BaseChartRenderer {
         super(contentType, width, height);
 
         const chartData = data[this.contentType];
-        this._data = Object.entries(chartData).map(([key, value]) => ({ name: key, value }));
+        this._data = Object.entries(chartData).map(([key, value]) => ({
+            name: key,
+            value,
+        }));
 
         this._colors = [
-            '#8673A1', '#C1876B', '#B8B799', '#8E402A',
-            '#3B83BD', '#DE4C8A', '#F4F4F4', '#69373e',
-            '#b68071', '#4739a6'
+            "#8673A1",
+            "#C1876B",
+            "#B8B799",
+            "#8E402A",
+            "#3B83BD",
+            "#DE4C8A",
+            "#F4F4F4",
+            "#69373e",
+            "#b68071",
+            "#4739a6",
         ];
     }
 
-    render(key=null) {
+    render(key = null) {
         return (
             <div
                 key={key}
                 className={styles.chartContainer}
                 style={{width: this.width, height: this.height}}
             >
-                <h4>
-                    {this.getChartDescription()}
-                </h4>
+                <h4>{this.getChartDescription()}</h4>
 
                 <ResponsiveContainer width="100%">
                     <RadarChart
@@ -47,9 +57,14 @@ export class RadarChartRenderer extends BaseChartRenderer {
                         outerRadius="80%"
                     >
                         <PolarGrid />
-                        <PolarAngleAxis dataKey="name" tick={{ fill: "white" }} />
+                        <PolarAngleAxis dataKey="name" tick={{fill: "white"}} />
                         <PolarRadiusAxis angle={45} domain={[0, 150]} />
-                        <Radar dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                        <Radar
+                            dataKey="value"
+                            stroke="#8884d8"
+                            fill="#8884d8"
+                            fillOpacity={0.6}
+                        />
                         <Tooltip />
                     </RadarChart>
                 </ResponsiveContainer>
@@ -65,5 +80,4 @@ export class RadarChartRenderer extends BaseChartRenderer {
                 return "Pie chart showing the distribution of posts number by channel";
         }
     }
-
 }

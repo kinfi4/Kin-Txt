@@ -1,7 +1,7 @@
-.overflow{
+.overflow {
     width: 100%;
     height: 100%;
-    top:0;
+    top: 0;
 
     position: fixed;
     background-color: rgba(0, 0, 0, 0.7);
@@ -12,12 +12,12 @@
     z-index: 14;
 }
 
-.overflow.active{
+.overflow.active {
     pointer-events: all;
     opacity: 1;
 }
 
-.inner{
+.inner {
     color: #f7fdff;
     border-radius: 4px;
     position: relative;

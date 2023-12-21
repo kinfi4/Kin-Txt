@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import WordCloud from 'react-d3-cloud';
+import React, {useState} from "react";
+import WordCloud from "react-d3-cloud";
 import {connect} from "react-redux";
-import {FiFilter} from "react-icons/fi"
+import {FiFilter} from "react-icons/fi";
 
 import visualizationCss from "../../ReportsVisualization.module.css";
 
@@ -15,49 +15,71 @@ import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {WORD_CLOUD_REPORT} from "../../../../../../config";
 import BackLink from "../../../../../../common/backLink/BackLink";
 
+const WordCloudReport = ({
+    showComparisonButton = true,
+    report,
+    wordsList,
+    showModal,
+}) => {
+    const colors = [
+        "#408f5e",
+        "#2F6B9A",
+        "#82a6c2",
+        "#BA97B4",
+        "#2CA884",
+        "#E39E21",
+        "#00C6B5",
+        "#BF8520",
+    ];
+    const [filters, setFilters] = useState({
+        channelFilter: "All Channels",
+        categoryFilter: "All",
+    });
 
-const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModal}) => {
-    const colors = ['#408f5e', '#2F6B9A', '#82a6c2', '#BA97B4', '#2CA884', '#E39E21', '#00C6B5', '#BF8520'];
-    const [filters, setFilters] = useState({channelFilter: "All Channels", categoryFilter: "All"});
-
-    let words = transformReportToWordsList(report, filters.channelFilter, filters.categoryFilter, wordsList);
-    let theBiggestWordValue = Math.max(...words.map(el => el.value));
-    let theSmallestWordValue = Math.min(...words.map(el => el.value));
+    let words = transformReportToWordsList(
+        report,
+        filters.channelFilter,
+        filters.categoryFilter,
+        wordsList
+    );
+    let theBiggestWordValue = Math.max(...words.map((el) => el.value));
+    let theSmallestWordValue = Math.min(...words.map((el) => el.value));
 
     return (
         <>
             <BackLink url={"/reports"} top={"120px"} left={"25px"} />
 
             <div className={visualizationCss.visualizationContainer}>
-
                 <div className={visualizationCss.header}>
                     <span>
                         {report.name}
-                        <div className={visualizationCss.totalMessagesCountLabel}>
-                            [{transformLargeNumberToReadable(report.totalWords)} words processed]
+                        <div
+                            className={visualizationCss.totalMessagesCountLabel}
+                        >
+                            [{transformLargeNumberToReadable(report.totalWords)}{" "}
+                            words processed]
                         </div>
                     </span>
 
-                    {
-                        showComparisonButton ?
-                            <div
-                                className={visualizationCss.exportButton}
-                                onClick={() => {
-                                    showModal(
-                                        <ChoseReportToCompare
-                                            reportType={WORD_CLOUD_REPORT}
-                                            currentReportId={report.reportId}
-                                        />,
-                                        500,
-                                        800,
-                                    )
-                                }}
-                            >
-                                COMPARE
-                            </div>
-                            :
-                            <></>
-                    }
+                    {showComparisonButton ? (
+                        <div
+                            className={visualizationCss.exportButton}
+                            onClick={() => {
+                                showModal(
+                                    <ChoseReportToCompare
+                                        reportType={WORD_CLOUD_REPORT}
+                                        currentReportId={report.reportId}
+                                    />,
+                                    500,
+                                    800
+                                );
+                            }}
+                        >
+                            COMPARE
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
 
                 <div className={visualizationCss.wordCloudFilters}>
@@ -65,10 +87,24 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                         <FilteringBlock
                             currentOption={filters.categoryFilter}
                             options={[
-                                {label: "All", onClick: () => setFilters({...filters, categoryFilter: "All"})},
-                                ...report.postsCategories.map(el => {
-                                    return {label: el, onClick: () => setFilters({...filters, categoryFilter: el})}
-                                })
+                                {
+                                    label: "All",
+                                    onClick: () =>
+                                        setFilters({
+                                            ...filters,
+                                            categoryFilter: "All",
+                                        }),
+                                },
+                                ...report.postsCategories.map((el) => {
+                                    return {
+                                        label: el,
+                                        onClick: () =>
+                                            setFilters({
+                                                ...filters,
+                                                categoryFilter: el,
+                                            }),
+                                    };
+                                }),
                             ]}
                         />
                     </div>
@@ -77,13 +113,26 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                         <FilteringBlock
                             currentOption={filters.channelFilter}
                             options={[
-                                {label: "All Channels", onClick: () => setFilters({...filters, channelFilter: "All Channels"})},
-                                ...Object.keys(report.dataByChannel).map(el => {
-                                    return {
-                                        label: el,
-                                        onClick: () => setFilters({...filters, channelFilter: el})
+                                {
+                                    label: "All Channels",
+                                    onClick: () =>
+                                        setFilters({
+                                            ...filters,
+                                            channelFilter: "All Channels",
+                                        }),
+                                },
+                                ...Object.keys(report.dataByChannel).map(
+                                    (el) => {
+                                        return {
+                                            label: el,
+                                            onClick: () =>
+                                                setFilters({
+                                                    ...filters,
+                                                    channelFilter: el,
+                                                }),
+                                        };
                                     }
-                                })
+                                ),
                             ]}
                         />
                     </div>
@@ -91,16 +140,16 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                     <div style={{position: "relative"}}>
                         <div
                             className={visualizationCss.filterOutWordsButton}
-                            onClick={() => showModal(
-                                <SelectFilteredWords />,
-                                500,
-                                800,
-                            )}
+                            onClick={() =>
+                                showModal(<SelectFilteredWords />, 500, 800)
+                            }
                         >
-                            <div><FiFilter style={{marginRight: "5px"}} /> Filter out words</div>
+                            <div>
+                                <FiFilter style={{marginRight: "5px"}} /> Filter
+                                out words
+                            </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div className={visualizationCss.wordCloudContainer}>
@@ -110,7 +159,14 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
                         height={1500}
                         random={() => 0.5}
                         padding={calcPadding(words.length)}
-                        fontSize={(word) => calcFontSize(word, words, theBiggestWordValue, theSmallestWordValue)}
+                        fontSize={(word) =>
+                            calcFontSize(
+                                word,
+                                words,
+                                theBiggestWordValue,
+                                theSmallestWordValue
+                            )
+                        }
                         fill={(w, i) => colors[i % colors.length]}
                         rotate={() => 0}
                     />
@@ -123,13 +179,14 @@ const WordCloudReport = ({showComparisonButton=true, report, wordsList, showModa
 let mapStateToProps = (state) => {
     return {
         wordsList: state.wordsCloudReducer.wordsList,
-    }
-}
+    };
+};
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
-    }
-}
+        showModal: (content, width, height) =>
+            dispatch(showModalWindow(content, width, height)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(WordCloudReport);

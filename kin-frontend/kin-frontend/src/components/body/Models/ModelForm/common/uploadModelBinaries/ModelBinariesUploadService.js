@@ -4,13 +4,19 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
 export class ModelBinariesUploadService {
-    constructor(serviceUrl, chunkSize= 1024 * 1024 * 5, modelCode) {
+    constructor(serviceUrl, chunkSize = 1024 * 1024 * 5, modelCode) {
         this.serviceUrl = serviceUrl;
         this.chunkSize = chunkSize;
         this.modelCode = modelCode;
     }
 
-    async uploadBlob(blob, uploadUrl, blobType, progressCallback, mergingStartedCallback) {
+    async uploadBlob(
+        blob,
+        uploadUrl,
+        blobType,
+        progressCallback,
+        mergingStartedCallback
+    ) {
         const totalChunks = Math.ceil(blob.size / this.chunkSize);
         const chunkProgress = 100 / totalChunks;
         let chunkNumber = 0;
@@ -21,7 +27,8 @@ export class ModelBinariesUploadService {
 
         const uploadNextChunk = async () => {
             if (chunkNumber < totalChunks) {
-                if(chunkNumber === totalChunks-1) {  // that means we're uploading the last chunk
+                if (chunkNumber === totalChunks - 1) {
+                    // that means we're uploading the last chunk
                     mergingStartedCallback(true);
                 }
 
@@ -42,12 +49,14 @@ export class ModelBinariesUploadService {
                         method: "POST",
                         data: formData,
                         headers: {
-                            "Authorization": `Token ${localStorage.getItem("token")}`,
+                            Authorization: `Token ${localStorage.getItem(
+                                "token"
+                            )}`,
                             "Content-Type": "multipart/form-data",
-                        }
+                        },
                     });
 
-                    if(response.status !== 200) {
+                    if (response.status !== 200) {
                         return false;
                     }
 
@@ -69,11 +78,13 @@ export class ModelBinariesUploadService {
         };
 
         return await uploadNextChunk();
-    };
+    }
 
     async calculateHash(file) {
         const buffer = await file.arrayBuffer();
-        const hash = await crypto.subtle.digest('SHA-256', buffer);
-        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        const hash = await crypto.subtle.digest("SHA-256", buffer);
+        return Array.from(new Uint8Array(hash))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
     }
 }

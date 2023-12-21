@@ -1,5 +1,13 @@
 import {BaseChartRenderer} from "../BaseChartRenderer";
-import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {
+    Bar,
+    BarChart,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 import styles from "../styles.module.css";
 import React from "react";
 import {PercentageTooltip} from "./Helpers/ShowPercentageTooltip";
@@ -10,51 +18,67 @@ export class StackedBarChartRenderer extends BaseChartRenderer {
 
         const chartData = data[this.contentType];
         this._data = Object.entries(chartData).map(([itemName, itemData]) => {
-            const totalSum = Object.values(itemData).reduce((acc, value) => acc + value, 0);
+            const totalSum = Object.values(itemData).reduce(
+                (acc, value) => acc + value,
+                0
+            );
 
-            const percentageData = { name: itemName };
+            const percentageData = {name: itemName};
             for (const [category, value] of Object.entries(itemData)) {
                 percentageData[category] = (value / totalSum) * 100;
             }
 
             return percentageData;
         });
-        this._categories = Object.keys(this._data[0]).filter(key => key !== "name");
+        this._categories = Object.keys(this._data[0]).filter(
+            (key) => key !== "name"
+        );
 
         this._colors = [
-            '#DB7093', '#008B8B', '#483D8B', '#DEB887',
-            '#5F9EA0', '#F5F5F5', '#7FFFD4', '#D7263D',
-            '#F46036', '#0088FE'
+            "#DB7093",
+            "#008B8B",
+            "#483D8B",
+            "#DEB887",
+            "#5F9EA0",
+            "#F5F5F5",
+            "#7FFFD4",
+            "#D7263D",
+            "#F46036",
+            "#0088FE",
         ];
     }
 
-    render(key=null) {
+    render(key = null) {
         return (
             <div
                 key={key}
                 className={styles.chartContainer}
                 style={{width: this.width, height: this.height}}
             >
-                <h4>
-                    {this.getChartDescription()}
-                </h4>
+                <h4>{this.getChartDescription()}</h4>
                 <ResponsiveContainer width="100%">
-                    <BarChart
-                        data={this._data}
-                    >
-                        <XAxis dataKey="name" interval={0} angle={this._data.length < 5 ? 0 : -90} color="#fff" dy={25} height={60} />
-                        <YAxis tickFormatter={(tick) => `${tick}%`} domain={[0, 100]} />
+                    <BarChart data={this._data}>
+                        <XAxis
+                            dataKey="name"
+                            interval={0}
+                            angle={this._data.length < 5 ? 0 : -90}
+                            color="#fff"
+                            dy={25}
+                            height={60}
+                        />
+                        <YAxis
+                            tickFormatter={(tick) => `${tick}%`}
+                            domain={[0, 100]}
+                        />
 
-                        {
-                            this._categories.map((category, index) => (
-                                <Bar
-                                    key={category}
-                                    dataKey={category}
-                                    stackId="a"
-                                    fill={this._colors[index % this._colors.length]}
-                                />
-                            ))
-                        }
+                        {this._categories.map((category, index) => (
+                            <Bar
+                                key={category}
+                                dataKey={category}
+                                stackId="a"
+                                fill={this._colors[index % this._colors.length]}
+                            />
+                        ))}
 
                         <Tooltip content={<PercentageTooltip />} />
                         <Legend />
@@ -77,26 +101,6 @@ export class StackedBarChartRenderer extends BaseChartRenderer {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //
 // {
@@ -259,5 +263,3 @@ export class StackedBarChartRenderer extends BaseChartRenderer {
 //     }
 // }
 // }
-
-

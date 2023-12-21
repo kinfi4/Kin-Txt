@@ -8,7 +8,6 @@ import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import {validateFormData} from "../common/FormDataValidation";
 
-
 const initialState = {
     modelType: ModelTypes.SKLEARN_MODEL,
     modelFile: null,
@@ -21,46 +20,55 @@ const initialState = {
     validationMessage: null,
     code: "",
     modelWasUpdated: false,
-}
+};
 
 const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
     const [data, setData] = React.useState(initialState);
 
-    const setInitialState = () => setData({...initialState, modelWasUpdated: true});
-
+    const setInitialState = () =>
+        setData({...initialState, modelWasUpdated: true});
 
     useEffect(() => {
         const requester = new APIRequester(MODEL_TYPES_URL);
 
-        requester.get(`/models/${modelCode}`).then((response) => {
-            setData({
-                ...data,
-                modelType: response.data.modelType,
-                modelFile: null,
-                tokenizerFile: null,
-                name: response.data.name,
-                modelStatus: response.data.modelStatus,
-                categoryMapping: Object.entries(response.data.categoryMapping).map(
-                    (value, categoryName) => ({
-                        value: Number(value[0]), categoryName: value[1]
-                    })
-                ),
-                modelName: response.data.originalModelFileName,
-                tokenizerName: response.data.originalTokenizerFileName,
-                validationMessage: response.data.validationMessage,
-                code: response.data.code,
-                modelDataHasChanged: false,
+        requester
+            .get(`/models/${modelCode}`)
+            .then((response) => {
+                setData({
+                    ...data,
+                    modelType: response.data.modelType,
+                    modelFile: null,
+                    tokenizerFile: null,
+                    name: response.data.name,
+                    modelStatus: response.data.modelStatus,
+                    categoryMapping: Object.entries(
+                        response.data.categoryMapping
+                    ).map((value, categoryName) => ({
+                        value: Number(value[0]),
+                        categoryName: value[1],
+                    })),
+                    modelName: response.data.originalModelFileName,
+                    tokenizerName: response.data.originalTokenizerFileName,
+                    validationMessage: response.data.validationMessage,
+                    code: response.data.code,
+                    modelDataHasChanged: false,
+                });
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 404) {
+                    showMessage([{message: "Model not found", type: "danger"}]);
+                    return;
+                }
+
+                console.log(error);
+
+                showMessage([
+                    {
+                        message: "Something went wrong during model loading.",
+                        type: "danger",
+                    },
+                ]);
             });
-        }).catch((error) => {
-            if(error.response && error.response.status === 404) {
-                showMessage([{message: "Model not found", type: 'danger'}]);
-                return;
-            }
-
-            console.log(error);
-
-            showMessage([{message: "Something went wrong during model loading.", type: 'danger'}]);
-        });
     }, []);
 
     const onUpdateButtonClick = () => {
@@ -76,8 +84,7 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
         setTimeout(() => {
             window.location.href = "/models";
         }, 20);
-    }
-
+    };
 
     return (
         <DefaultModelForm
@@ -91,8 +98,11 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
 
 const mapDispatchToProp = (dispatch) => {
     return {
-        onModelSavingCallback: (model, setInitialState) => dispatch(validateAndSaveModel(model, setInitialState, true)),
+        onModelSavingCallback: (model, setInitialState) =>
+            dispatch(validateAndSaveModel(model, setInitialState, true)),
     };
-}
+};
 
-export default connect(() => {return{};}, mapDispatchToProp)(ModelUpdateForm);
+export default connect(() => {
+    return {};
+}, mapDispatchToProp)(ModelUpdateForm);

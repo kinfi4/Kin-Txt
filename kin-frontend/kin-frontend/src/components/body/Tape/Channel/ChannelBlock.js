@@ -1,5 +1,5 @@
 import React from "react";
-import channelCss from './Channel.module.css'
+import channelCss from "./Channel.module.css";
 import {FILE_STORAGE_URL} from "../../../../config";
 import {showModalWindow} from "../../../../redux/reducers/modalWindowReducer";
 import {connect} from "react-redux";
@@ -11,12 +11,21 @@ const ChannelBlock = (props) => {
         <div
             className={channelCss.channelBlockContainer}
             onClick={(event) => {
-                props.showModal(<ChannelInfo channel={props.channel} />, 900, 600)
+                props.showModal(
+                    <ChannelInfo channel={props.channel} />,
+                    900,
+                    600
+                );
             }}
         >
-            {
-                props.channelsLoading ? "LOADING" : <img src={FILE_STORAGE_URL + props.channel.profilePhotoUrl} alt={truncate(props.channel.title, 14)}/>
-            }
+            {props.channelsLoading ? (
+                "LOADING"
+            ) : (
+                <img
+                    src={FILE_STORAGE_URL + props.channel.profilePhotoUrl}
+                    alt={truncate(props.channel.title, 14)}
+                />
+            )}
         </div>
     );
 };
@@ -24,14 +33,14 @@ const ChannelBlock = (props) => {
 let mapStateToProps = (state) => {
     return {
         channelsLoading: state.channels.loading,
-    }
-}
+    };
+};
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
-    }
-}
-
+        showModal: (content, width, height) =>
+            dispatch(showModalWindow(content, width, height)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelBlock);
