@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, validator
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.types import CategoryMapping
 from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 
 
 class ModelFilters(BaseModel):
@@ -19,6 +20,7 @@ class ModelValidationEntity(BaseModel):
     category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
     original_model_file_name: str | None = Field(None, alias="originalModelFileName")
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
+    preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
 
     class Config:
         allow_population_by_field_name = True
@@ -36,6 +38,7 @@ class CreateModelEntity(BaseModel):
     category_mapping: CategoryMapping = Field(..., alias="categoryMapping", )
     original_model_file_name: str | None = Field(None, alias="originalModelFileName")
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
+    preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
 
     class Config:
         allow_population_by_field_name = True
@@ -52,7 +55,17 @@ class CreateModelEntity(BaseModel):
 
 
 class UpdateModelEntity(CreateModelEntity):
-    pass
+    def dict(self, mong_db_parseable: bool = False, *args, **kwargs) -> dict:
+        default_dict = super().dict(*args, **kwargs)
+        if not mong_db_parseable:
+            return default_dict
+
+        preprocessing_config_dict = default_dict.pop("preprocessing_config")
+        if preprocessing_config_dict:
+            for key, value in preprocessing_config_dict.items():
+                default_dict[f"preprocessing_config.{key}"] = value
+
+        return default_dict
 
 
 class CustomModelRegistrationEntity(BaseModel):

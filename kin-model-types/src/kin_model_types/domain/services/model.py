@@ -43,7 +43,7 @@ class ModelService:
         if current_model.model_type == ModelTypes.BUILTIN:
             raise ImpossibleToUpdateCustomModelException(f"Impossible to update built-in model {model_code}")
 
-        model_to_validate = self._models_repository.update_model(model_code, username, model.dict(exclude_none=True))
+        model_to_validate = self._models_repository.update_model(model_code, username, model.dict(exclude_none=True, mong_db_parseable=True))
 
         self._events_publisher.publish(
             REPORTS_BUILDER_EXCHANGE,

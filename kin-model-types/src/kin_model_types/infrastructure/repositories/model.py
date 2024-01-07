@@ -1,5 +1,5 @@
 import logging
-from typing import Mapping, TypeAlias
+from typing import Mapping, TypeAlias, Any
 
 from bson import ObjectId
 from pymongo import MongoClient
@@ -8,8 +8,9 @@ from kin_model_types.constants import ModelStatuses
 from kin_model_types.domain.entities import ModelEntity, CreateModelEntity, ModelFilters
 from kin_model_types.exceptions.base import UserModelNotFoundException
 from kin_model_types.types import CategoryMapping
+from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 
-ModelDict: TypeAlias = dict[str, str | ModelStatuses, CategoryMapping]
+ModelDict: TypeAlias = dict[str, Any]
 
 
 class ModelRepository:
@@ -89,4 +90,5 @@ class ModelRepository:
             validation_message=model_dict.get("validation_message"),
             original_model_file_name=model_dict.get("original_model_file_name"),
             original_tokenizer_file_name=model_dict.get("original_tokenizer_file_name"),
+            preprocessing_config=model_dict.get("preprocessing_config", PreprocessingConfig()),
         )
