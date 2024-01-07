@@ -17,11 +17,8 @@ class KerasPredictor(IPredictor):
     def preprocess_text(self, text: str) -> str:
         return self._text_preprocessor.preprocess_text(text)
 
-    def preprocess_and_lemmatize(self, text: str) -> str:
-        return self._text_preprocessor.preprocess_and_lemmatize(text)
-
     def predict(self, text: str) -> str:
-        vectors = self._text_preprocessor.vectorize([text])
+        vectors = self._text_preprocessor.vectorize([text], preprocess=True)
 
         padded_vectors = pad_sequences(vectors, maxlen=self._model.input_shape[1])
         prediction_result = self._model.predict(padded_vectors, verbose=False)[0]

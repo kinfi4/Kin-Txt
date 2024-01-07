@@ -32,7 +32,8 @@ class KinTxtGenericPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
         vectorizer = vectorizer_factory.create_vectorizer(model_entity)
 
         return TextPreprocessor(
-            stop_words_storage_path=Settings().stop_words_storage_path,
+            stop_words_storage_path=model_entity.get_stop_words_path(Settings().model_storage_path),
+            preprocessing_config=model_entity.preprocessing_config,
             vectorizer=vectorizer,
         )
 

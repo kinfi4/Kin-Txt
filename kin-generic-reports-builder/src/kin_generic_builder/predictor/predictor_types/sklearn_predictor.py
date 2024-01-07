@@ -14,11 +14,8 @@ class SkLearnPredictor(IPredictor):
     def preprocess_text(self, text: str) -> str:
         return self._text_preprocessor.preprocess_text(text)
 
-    def preprocess_and_lemmatize(self, text: str) -> str:
-        return self._text_preprocessor.preprocess_and_lemmatize(text)
-
     def predict(self, text: str) -> str:
-        vectors = self._text_preprocessor.vectorize([text])
+        vectors = self._text_preprocessor.vectorize([text], preprocess=True)
 
         prediction_result = self._model.predict(vectors.toarray())[0]
         return self._get_predicted_news_type_label(prediction_result)

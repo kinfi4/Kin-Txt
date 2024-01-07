@@ -4,7 +4,7 @@ from fastapi import APIRouter, UploadFile, File, Form, Depends, status
 from fastapi.responses import JSONResponse, Response
 
 from kin_generic_builder.api.domain import BlobsService, BlobType
-from kin_generic_builder.api.domain.blobs_service import FileIntegrityError
+from kin_generic_builder.api.domain.blobs_service import FileIntegrityError, FileValidationError
 from kin_generic_builder.settings import Settings
 from kin_generic_builder.api.entities import User
 from kin_generic_builder.api.views.helpers import get_current_user
@@ -29,7 +29,7 @@ async def upload_model_binaries(
     try:
         await service.upload_model_binaries(
             user=current_user,
-            chunk=await chunk.read(),
+            chunk=chunk,
             model_code=model_code,
             chunk_index=chunk_index,
             blob_type=blob_type,
@@ -40,6 +40,12 @@ async def upload_model_binaries(
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"errors": "Incorrect file hash, it seems like file was corrupted during the upload"},
+        )
+    except FileValidationError as e:
+        _logger.error(f"Incorrect file format: {e}")
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"errors": f"Incorrect file format... {e}"},
         )
     except Exception as e:
         _logger.error(f"Error while uploading the chunk: {e}")

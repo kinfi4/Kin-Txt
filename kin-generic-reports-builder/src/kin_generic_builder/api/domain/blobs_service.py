@@ -4,22 +4,31 @@ import logging
 import hashlib
 from enum import Enum
 
+from fastapi import UploadFile
+
 from kin_generic_builder.api.entities import User
 from kin_generic_builder.mixins import UnpackKerasArchiveMixin
 
-__all__ = ["BlobsService", "BlobType", "FileIntegrityError"]
+__all__ = ["BlobsService", "BlobType", "FileIntegrityError", "FileValidationError"]
 
 
 class BlobType(str, Enum):
     MODEL = "model"
     TOKENIZER = "tokenizer"
+    STOP_WORDS = "stop_words"
 
 
 class FileIntegrityError(Exception):
     pass
 
 
+class FileValidationError(Exception):
+    pass
+
+
 class BlobsService(UnpackKerasArchiveMixin):
+    _ALLOWED_STOP_WORDS_EXTENSIONS = ["csv", "txt", "json"]
+
     def __init__(self, model_storage_path: str) -> None:
         self._storage_path = model_storage_path
         self._logger = logging.getLogger(__name__)
@@ -27,12 +36,15 @@ class BlobsService(UnpackKerasArchiveMixin):
     async def upload_model_binaries(
         self,
         user: User,
-        chunk: bytes,
+        chunk: UploadFile,
         model_code: str,
         chunk_index: int,
         blob_type: BlobType,
         chuck_hash: str,
     ) -> None:
+        await self._validate_chunk_file(chunk, blob_type)
+        chunk = await chunk.read()
+
         user_folder = os.path.join(self._storage_path, user.username)
         if not os.path.exists(user_folder):
             os.mkdir(user_folder)
@@ -82,3 +94,7 @@ class BlobsService(UnpackKerasArchiveMixin):
 
         if file_hash != expected_hash:
             raise FileIntegrityError(f"File {file_path} has incorrect hash")
+
+    async def _validate_chunk_file(self, chunk: UploadFile, blob_type: BlobType) -> None:
+        if blob_type == BlobType.STOP_WORDS and chunk.filename.split(".")[-1] not in self._ALLOWED_STOP_WORDS_EXTENSIONS:
+            raise FileValidationError(f"File {chunk.filename} has incorrect extension for stop-words file, expected .txt, .csv or .json")

@@ -36,3 +36,4 @@ emoji_regex_compiled = re.compile(
 class Languages(Enum):
     UKRAINIAN = "uk"
     RUSSIAN = "ru"
+    ENGLISH = "en"

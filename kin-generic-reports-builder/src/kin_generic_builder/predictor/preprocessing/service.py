@@ -1,61 +1,60 @@
-import os
 import re
-import json
+import logging
 from typing import Iterable
 from string import punctuation
 
-import langid
 import pandas as pd
-from pymorphy2 import MorphAnalyzer
 from nltk.tokenize import word_tokenize
 from scipy.sparse.csr import csr_matrix
 
+from kin_generic_builder.predictor.preprocessing.stop_words_loader_mixin import StopWordsLoaderMixin
+from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 from kin_txt_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
 from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 from kin_generic_builder.constants import emoji_regex_compiled
-from kin_generic_builder.constants import Languages
 
 
-class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
+class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin):
     def __init__(
         self,
-        stop_words_storage_path: str,
         vectorizer: ITextVectorizer,
+        stop_words_storage_path: str | None,
+        preprocessing_config: PreprocessingConfig | None = None,
     ) -> None:
         self._vectorizer = vectorizer
         self._stop_words_storage_path = stop_words_storage_path
+        self._preprocessing_config = preprocessing_config
 
-        self._lemmatizers_cache: dict[Languages, MorphAnalyzer] = {}
-        self._stop_words_cache: dict[Languages, list[str]] = {}
-
-        self._current_text_lang: Languages | None = None
+        self._logger = logging.getLogger(__name__)
 
     def preprocess_text(self, text: str) -> str:
         self._reset_current_text_lang()
 
-        text = text.lower()
-        text = self.remove_html_tags(text)
-        text = self.remove_links(text)
-        text = self.remove_emoji(text)
-        text = self.remove_punctuation(text)
-        text = self.remove_extra_spaces(text)
-        text = self.remove_stop_words(text)
+        if self._preprocessing_config is None:
+            return text
+
+        if self._preprocessing_config.lowercase:
+            text = text.lower()
+        if self._preprocessing_config.remove_links:
+            text = self.remove_links(text)
+        if self._preprocessing_config.remove_html_tags:
+            text = self.remove_html_tags(text)
+        if self._preprocessing_config.remove_emoji:
+            text = self.remove_emoji(text)
+        if self._preprocessing_config.remove_punctuation:
+            text = self.remove_punctuation(text)
+        if self._preprocessing_config.remove_extra_spaces:
+            text = self.remove_extra_spaces(text)
+        if self._preprocessing_config.remove_stop_words:
+            text = self.remove_stop_words(text)
 
         return text
-
-    def preprocess_and_lemmatize(self, text: str) -> str:
-        text = self.preprocess_text(text)
-        tokens = word_tokenize(text)
-
-        morph = self._get_lemmatizer(lang=self._get_lang(text))
-
-        return " ".join((morph.parse(word)[0].normal_form for word in tokens))
 
     def vectorize(self, texts: Iterable[str], preprocess: bool = False) -> csr_matrix | list:
         if preprocess:
             texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
-            texts = texts.apply(self.preprocess_and_lemmatize)
+            texts = texts.apply(self.preprocess_text)
 
         return self._vectorizer.vectorize(texts)
 
@@ -69,11 +68,14 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
         return re.sub(emoji_regex_compiled, '', text)
 
     def remove_stop_words(self, text: str) -> str:
-        stop_words = self._preload_stop_words(lang=self._get_lang(text))
+        stop_words_are_valid, stop_words = self.load_stop_words(self._stop_words_storage_path)
+
+        if not stop_words_are_valid:
+            self._logger.warning(f"Stop words file {self._stop_words_storage_path} is not valid")
+            return text
 
         cleared_words = [word for word in word_tokenize(text) if word.isalpha() and word not in stop_words]
-        truncated_text = cleared_words
-        return ' '.join(truncated_text)
+        return ' '.join(cleared_words)
 
     def remove_punctuation(self, text: str) -> str:
         text = re.sub(rf'[{punctuation}]', '', text)
@@ -82,30 +84,6 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer):
 
     def remove_extra_spaces(self, text: str) -> str:
         return re.sub(r' +', ' ', text)
-
-    def _get_lang(self, text: str) -> Languages:
-        if self._current_text_lang is None:
-            text_lang = langid.classify(text)[0]
-
-            try:
-                self._current_text_lang = Languages(text_lang)
-            except ValueError:
-                self._current_text_lang = Languages.RUSSIAN
-
-        return self._current_text_lang
-
-    def _get_lemmatizer(self, lang: Languages) -> MorphAnalyzer:
-        if lang not in self._lemmatizers_cache:
-            self._lemmatizers_cache[lang] = MorphAnalyzer(lang=lang.value)
-
-        return self._lemmatizers_cache[lang]
-
-    def _preload_stop_words(self, lang: Languages) -> list[str]:
-        if lang not in self._stop_words_cache:
-            with open(os.path.join(self._stop_words_storage_path, f"{lang.value}.json"), "r") as stop_words_file:
-                self._stop_words_cache[lang] = json.load(stop_words_file)
-
-        return self._stop_words_cache[lang]
 
     def _reset_current_text_lang(self) -> None:
         self._current_text_lang = None
