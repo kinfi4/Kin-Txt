@@ -1,0 +1,27 @@
+.label {
+    font-size: 17px;
+    font-weight: bold;
+    color: #c2c2c2;
+}
+.checkboxOptionsContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.settingsContainer {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    padding-left: 15px;
+    gap: 200px;
+
+    border-left: 2px solid #c2c2c2;
+}
+.inputFileContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

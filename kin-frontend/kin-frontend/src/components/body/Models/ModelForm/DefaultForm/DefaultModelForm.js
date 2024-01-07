@@ -28,16 +28,10 @@ const DefaultModelForm = ({
     onModelSavingCallback,
     isUpdateForm = false,
 }) => {
-    const [modelFileUploadProgress, setModelFileUploadProgress] =
-        React.useState(0);
-    const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] =
-        React.useState(0);
-    const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] =
-        React.useState(false);
-    const [
-        validatingUploadedTokenizerFiles,
-        setValidatingUploadedTokenizerFiles,
-    ] = React.useState(false);
+    const [modelFileUploadProgress, setModelFileUploadProgress] = React.useState(0);
+    const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] = React.useState(0);
+    const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] = React.useState(false);
+    const [validatingUploadedTokenizerFiles, setValidatingUploadedTokenizerFiles] = React.useState(false);
 
     let modelBlobName = null;
     if (data.modelFile) {
@@ -53,8 +47,7 @@ const DefaultModelForm = ({
         tokenizerBlobName = data.tokenizerName;
     }
 
-    const blobsAreUploading =
-        modelFileUploadProgress > 0 || tokenizerFileUploadProgress > 0;
+    const blobsAreUploading = modelFileUploadProgress > 0 || tokenizerFileUploadProgress > 0;
 
     const handleModelValidationStart = async () => {
         if (blobsAreUploading) {
@@ -73,6 +66,14 @@ const DefaultModelForm = ({
             return;
         }
 
+        if(data.preprocessingConfig.stopWordsFile && !data.preprocessingConfig.stopWordsFile.name.split(".").pop().match(/^(txt|csv|json)$/)) {
+            showMessage([
+                {message: `Stop words file must be a .txt, .csv or .json file`, type: "danger"},
+            ]);
+            return;
+
+        }
+
         const binariesUploadService = new ModelBinariesUploadService(
             GENERIC_REPORTS_BUILDER_URL,
             1024 * 1024 * 5, // 5MB
@@ -80,9 +81,10 @@ const DefaultModelForm = ({
         );
         let promiseModelUploadSuccess = Promise.resolve(true);
         let promiseTokenizerUploadSuccess = Promise.resolve(true);
+        let promiseStopWordsUploadSuccess = Promise.resolve(true);
 
         if (data.modelFile) {
-            promiseModelUploadSuccess = binariesUploadService.uploadBlob(
+            promiseModelUploadSuccess = binariesUploadService.uploadBlobByChunks(
                 data.modelFile,
                 "/blobs/upload",
                 BinariesTypes.MODEL,
@@ -92,13 +94,21 @@ const DefaultModelForm = ({
         }
 
         if (data.tokenizerFile) {
-            promiseTokenizerUploadSuccess = binariesUploadService.uploadBlob(
+            promiseTokenizerUploadSuccess = binariesUploadService.uploadBlobByChunks(
                 data.tokenizerFile,
                 "/blobs/upload",
                 BinariesTypes.TOKENIZER,
                 setTokenizerFileUploadProgress,
                 setValidatingUploadedTokenizerFiles
             );
+        }
+
+        if (data.preprocessingConfig.stopWordsFile) {
+            promiseStopWordsUploadSuccess = binariesUploadService.uploadFile(
+                data.preprocessingConfig.stopWordsFile,
+                "/blobs/upload",
+                BinariesTypes.STOP_WORDS,
+            )
         }
 
         if (!(await promiseModelUploadSuccess)) {
@@ -119,6 +129,15 @@ const DefaultModelForm = ({
             ]);
             return;
         }
+        if (!(await promiseStopWordsUploadSuccess)) {
+            showMessage([
+                {
+                    message: `Error while uploading stop words file...`,
+                    type: "danger",
+                },
+            ]);
+            return;
+        }
 
         onModelSavingCallback();
         setModelFileUploadProgress(0);
@@ -127,7 +146,7 @@ const DefaultModelForm = ({
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
-            if (data.modelWasUpdated) {
+            if (!data.preventPageReload) {
                 return;
             }
 
@@ -142,7 +161,7 @@ const DefaultModelForm = ({
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [data.modelWasUpdated]);
+    }, [data.preventPageReload]);
 
     return (
         <div className={statsStyles.statsContainer}>
@@ -290,7 +309,7 @@ const DefaultModelForm = ({
                     </div>
                 </div>
                 <div className={formStyles.advancedSettingsContainer}>
-                    <SettingsToggle  settingsForm={<AdvancedSettingsForm settingsData={data} setData={setData} />}/>
+                    <SettingsToggle settingsForm={<AdvancedSettingsForm settingsData={data} setData={setData} />}/>
                 </div>
             </div>
         </div>

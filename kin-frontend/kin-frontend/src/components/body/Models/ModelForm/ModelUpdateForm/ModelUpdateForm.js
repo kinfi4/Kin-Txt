@@ -19,14 +19,23 @@ const initialState = {
     tokenizerName: null,
     validationMessage: null,
     code: "",
-    modelWasUpdated: false,
+    preventPageReload: true,
+    preprocessingConfig: {
+        removeLinks: true,
+        removeEmoji: false,
+        removePunctuation: true,
+        removeExtraSpaces: true,
+        removeHtmlTags: true,
+        lowercase: true,
+        stopWordsFile: null,
+        stopWordsFileName: null,
+    },
 };
 
 const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
     const [data, setData] = React.useState(initialState);
 
-    const setInitialState = () =>
-        setData({...initialState, modelWasUpdated: true});
+    const letPageReload = () => setData({...initialState, preventPageReload: false});
 
     useEffect(() => {
         const requester = new APIRequester(MODEL_TYPES_URL);
@@ -52,6 +61,16 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                     validationMessage: response.data.validationMessage,
                     code: response.data.code,
                     modelDataHasChanged: false,
+                    preprocessingConfig: {
+                        removeLinks: response.data.preprocessingConfig.removeLinks,
+                        removeEmoji: response.data.preprocessingConfig.removeEmoji,
+                        removePunctuation: response.data.preprocessingConfig.removePunctuation,
+                        removeExtraSpaces: response.data.preprocessingConfig.removeExtraSpaces,
+                        removeHtmlTags: response.data.preprocessingConfig.removeHtmlTags,
+                        lowercase: response.data.preprocessingConfig.lowercase,
+                        stopWordsFile: null,
+                        stopWordsFileName: response.data.preprocessingConfig.stopWordsFileOriginalName,
+                    }
                 });
             })
             .catch((error) => {
@@ -78,12 +97,12 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
             return;
         }
 
-        onModelSavingCallback(data, setInitialState);
+        onModelSavingCallback(data, letPageReload);
 
         // update after delay in 100ms
         setTimeout(() => {
             window.location.href = "/models";
-        }, 20);
+        }, 100);
     };
 
     return (
@@ -98,8 +117,8 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
 
 const mapDispatchToProp = (dispatch) => {
     return {
-        onModelSavingCallback: (model, setInitialState) =>
-            dispatch(validateAndSaveModel(model, setInitialState, true)),
+        onModelSavingCallback: (model, letPageReload) =>
+            dispatch(validateAndSaveModel(model, letPageReload, true)),
     };
 };
 

@@ -23,7 +23,7 @@ const initialState = {
         removeExtraSpaces: true,
         removeHtmlTags: true,
         lowercase: true,
-        removeStopWords: false,
+        stopWordsFile: null,
     },
 };
 

@@ -48,4 +48,5 @@ export const DatasourceTypes = {
 export const BinariesTypes = {
     MODEL: "model",
     TOKENIZER: "tokenizer",
+    STOP_WORDS: "stop_words",
 };

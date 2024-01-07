@@ -15,7 +15,7 @@ const SettingsFormOptionCheckbox = ({data, setData, optionName, title}) => {
                 <input
                     type="checkbox"
                     id={optionName}
-                    value={data.preprocessingConfig[optionName]}
+                    checked={data.preprocessingConfig[optionName]}
                     onChange={(event) =>
                         setData({
                             ...data,

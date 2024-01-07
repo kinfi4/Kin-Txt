@@ -1,4 +1,5 @@
 import axios from "axios";
+import {showMessage} from "../../../../../../utils/messages";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -10,7 +11,7 @@ export class ModelBinariesUploadService {
         this.modelCode = modelCode;
     }
 
-    async uploadBlob(
+    async uploadBlobByChunks(
         blob,
         uploadUrl,
         blobType,
@@ -44,19 +45,8 @@ export class ModelBinariesUploadService {
                 formData.append("chuck_hash", await this.calculateHash(chunk));
 
                 try {
-                    const response = await axios({
-                        url: completeUploadUrl,
-                        method: "POST",
-                        data: formData,
-                        headers: {
-                            Authorization: `Token ${localStorage.getItem(
-                                "token"
-                            )}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                    });
-
-                    if (response.status !== 200) {
+                    const success = await this._uploadSingleBlob(completeUploadUrl, formData);
+                    if (!success) {
                         return false;
                     }
 
@@ -67,7 +57,7 @@ export class ModelBinariesUploadService {
 
                     return await uploadNextChunk();
                 } catch (e) {
-                    console.log(e);
+                    showMessage([{message: `Error while uploading the file... \n${e}}`, type: "danger"}]);
                     return false;
                 }
             } else {
@@ -80,11 +70,37 @@ export class ModelBinariesUploadService {
         return await uploadNextChunk();
     }
 
+    async uploadFile(file, uploadUrl, blobType) {
+        const formData = new FormData();
+        formData.append("chunk", file);
+        formData.append("chunk_index", 0);
+        formData.append("total_chunks", 1);
+        formData.append("blob_type", blobType);
+        formData.append("model_code", this.modelCode);
+        formData.append("chuck_hash", await this.calculateHash(file));
+
+        const completeUploadUrl = `${this.serviceUrl}${uploadUrl}`;
+
+        return await this._uploadSingleBlob(completeUploadUrl, formData);
+    }
+
     async calculateHash(file) {
         const buffer = await file.arrayBuffer();
         const hash = await crypto.subtle.digest("SHA-256", buffer);
-        return Array.from(new Uint8Array(hash))
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
+        return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async _uploadSingleBlob(uploadUrl, formData) {
+        const response = await axios({
+            url: uploadUrl,
+            method: "POST",
+            data: formData,
+            headers: {
+                Authorization: `Token ${localStorage.getItem("token")}`,
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return response.status === 200;
     }
 }

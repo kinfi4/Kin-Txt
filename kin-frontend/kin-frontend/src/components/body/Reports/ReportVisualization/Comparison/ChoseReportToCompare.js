@@ -30,8 +30,6 @@ const ChoseReport = ({
         requestReports().then((r) => setReports(r));
     }, []);
 
-    console.log(reportsIdentifiers);
-
     function onChoseReport(reportId) {
         hideModalWindow();
         setComparisonReports(currentReportId, reportId);
