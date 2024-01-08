@@ -12,7 +12,6 @@ services:
       - ./kin-frontend/public:/app/public
       - ./kin-frontend/package.json:/app/package.json
       - ./kin-frontend/package-lock.json:/app/package-lock.json
-      - ./kin-frontend/node_modules:/app/node_modules
       - ./kin-frontend/.prettierrc:/app/.prettierrc
       - ./kin-frontend/.prettierignore:/app/.prettierignore
     ports:

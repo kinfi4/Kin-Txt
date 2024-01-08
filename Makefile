@@ -18,3 +18,4 @@ build:
 	cd kin-generic-reports-builder && make build
 	cd kin-api-gateway && make build
 	cd kin-model-types && make build 
+	cd kin-news-classification-reports-builder && make build

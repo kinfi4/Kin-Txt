@@ -7,7 +7,7 @@ services:
       dockerfile: ./etc/kin-news/Dockerfile
     image: "kin-news-api"
     container_name: "kin-news-api"
-    command: bash -c "alembic revision --autogenerate && alembic upgrade head && python -m kin_news_api start-app"
+    command: bash -c "alembic upgrade head && python -m kin_news_api start-app"
     env_file:
       - ./etc/kin-news/env/.dev.env
     ports:
