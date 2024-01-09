@@ -50,3 +50,18 @@ export const BinariesTypes = {
     TOKENIZER: "tokenizer",
     STOP_WORDS: "stop_words",
 };
+
+export const SupportedLanguages = {
+    UKRAINIAN: {label: "Ukrainian", value: "uk"},
+    RUSSIAN: {label: "Russian", value: "ru"},
+    ENGLISH: {label: "English", value: "en"},
+    OTHER: {label: "Other", value: "other"},
+
+    getLanguageByValue: (languageValue) => {
+        for (const language of Object.values(SupportedLanguages)) {
+            if (language.value === languageValue) {
+                return language;
+            }
+        }
+    }
+};

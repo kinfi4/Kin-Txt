@@ -10,6 +10,7 @@ import {
     BinariesTypes,
     GENERIC_REPORTS_BUILDER_URL,
     ModelTypes,
+    SupportedLanguages,
 } from "../../../../../config";
 import InsertModelFiles from "../common/InsertModelFiles";
 import FormInput from "../../../../../common/formInputName/FormInput";
@@ -306,10 +307,61 @@ const DefaultModelForm = ({
                                 id={"modelMappings"}
                             />
                         </div>
+                        <div className={formStyles.formInputContainer}>
+                            <label
+                                id="language"
+                                className={statsCss.generateReportFormLabel}
+                            >
+                                Select model language (needed for preprocessing only):
+                            </label>
+
+                            <Select
+                                defaultValue={{
+                                    value: SupportedLanguages.ENGLISH.value,
+                                    label: SupportedLanguages.ENGLISH.label,
+                                }}
+                                isSearchable={true}
+                                name="language"
+                                value={{
+                                    value: data.preprocessingConfig.language.value,
+                                    label: data.preprocessingConfig.language.label,
+                                }}
+                                onChange={(newValue) =>
+                                    setData({
+                                        ...data,
+                                        preprocessingConfig: {
+                                            ...data.preprocessingConfig,
+                                            language: SupportedLanguages.getLanguageByValue(newValue.value)
+                                        }
+                                    })
+                                }
+                                options={
+                                    Object.entries(SupportedLanguages)
+                                        .filter(([key, element]) => element.value !== undefined)
+                                        .map(
+                                            ([key, lang]) =>
+                                            ({value: lang.value, label: lang.label})
+                                        )
+                                }
+                                styles={{
+                                    ...selectStyles,
+                                    control: (styles) => ({
+                                        ...styles,
+                                        backgroundColor: "#1d2c3b",
+                                        border: "1px solid #2CA884",
+                                        "&:hover": {
+                                            border: "1px solid #2CA884",
+                                        },
+                                        width: "100%",
+                                        cursor: "pointer",
+                                    }),
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className={formStyles.advancedSettingsContainer}>
-                    <SettingsToggle settingsForm={<AdvancedSettingsForm settingsData={data} setData={setData} />}/>
+                    <SettingsToggle settingsForm={<AdvancedSettingsForm settingsData={data} setData={setData} />} />
                 </div>
             </div>
         </div>

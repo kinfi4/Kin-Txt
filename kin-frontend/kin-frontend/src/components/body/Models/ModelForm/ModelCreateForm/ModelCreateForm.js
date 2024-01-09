@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 
-import {ModelTypes} from "../../../../../config";
+import {ModelTypes, SupportedLanguages} from "../../../../../config";
 import {validateFormData} from "../common/FormDataValidation";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
@@ -24,6 +24,8 @@ const initialState = {
         removeHtmlTags: true,
         lowercase: true,
         stopWordsFile: null,
+        language: SupportedLanguages.ENGLISH,
+        lemmatize: false,
     },
 };
 

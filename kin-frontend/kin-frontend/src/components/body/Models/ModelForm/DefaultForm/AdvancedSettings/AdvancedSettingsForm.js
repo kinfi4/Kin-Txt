@@ -26,6 +26,7 @@ const AdvancedSettingsForm = ({settingsData, setData}) => {
                             inputFileMessage={"Choose a csv, json, txt file with stop words"}
                             originalFileNameField={"stopWordsFileName"}
                         />
+                        <SettingsFormOptionCheckbox setData={setData} data={settingsData} optionName={"lemmatize"} title={"Lemmatize text"} style={{marginTop: "20px"}}/>
                     </div>
                 </div>
             </div>

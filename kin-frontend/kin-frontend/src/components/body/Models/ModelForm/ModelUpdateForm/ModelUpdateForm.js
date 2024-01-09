@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 
 import APIRequester from "../../../../../common/apiCalls/APIRequester";
-import {ModelTypes, MODEL_TYPES_URL} from "../../../../../config";
+import {ModelTypes, MODEL_TYPES_URL, SupportedLanguages} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
@@ -29,6 +29,8 @@ const initialState = {
         lowercase: true,
         stopWordsFile: null,
         stopWordsFileName: null,
+        language: SupportedLanguages.ENGLISH,
+        lemmatize: false,
     },
 };
 
@@ -70,6 +72,10 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                         lowercase: response.data.preprocessingConfig.lowercase,
                         stopWordsFile: null,
                         stopWordsFileName: response.data.preprocessingConfig.stopWordsFileOriginalName,
+                        language: SupportedLanguages.getLanguageByValue(
+                            response.data.preprocessingConfig.language
+                        ),
+                        lemmatize: response.data.preprocessingConfig.lemmatizeText,
                     }
                 });
             })
