@@ -31,3 +31,6 @@ ci: format-check | tests
 
 logs:
 	docker compose logs -f 
+
+make-migrations:
+	docker compose run --rm --no-deps statistics-api alembic revision --autogenerate -m "New migration"

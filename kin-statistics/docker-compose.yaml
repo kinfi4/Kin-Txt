@@ -7,7 +7,7 @@ services:
       dockerfile: ./etc/kin-stats/Dockerfile
     image: 'kin-statistics-api'
     container_name: 'kin-statistics-api'
-    command: bash -c "alembic-autogen-check || alembic revision --autogenerate && alembic upgrade head && python -m kin_statistics_api run-server"
+    command: bash -c "alembic upgrade head && python -m kin_statistics_api run-server"
     env_file:
       - ./etc/kin-stats/env/.dev.env
     ports:

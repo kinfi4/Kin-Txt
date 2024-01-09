@@ -331,6 +331,7 @@ const DefaultModelForm = ({
                                             ({value: lang.value, label: lang.label})
                                         )
                                 }
+                                width={"100%"}
                             />
                         </div>
                     </div>
