@@ -1,19 +1,3 @@
-export const selectStyles = {
-    control: (styles) => ({
-        ...styles,
-        backgroundColor: "#1d2c3b",
-        border: "1px solid #2CA884",
-        "&:hover": {
-            border: "1px solid #2CA884",
-        },
-        minWidth: "360px",
-        maxWidth: "360px",
-        cursor: "pointer",
-    }),
-    singleValue: (styles) => ({...styles, color: "#cecece"}),
-    option: (styles) => ({...styles, cursor: "pointer"}),
-};
-
 export const multiSelectStyles = {
     control: (styles) => ({
         ...styles,

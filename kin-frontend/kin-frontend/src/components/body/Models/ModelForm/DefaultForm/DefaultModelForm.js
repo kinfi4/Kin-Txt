@@ -22,6 +22,7 @@ import {ModelBinariesUploadService} from "../common/uploadModelBinaries/ModelBin
 import {showMessage} from "../../../../../utils/messages";
 import SettingsToggle from "./AdvancedSettings/SettingsToggle";
 import AdvancedSettingsForm from "./AdvancedSettings/AdvancedSettingsForm";
+import SelectItem from "../../../../../common/select/SelectItem";
 
 const DefaultModelForm = ({
     data,
@@ -189,12 +190,11 @@ const DefaultModelForm = ({
                                 Model Type:
                             </label>
 
-                            <Select
+                            <SelectItem
                                 defaultValue={{
                                     value: ModelTypes.SKLEARN_MODEL,
                                     label: ModelTypes.SKLEARN_MODEL,
                                 }}
-                                isSearchable={true}
                                 name="modelType"
                                 value={{
                                     value: data.modelType,
@@ -206,19 +206,7 @@ const DefaultModelForm = ({
                                 options={Object.entries(ModelTypes).map(
                                     ([key, value]) => ({value: value, label: value})
                                 )}
-                                styles={{
-                                    ...selectStyles,
-                                    control: (styles) => ({
-                                        ...styles,
-                                        backgroundColor: "#1d2c3b",
-                                        border: "1px solid #2CA884",
-                                        "&:hover": {
-                                            border: "1px solid #2CA884",
-                                        },
-                                        width: "100%",
-                                        cursor: "pointer",
-                                    }),
-                                }}
+                                width={"100%"}
                             />
                         </div>
                         {/*Input model*/}
@@ -312,10 +300,10 @@ const DefaultModelForm = ({
                                 id="language"
                                 className={statsCss.generateReportFormLabel}
                             >
-                                Select model language (needed for preprocessing only):
+                                Select model language:
                             </label>
 
-                            <Select
+                            <SelectItem
                                 defaultValue={{
                                     value: SupportedLanguages.ENGLISH.value,
                                     label: SupportedLanguages.ENGLISH.label,
@@ -343,19 +331,6 @@ const DefaultModelForm = ({
                                             ({value: lang.value, label: lang.label})
                                         )
                                 }
-                                styles={{
-                                    ...selectStyles,
-                                    control: (styles) => ({
-                                        ...styles,
-                                        backgroundColor: "#1d2c3b",
-                                        border: "1px solid #2CA884",
-                                        "&:hover": {
-                                            border: "1px solid #2CA884",
-                                        },
-                                        width: "100%",
-                                        cursor: "pointer",
-                                    }),
-                                }}
                             />
                         </div>
                     </div>

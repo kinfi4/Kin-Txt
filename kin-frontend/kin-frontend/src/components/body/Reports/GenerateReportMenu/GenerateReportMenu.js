@@ -27,9 +27,10 @@ import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow"
 import {loadUserTemplates} from "../../../../redux/reducers/visualizationTemplates";
 import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
 import APIRequester from "../../../../common/apiCalls/APIRequester";
-import {selectStyles, multiSelectStyles} from "./styles/formStyles";
+import {multiSelectStyles} from "./styles/formStyles";
 import FormInput from "../../../../common/formInputName/FormInput";
 import commonStyles from "../../../../common/CommonStyles.module.css";
+import SelectItem from "../../../../common/select/SelectItem";
 
 const ACTION_CREATE_OPTION = "create-option";
 const ACTION_REMOVE_OPTION = "remove-value";
@@ -293,12 +294,11 @@ const GenerateReportMenu = ({
                             Report Type:
                         </label>
 
-                        <Select
+                        <SelectItem
                             defaultValue={{
                                 value: STATISTICAL_REPORT,
                                 label: "Statistical report",
                             }}
-                            isSearchable={true}
                             name="reportType"
                             value={{
                                 value: data.reportType,
@@ -314,7 +314,6 @@ const GenerateReportMenu = ({
                                 },
                                 {value: WORD_CLOUD_REPORT, label: "Word cloud"},
                             ]}
-                            styles={selectStyles}
                         />
                     </div>
 
@@ -326,8 +325,7 @@ const GenerateReportMenu = ({
                             Model:
                         </label>
 
-                        <Select
-                            isSearchable={true}
+                        <SelectItem
                             name="modelCode"
                             value={{
                                 value: data.modelCode,
@@ -351,7 +349,6 @@ const GenerateReportMenu = ({
                                     label: model.name,
                                 })),
                             ]}
-                            styles={selectStyles}
                         />
                     </div>
 
@@ -368,8 +365,7 @@ const GenerateReportMenu = ({
                                 Visualization template:
                             </label>
 
-                            <Select
-                                isSearchable={true}
+                            <SelectItem
                                 name="templateId"
                                 value={{
                                     value: data.templateId,
@@ -389,7 +385,6 @@ const GenerateReportMenu = ({
                                         label: template.name,
                                     })),
                                 ]}
-                                styles={selectStyles}
                             />
                         </div>
                     )}
@@ -402,8 +397,7 @@ const GenerateReportMenu = ({
                             Datasource:
                         </label>
 
-                        <Select
-                            isSearchable={true}
+                        <SelectItem
                             name="datasource"
                             value={{
                                 value: data.datasource,
@@ -415,7 +409,6 @@ const GenerateReportMenu = ({
                             options={Object.entries(DatasourceTypes).map(
                                 (item) => ({value: item[1], label: item[1]})
                             )}
-                            styles={selectStyles}
                         />
                     </div>
 
