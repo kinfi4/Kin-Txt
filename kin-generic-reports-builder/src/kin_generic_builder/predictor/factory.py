@@ -15,7 +15,7 @@ __all__ = ["KinTxtGenericPredictorFactory"]
 
 
 class KinTxtGenericPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
-    model_type = "GenericModel"
+    model_types = "GenericModel"
 
     def create_predictor(self, model_entity: ModelEntity, generate_request: GenerateReportEntity) -> IPredictor:
         text_preprocessor = self.create_text_preprocessor(model_entity)

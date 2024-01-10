@@ -13,6 +13,7 @@ const PostponedReport = ({report, deleteReport}) => {
         );
         if (userConfirm) {
             deleteReport(report.reportId);
+            window.location.href = "/reports";
         }
     };
 
