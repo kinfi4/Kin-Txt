@@ -67,6 +67,7 @@ class ModelService:
             name=model_entity.name,
             model_type=ModelTypes.BUILTIN,
             category_mapping=model_entity.category_mapping,
+            preprocessing_config=model_entity.preprocessing_config,
         )
 
         model_to_validate = self._models_repository.save_new_model(

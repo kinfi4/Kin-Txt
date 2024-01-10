@@ -74,3 +74,4 @@ class CustomModelRegistrationEntity(BaseModel):
     owner_username: str = Field(..., alias="ownerUsername")
     category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
     validation_needed: bool = Field(False, alias="validationNeeded")
+    preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")

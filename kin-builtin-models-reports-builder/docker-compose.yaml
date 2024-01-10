@@ -37,7 +37,7 @@ services:
       - ./submodules:/submodules
       - kin-reports-builder-models:/models
     depends_on:
-      - news-classification-builder-consumer
+      - builtin-reports-builder-consumer
 
 networks:
   kin-network:

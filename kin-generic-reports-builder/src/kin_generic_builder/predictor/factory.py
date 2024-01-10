@@ -2,7 +2,7 @@ import joblib
 from keras.models import load_model
 
 from kin_txt_core.reports_building.constants import ModelTypes
-from kin_txt_core.reports_building.domain.entities import ModelEntity
+from kin_txt_core.reports_building.domain.entities import ModelEntity, GenerateReportEntity
 from kin_txt_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
 from kin_txt_core.reports_building.exceptions import UnsupportedModelTypeError
 
@@ -17,7 +17,7 @@ __all__ = ["KinTxtGenericPredictorFactory"]
 class KinTxtGenericPredictorFactory(UnpackKerasArchiveMixin, IPredictorFactory):
     model_type = "GenericModel"
 
-    def create_predictor(self, model_entity: ModelEntity) -> IPredictor:
+    def create_predictor(self, model_entity: ModelEntity, generate_request: GenerateReportEntity) -> IPredictor:
         text_preprocessor = self.create_text_preprocessor(model_entity)
 
         if model_entity.model_type == ModelTypes.SKLEARN:
