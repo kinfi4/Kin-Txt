@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 WORKDIR /app
 COPY ./src/pyproject.toml ./src/poetry.lock* /app/
 
-COPY ./src/kin_news_classification/ /app/kin_news_classification
+COPY ./src/kin_builtin_models/ /app/kin_builtin_models
 COPY ./submodules /submodules
 
 RUN poetry install

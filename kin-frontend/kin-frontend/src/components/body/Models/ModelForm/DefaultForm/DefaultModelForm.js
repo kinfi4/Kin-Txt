@@ -16,7 +16,6 @@ import InsertModelFiles from "../common/InsertModelFiles";
 import FormInput from "../../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
-import {selectStyles} from "../../../Reports/GenerateReportMenu/styles/formStyles";
 import BackLink from "../../../../../common/backLink/BackLink";
 import {ModelBinariesUploadService} from "../common/uploadModelBinaries/ModelBinariesUploadService";
 import {showMessage} from "../../../../../utils/messages";

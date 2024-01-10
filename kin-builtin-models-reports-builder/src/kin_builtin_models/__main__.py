@@ -2,7 +2,7 @@ import click
 
 from kin_txt_core.reports_building.app import run_celery, run_consumer
 
-from kin_news_classification.predictor.factory import KinBertNewsClassificator
+from kin_builtin_models.predictor.factory import KinBertNewsClassificator
 
 
 @click.group()

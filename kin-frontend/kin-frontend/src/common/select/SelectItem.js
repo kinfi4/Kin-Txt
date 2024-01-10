@@ -15,7 +15,7 @@ const SelectItem = ({defaultValue, name, value, onChange, options, width= "360px
             width: width,
         }),
         singleValue: (styles) => ({...styles, color: "#cecece"}),
-        option: (styles) => ({...styles, cursor: "pointer"}),
+        option: (styles) => ({...styles, cursor: "pointer", color: "black"}),
     };
 
     return (

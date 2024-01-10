@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "kin news classification reports builder"
+name = "kin builtin models reports builder"
 version = "0.1.0"
 description = ""
 authors = ["kinfi4 <ilyamakarov223@gmail.com>"]

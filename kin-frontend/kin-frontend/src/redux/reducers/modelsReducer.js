@@ -69,6 +69,9 @@ export const validateAndSaveModel =
         data["preprocessingConfig"]["removeStopWords"] = model.preprocessingConfig.stopWordsFile !== null;
         data["preprocessingConfig"]["lemmatizeText"] = model.preprocessingConfig.lemmatize;
         data["preprocessingConfig"]["language"] = model.preprocessingConfig.language.value;
+        data["preprocessingConfig"]["maxTokens"] = model.preprocessingConfig.maxlen;
+        data["preprocessingConfig"]["padding"] = model.preprocessingConfig.padding;
+        data["preprocessingConfig"]["truncating"] = model.preprocessingConfig.truncating;
 
         if (model.preprocessingConfig.stopWordsFile !== null) {
             data["preprocessingConfig"]["stopWordsFileOriginalName"] = model.preprocessingConfig.stopWordsFile.name;

@@ -20,12 +20,22 @@ class KerasPredictor(IPredictor):
     def predict(self, text: str) -> str:
         vectors = self._text_preprocessor.vectorize([text], preprocess=True)
 
-        padded_vectors = pad_sequences(vectors, maxlen=self._model.input_shape[1])
+        maxlen = self._model.input_shape[1]
+        if self._metadata.preprocessing_config.max_tokens is not None:
+            maxlen = self._metadata.preprocessing_config.max_tokens
+
+        padded_vectors = pad_sequences(
+            vectors,
+            maxlen=maxlen,
+            padding=self._metadata.preprocessing_config.padding,
+            truncating=self._metadata.preprocessing_config.truncating,
+        )
+
         prediction_result = self._model.predict(padded_vectors, verbose=False)[0]
 
-        return self._get_predicted_news_type_label(prediction_result)
+        return self._predict(prediction_result)
 
-    def _get_predicted_news_type_label(self, prediction_result: ndarray) -> str:
+    def _predict(self, prediction_result: ndarray) -> str:
         if self._model.layers[-1].units > 1:
             return self._metadata.category_mapping[str(prediction_result.argmax())]
 

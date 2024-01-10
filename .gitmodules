@@ -13,3 +13,6 @@
 [submodule "kin-news-classification-reports-builder/submodules/kin-txt-core"]
 	path = kin-news-classification-reports-builder/submodules/kin-txt-core
 	url = git@github.com:kinfi4/Kin-News-Core.git
+[submodule "builtin-models-core-submodule"]
+	path = kin-builtin-models-reports-builder/submodules/kin-txt-core
+	url = git@github.com:kinfi4/Kin-News-Core.git

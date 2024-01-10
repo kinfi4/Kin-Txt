@@ -1,41 +1,41 @@
 version: '3'
 
 services:
-  news-classification-builder-consumer:
+  builtin-reports-builder-consumer:
     build:
       context: .
       dockerfile: etc/kin-reports-builder/Dockerfile
-    image: 'kin-news-classification-reports-builder'
-    container_name: 'news-classification-builder-consumer'
-    command: bash -c "python -m kin_news_classification consume"
+    image: 'kin-builtin-models-reports-builder'
+    container_name: 'builtin-reports-builder-consumer'
+    command: bash -c "python -m kin_builtin_models consume"
     env_file:
       - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
-      - ./src/kin_news_classification:/app/kin_news_classification
+      - ./src/kin_builtin_models:/app/kin_builtin_models
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
       - ./submodules:/submodules
-      - /home/kinfi4/compiled-models-builders/kin-news/:/models
+      - kin-reports-builder-models:/models
 
-  news-classification-builder-celery-worker:
+  builtin-reports-builder-celery-worker:
     build:
       context: .
       dockerfile: etc/kin-reports-builder/Dockerfile
-    image: 'kin-news-classification-reports-builder'
-    container_name: 'news-classification-builder-celery-worker'
-    command: bash -c "python -m kin_news_classification run-tasks"
+    image: 'kin-builtin-models-reports-builder'
+    container_name: 'builtin-reports-builder-celery-worker'
+    command: bash -c "python -m kin_builtin_models run-tasks"
     env_file:
       - etc/kin-reports-builder/env/.dev.env
     networks:
       - kin-network
     volumes:
-      - ./src/kin_news_classification:/app/kin_news_classification
+      - ./src/kin_builtin_models:/app/kin_builtin_models
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
       - ./submodules:/submodules
-      - /home/kinfi4/compiled-models-builders/kin-news/:/models
+      - kin-reports-builder-models:/models
     depends_on:
       - news-classification-builder-consumer
 
@@ -43,3 +43,6 @@ networks:
   kin-network:
     external:
       name: kin-network
+
+volumes:
+    kin-reports-builder-models:

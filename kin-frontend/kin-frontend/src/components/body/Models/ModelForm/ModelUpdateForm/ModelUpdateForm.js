@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 
 import APIRequester from "../../../../../common/apiCalls/APIRequester";
-import {ModelTypes, MODEL_TYPES_URL, SupportedLanguages} from "../../../../../config";
+import {ModelTypes, MODEL_TYPES_URL, SupportedLanguages, PossibleTruncatePaddingTypes} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
@@ -31,6 +31,9 @@ const initialState = {
         stopWordsFileName: null,
         language: SupportedLanguages.ENGLISH,
         lemmatize: false,
+        padding: PossibleTruncatePaddingTypes.Pre,
+        truncating: PossibleTruncatePaddingTypes.Pre,
+        maxlen: null,
     },
 };
 
@@ -76,6 +79,13 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
                             response.data.preprocessingConfig.language
                         ),
                         lemmatize: response.data.preprocessingConfig.lemmatizeText,
+                        maxlen: response.data.preprocessingConfig.maxTokens,
+                        padding: PossibleTruncatePaddingTypes.getPaddingTypeByValue(
+                            response.data.preprocessingConfig.padding
+                        ),
+                        truncating: PossibleTruncatePaddingTypes.getPaddingTypeByValue(
+                            response.data.preprocessingConfig.truncating
+                        ),
                     }
                 });
             })

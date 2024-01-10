@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 
-import {ModelTypes, SupportedLanguages} from "../../../../../config";
+import {ModelTypes, PossibleTruncatePaddingTypes, SupportedLanguages} from "../../../../../config";
 import {validateFormData} from "../common/FormDataValidation";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
@@ -26,6 +26,9 @@ const initialState = {
         stopWordsFile: null,
         language: SupportedLanguages.ENGLISH,
         lemmatize: false,
+        padding: PossibleTruncatePaddingTypes.Pre,
+        truncating: PossibleTruncatePaddingTypes.Pre,
+        maxlen: null,
     },
 };
 

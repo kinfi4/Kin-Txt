@@ -7,7 +7,6 @@ from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 
 class KerasVectorizer(ITextVectorizer):
     def __init__(self, vectorizer: Tokenizer) -> None:
-        print("LOADED VECTORISER: ", vectorizer)
         self._vectorizer = vectorizer
 
     def vectorize(self, texts: Iterable[str]) -> list:

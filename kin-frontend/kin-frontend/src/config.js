@@ -65,3 +65,21 @@ export const SupportedLanguages = {
         }
     }
 };
+
+export const PossibleTruncatePaddingTypes = {
+    Pre: "pre",
+    Post: "post",
+
+    getOptionsForSelect: () => {
+        return [{value: "pre", label: "Pre"}, {value: "post", label: "Post"}];
+    },
+    getPaddingTypeByValue: (value) => {
+        if(value === "pre") {
+            return PossibleTruncatePaddingTypes.Pre;
+        } else if(value === "post") {
+            return PossibleTruncatePaddingTypes.Post;
+        } else {
+            return null;
+        }
+    },
+};

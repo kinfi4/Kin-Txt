@@ -1,14 +1,14 @@
-from kin_news_classification.predictor.predictor import NewsTypePredictor
+from kin_builtin_models.predictor.predictor import NewsTypePredictor
 
 from kin_txt_core.reports_building.constants import ModelTypes
 from kin_txt_core.reports_building.domain.entities import ModelEntity, CustomModelRegistrationEntity
 from kin_txt_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
 
-__all__ = ["KinBertNewsClassificator"]
+__all__ = ["BuiltInModelsPredictorFactory"]
 
 
-class KinBertNewsClassificator(IPredictorFactory):
-    model_type: CustomModelRegistrationEntity = CustomModelRegistrationEntity(
+class BuiltInModelsPredictorFactory(IPredictorFactory):
+    model_types: CustomModelRegistrationEntity = CustomModelRegistrationEntity(
         code="kin_bert_news_classificator",
         name="Kin BERT News Classificator",
         owner_username="kinfi4",
