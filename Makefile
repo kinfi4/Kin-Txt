@@ -8,6 +8,7 @@ run-services:
 	cd kin-generic-reports-builder && make run-silent
 	cd kin-api-gateway && make run-silent
 	cd kin-model-types && make run-silent
+	cd kin-builtin-models-reports-builder && make run-silent
 
 run: | run-infra run-services
 
@@ -18,4 +19,4 @@ build:
 	cd kin-generic-reports-builder && make build
 	cd kin-api-gateway && make build
 	cd kin-model-types && make build 
-	cd kin-news-classification-reports-builder && make build
+	cd kin-builtin-models-reports-builder && make build
