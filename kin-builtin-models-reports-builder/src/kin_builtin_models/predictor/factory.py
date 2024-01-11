@@ -26,7 +26,7 @@ class BuiltInModelsPredictorFactory(IPredictorFactory):
     ]
 
     def create_predictor(self, model_entity: ModelEntity, generation_request: GenerateReportEntity) -> IPredictor:
-        return EnglishSentimentPredictor()
+        return EnglishSentimentPredictor(report_type=generation_request.report_type)
 
     def is_handling(self, model_type: ModelTypes, model_code: str) -> bool:
         return model_type == ModelTypes.BUILTIN and model_code in self.supported_model_type_codes

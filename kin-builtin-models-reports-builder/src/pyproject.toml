@@ -9,6 +9,10 @@ readme = "README.md"
 python = "~3.10"
 
 kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
+transformers = {extras = ["torch"], version = "^4.36.2"}
+spacy = "^3.7.1"
+
+en_core_web_lg = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl"}
 
 [build-system]
 requires = ["poetry-core"]

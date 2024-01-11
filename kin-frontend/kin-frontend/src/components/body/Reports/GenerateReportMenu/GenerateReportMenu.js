@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {DateRangePicker} from "react-date-range";
 import Creatable from "react-select/creatable";
-import Select from "react-select";
 
 import statsCss from "../Statistics.module.css";
 import mainPageCss from "../../MainPage.module.css";
