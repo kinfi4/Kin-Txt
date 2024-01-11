@@ -1,5 +1,6 @@
 from sklearn.svm import SVC
 
+from kin_txt_core.datasources.common import ClassificationEntity
 from kin_txt_core.reports_building.domain.entities import ModelEntity
 from kin_txt_core.reports_building.domain.services.predicting import IPredictor
 from kin_generic_builder.predictor.preprocessing.service import TextPreprocessor
@@ -14,8 +15,8 @@ class SkLearnPredictor(IPredictor):
     def preprocess_text(self, text: str) -> str:
         return self._text_preprocessor.preprocess_text(text)
 
-    def predict(self, text: str) -> str:
-        vectors = self._text_preprocessor.vectorize([text], preprocess=True)
+    def predict(self, entity: ClassificationEntity) -> str:
+        vectors = self._text_preprocessor.vectorize([entity.text], preprocess=True)
 
         prediction_result = self._model.predict(vectors.toarray())[0]
         return self._get_predicted_news_type_label(prediction_result)

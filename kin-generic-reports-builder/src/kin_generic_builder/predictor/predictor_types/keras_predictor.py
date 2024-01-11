@@ -2,6 +2,7 @@ from numpy import ndarray
 from keras.models import Sequential
 from keras.utils import pad_sequences
 
+from kin_txt_core.datasources.common import ClassificationEntity
 from kin_txt_core.reports_building.domain.entities import ModelEntity
 from kin_txt_core.reports_building.domain.services.predicting import IPredictor
 
@@ -17,8 +18,8 @@ class KerasPredictor(IPredictor):
     def preprocess_text(self, text: str) -> str:
         return self._text_preprocessor.preprocess_text(text)
 
-    def predict(self, text: str) -> str:
-        vectors = self._text_preprocessor.vectorize([text], preprocess=True)
+    def predict(self, entity: ClassificationEntity) -> str:
+        vectors = self._text_preprocessor.vectorize([entity.text], preprocess=True)
 
         maxlen = self._model.input_shape[1]
         if self._metadata.preprocessing_config.max_tokens is not None:
