@@ -2,6 +2,7 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 import {logout} from "../../redux/reducers/authReducer";
 import {connect} from "react-redux";
+import logoImg from "../../images/kin-txt-logo-removebg.png";
 
 import headerCss from "./Header.module.css";
 
@@ -10,7 +11,10 @@ function Header(props) {
         <>
             <header className={headerCss.header}>
                 <NavLink to={"/reports"}>
-                    <div className={headerCss.logo}>Kin TxT</div>
+                    <div className={headerCss.logo}>
+                        {/*<img src={logoImg} alt="Logo" />*/}
+                        Kin-TXT
+                    </div>
                 </NavLink>
                 <nav>
                     <h3>

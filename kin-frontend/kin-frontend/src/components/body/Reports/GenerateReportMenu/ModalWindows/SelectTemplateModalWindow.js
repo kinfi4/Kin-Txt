@@ -5,72 +5,17 @@ import {AiFillDelete} from "react-icons/ai";
 import TapeCss from "../../../Tape/Tape.module.css";
 import GenerateReportCss from "../styles/GenerateReport.module.css";
 
-import {STATISTICS_SERVICE_URL} from "../../../../../config";
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
-import {showMessage} from "../../../../../utils/messages";
-import APIRequester from "../../../../../common/apiCalls/APIRequester";
+import {GenerationBlueprintController} from "../GenerationBlueprintController";
 
-const SelectTemplateModalWindow = ({
-    choseTemplate,
-    hideModalWindow,
-    ...props
-}) => {
+const SelectTemplateModalWindow = ({setReportData, hideModalWindow}) => {
     const [templates, setTemplates] = useState([]);
-    const onChoseTemplate = (templateId) => {
-        choseTemplate(templateId);
-        hideModalWindow();
-    };
-    const loadTemplates = () => {
-        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
-
-        apiRequester
-            .get("/templates")
-            .then((response) => {
-                setTemplates(
-                    response.data.templates.map((template) => {
-                        return {name: template.name, id: template.id};
-                    })
-                );
-            })
-            .catch((error) => {
-                showMessage([
-                    {
-                        message:
-                            "Something went wrong during blueprint loading.",
-                        type: "danger",
-                    },
-                ]);
-            });
-    };
-
-    const onDeleteClick = (templateId) => {
-        if (
-            !window.confirm("Are you sure you want to delete this blueprint?")
-        ) {
-            return;
-        }
-
-        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
-
-        apiRequester
-            .delete(`/templates/${templateId}`)
-            .then((response) => {
-                showMessage([{message: "Blueprint deleted.", type: "success"}]);
-                loadTemplates();
-            })
-            .catch((error) => {
-                showMessage([
-                    {
-                        message:
-                            "Something went wrong during blueprint deleting.",
-                        type: "danger",
-                    },
-                ]);
-            });
-    };
+    const blueprintController = new GenerationBlueprintController(setReportData, setTemplates, hideModalWindow);
 
     useEffect(() => {
-        loadTemplates();
+        (async () => {
+            await blueprintController.loadUserBlueprintsList();
+        })();
     }, []);
 
     return (
@@ -84,10 +29,10 @@ const SelectTemplateModalWindow = ({
                         className={GenerateReportCss.choseTemplateBlock}
                         key={idx}
                     >
-                        <span onClick={() => onChoseTemplate(template.id)}>
+                        <span onClick={() => blueprintController.loadBlueprint(template.id)}>
                             {template.name}
                         </span>
-                        <span onClick={() => onDeleteClick(template.id)}>
+                        <span onClick={() => blueprintController.deleteBlueprint(template.id)}>
                             <AiFillDelete />
                         </span>
                     </div>
@@ -103,7 +48,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(
-    () => null,
-    mapDispatchToProps
-)(SelectTemplateModalWindow);
+export default connect(() => null, mapDispatchToProps)(SelectTemplateModalWindow);

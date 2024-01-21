@@ -23,9 +23,10 @@ const StatisticalReport = ({showComparisonButton = true, report, ...props}) => {
         activeExportOptions: false,
     });
     const reportBuilder = new ReportBuilder(report);
+    const reportIsEmpty = report.totalMessagesCount === 0;
 
     function renderExportOptions() {
-        if (exportOptions.activeExportOptions) {
+        if (exportOptions.activeExportOptions && !reportIsEmpty) {
             return (
                 <div className={visualizationCss.exportOptions}>
                     <div
@@ -77,47 +78,60 @@ const StatisticalReport = ({showComparisonButton = true, report, ...props}) => {
                         </div>
                     </span>
 
-                    <div className={visualizationCss.reportOptions}>
-                        <div
-                            className={visualizationCss.exportButton}
-                            onMouseEnter={() =>
-                                setExportOptions({activeExportOptions: true})
-                            }
-                            onMouseLeave={() =>
-                                setExportOptions({activeExportOptions: false})
-                            }
-                            style={{marginLeft: "30px"}}
-                        >
-                            EXPORT
-                            {renderExportOptions()}
-                        </div>
-                        {showComparisonButton ? (
-                            <div
-                                className={visualizationCss.exportButton}
-                                onClick={() => {
-                                    props.showModal(
-                                        <ChoseReportToCompare
-                                            reportType={STATISTICAL_REPORT}
-                                            currentReportId={report.reportId}
-                                        />,
-                                        500,
-                                        800
-                                    );
-                                }}
-                            >
-                                COMPARE
-                            </div>
-                        ) : (
+                    {
+                        reportIsEmpty ?
                             <></>
-                        )}
-                    </div>
+                            :
+                            <div className={visualizationCss.reportOptions}>
+                                <div
+                                    className={visualizationCss.exportButton}
+                                    onMouseEnter={() =>
+                                        setExportOptions({activeExportOptions: true})
+                                    }
+                                    onMouseLeave={() =>
+                                        setExportOptions({activeExportOptions: false})
+                                    }
+                                    style={{marginLeft: "30px"}}
+                                >
+                                    EXPORT
+                                    {renderExportOptions()}
+                                </div>
+                                {showComparisonButton ? (
+                                    <div
+                                        className={visualizationCss.exportButton}
+                                        onClick={() => {
+                                            props.showModal(
+                                                <ChoseReportToCompare
+                                                    reportType={STATISTICAL_REPORT}
+                                                    currentReportId={report.reportId}
+                                                />,
+                                                500,
+                                                800
+                                            );
+                                        }}
+                                    >
+                                        COMPARE
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                    }
                 </div>
 
                 <div className={visualizationCss.chartsContainer}>
-                    {reportBuilder
-                        .generateChartRenderers()
-                        .organizeChartsOrder()
-                        .build()}
+                    {
+                        reportIsEmpty ?
+                            <span className={visualizationCss.emptyReportMessage}>
+                                Sorry, but it seems like there's no data found :(( <br/>
+                                Verify the channels list, datasource and dates range.
+                            </span>
+                            :
+                            reportBuilder
+                                .generateChartRenderers()
+                                .organizeChartsOrder()
+                                .build()
+                    }
                 </div>
             </div>
         </>

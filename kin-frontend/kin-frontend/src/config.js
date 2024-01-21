@@ -43,6 +43,7 @@ export const ModelStatuses = {
 export const DatasourceTypes = {
     TELEGRAM: "telegram",
     TWITTER: "twitter",
+    REDDIT: "reddit",
 };
 
 export const BinariesTypes = {

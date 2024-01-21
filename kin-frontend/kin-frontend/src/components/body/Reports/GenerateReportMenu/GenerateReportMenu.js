@@ -13,7 +13,6 @@ import {
 import {generateReport} from "../../../../redux/reducers/reportsReducer";
 import {
     DatasourceTypes,
-    NEWS_SERVICE_URL,
     STATISTICAL_REPORT,
     STATISTICS_SERVICE_URL,
     VisualizationPossibleModelTypes,
@@ -30,6 +29,7 @@ import {multiSelectStyles} from "./styles/formStyles";
 import FormInput from "../../../../common/formInputName/FormInput";
 import commonStyles from "../../../../common/CommonStyles.module.css";
 import SelectItem from "../../../../common/select/SelectItem";
+import {GenerationBlueprintController} from "./GenerationBlueprintController";
 
 const ACTION_CREATE_OPTION = "create-option";
 const ACTION_REMOVE_OPTION = "remove-value";
@@ -41,7 +41,7 @@ const initialGenerateReportState = {
     templateId: "",
     modelCode: "",
     name: "",
-    datasource: DatasourceTypes.TELEGRAM,
+    datasourceType: DatasourceTypes.TELEGRAM,
     modelType: VisualizationPossibleModelTypes.SKLEARN_MODEL,
 };
 
@@ -55,6 +55,7 @@ const GenerateReportMenu = ({
     loadUserTemplates,
 }) => {
     const [data, setData] = useState(initialGenerateReportState);
+    const blueprintController = new GenerationBlueprintController(setData, null, hideModalWindow);
 
     useEffect(() => {
         loadUserTemplates();
@@ -89,116 +90,13 @@ const GenerateReportMenu = ({
             return;
         }
 
-        const apiRequester = new APIRequester(NEWS_SERVICE_URL);
-
-        const response = await apiRequester.get(
-            `/channels/exists/${channelLink}`
-        );
-
-        if (response.data.exists) {
-            channelLink = channelLink.replace("https://t.me/", "");
-            const newList = [...data.channels, channelLink];
-
-            setData({...data, channels: newList});
-        } else {
-            showMessage([
-                {
-                    message: "Channel with provided link does not exists!",
-                    type: "danger",
-                },
-            ]);
-        }
+        channelLink = channelLink.replace("https://t.me/", "");
+        const newList = [...data.channels, channelLink];
+        setData({...data, channels: newList});
     };
-
     const removeChannelFromList = async (channelLink) => {
         const newList = data.channels.filter((link) => link !== channelLink);
         setData({...data, channels: newList});
-    };
-
-    const saveBlueprint = async (blueprintName) => {
-        if (!blueprintName) {
-            showMessage([
-                {
-                    message: "You have to specify the blueprint name.",
-                    type: "danger",
-                },
-            ]);
-            return;
-        }
-
-        const postData = {
-            name: blueprintName,
-            reportType: data.reportType,
-            channelList: data.channels,
-            fromDate: data.startDate.toISOString(),
-            toDate: data.endDate.toISOString(),
-            modelCode: data.modelCode,
-            templateId: data.templateId,
-            reportName: data.name,
-            modelType: data.modelType,
-            datasource: data.datasource,
-        };
-
-        const apiRequester = new APIRequester(
-            STATISTICS_SERVICE_URL,
-            null,
-            true
-        );
-
-        try {
-            const response = await apiRequester.post("/templates", postData);
-            if (response.status === 201) {
-                showMessage([
-                    {
-                        message: "Blueprint has been saved successfully",
-                        type: "success",
-                    },
-                ]);
-                hideModalWindow();
-            } else {
-                showMessage([
-                    {
-                        message:
-                            "Something went wrong during blueprint saving.",
-                        type: "danger",
-                    },
-                ]);
-            }
-        } catch (error) {
-            showMessage([
-                {
-                    message: "Something went wrong during blueprint saving.",
-                    type: "danger",
-                },
-            ]);
-        }
-    };
-    const loadBlueprint = async (blueprintId) => {
-        const apiRequester = new APIRequester(STATISTICS_SERVICE_URL);
-
-        const response = await apiRequester.get(`/templates/${blueprintId}`);
-
-        if (!response.data) {
-            showMessage([
-                {
-                    message: "Something went wrong during template loading.",
-                    type: "danger",
-                },
-            ]);
-            return;
-        }
-
-        setData({
-            startDate: new Date(response.data.fromDate),
-            endDate: new Date(response.data.toDate),
-            reportType: response.data.reportType,
-            channels: response.data.channelList,
-            templateId: response.data.templateId,
-            modelCode: response.data.modelCode,
-            name: response.data.reportName,
-            modelType: response.data.modelType,
-            datasource: response.data.datasource,
-        });
     };
 
     return (
@@ -255,7 +153,7 @@ const GenerateReportMenu = ({
                                 onClick={() =>
                                     showModalWindow(
                                         <InputModalWindow
-                                            actionCallback={saveBlueprint}
+                                            actionCallback={(blueprintName => blueprintController.saveBlueprint(blueprintName, data))}
                                             title={"NAME YOUR TEMPLATE"}
                                             inputPlaceholder={"Template name"}
                                             submitPlaceholder={"SAVE"}
@@ -271,7 +169,7 @@ const GenerateReportMenu = ({
                                 onClick={() =>
                                     showModalWindow(
                                         <SelectTemplateModalWindow
-                                            choseTemplate={loadBlueprint}
+                                            setReportData={setData}
                                         />,
                                         450,
                                         800
@@ -399,11 +297,11 @@ const GenerateReportMenu = ({
                         <SelectItem
                             name="datasource"
                             value={{
-                                value: data.datasource,
-                                label: data.datasource,
+                                value: data.datasourceType,
+                                label: data.datasourceType,
                             }}
                             onChange={(newValue) =>
-                                setData({...data, datasource: newValue.value})
+                                setData({...data, datasourceType: newValue.value})
                             }
                             options={Object.entries(DatasourceTypes).map(
                                 (item) => ({value: item[1], label: item[1]})
@@ -470,11 +368,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         sendGenerationRequest: (data) => dispatch(generateReport(data)),
-        showModalWindow: (content, width, height) =>
-            dispatch(showModalWindow(content, width, height)),
+        showModalWindow: (content, width, height) => dispatch(showModalWindow(content, width, height)),
         hideModalWindow: () => dispatch(hideModalWindow),
-        loadUserModels: (modelFilters) =>
-            dispatch(loadUserModels(modelFilters)),
+        loadUserModels: (modelFilters) => dispatch(loadUserModels(modelFilters)),
         loadUserTemplates: () => dispatch(loadUserTemplates()),
     };
 };

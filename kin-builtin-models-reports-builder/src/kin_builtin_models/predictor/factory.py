@@ -4,7 +4,8 @@ from kin_txt_core.reports_building.constants import ModelTypes
 from kin_txt_core.reports_building.domain.entities import (
     ModelEntity,
     CustomModelRegistrationEntity,
-    PreprocessingConfig, GenerateReportEntity,
+    PreprocessingConfig,
+    GenerateReportEntity,
 )
 from kin_txt_core.reports_building.domain.services.predicting import IPredictorFactory, IPredictor
 

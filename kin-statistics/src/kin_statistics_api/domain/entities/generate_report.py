@@ -25,7 +25,7 @@ class GenerateReportEntity(BaseModel):
     end_date: date = Field(..., alias="endDate")
     channel_list: list[str] = Field(..., alias="channels")
     report_type: ReportTypes = Field(..., alias="reportType")
-    datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
+    datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
     model_type: ModelTypes = Field(..., alias="modelType")
 
     @validator("channel_list", pre=True, allow_reuse=True)

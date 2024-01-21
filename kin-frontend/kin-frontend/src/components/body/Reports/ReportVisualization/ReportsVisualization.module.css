@@ -212,3 +212,9 @@
     color: #7b6991;
     margin-top: 5px;
 }
+.emptyReportMessage {
+    text-align: center;
+    font-size: 30px;
+    color: #f7fdff;
+    font-weight: bold;
+}

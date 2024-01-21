@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, date
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 from kin_txt_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
@@ -18,7 +18,7 @@ class GenerationTemplate(BaseModel):
     template_id: str = Field(..., alias="templateId")
     model_code: str = Field(..., alias="modelCode")
     report_name: str = Field(..., alias="reportName")
-    datasource: DataSourceTypes = Field(DataSourceTypes.TELEGRAM)
+    datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
     model_type: ModelTypes = Field(..., alias="modelType")
 
     class Config:
@@ -26,3 +26,10 @@ class GenerationTemplate(BaseModel):
         json_encoders = {
             datetime: lambda dt: dt.isoformat(),
         }
+
+    @validator("from_date", "to_date", pre=True)
+    def parse_date(cls, value: str | datetime) -> datetime:
+        if isinstance(value, datetime):
+            return value
+
+        return datetime.strptime(value, "%m/%d/%Y")

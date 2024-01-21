@@ -2,7 +2,7 @@ import torch
 import spacy
 from transformers import BertTokenizer, BertForSequenceClassification
 
-from kin_txt_core.datasources.common import ClassificationEntity
+from kin_txt_core.datasources.common.entities import ClassificationEntity
 from kin_txt_core.reports_building.domain.services.predicting import IPredictor
 from kin_txt_core.reports_building.constants import ReportTypes
 
@@ -24,8 +24,8 @@ class EnglishSentimentPredictor(IPredictor):
 
         self.en_nlp = spacy.load("en_core_web_lg")
 
-    def predict(self, msg: str) -> str:
-        inputs = self.tokenizer(msg, return_tensors="pt", padding=True, truncation=True, max_length=512)
+    def predict(self, entity: ClassificationEntity) -> str:
+        inputs = self.tokenizer(entity.text, return_tensors="pt", padding=True, truncation=True, max_length=512)
         outputs = self.model(**inputs)
         prediction = torch.nn.functional.softmax(outputs.logits, dim=-1)
         sent_idx = prediction[0].argmax()
