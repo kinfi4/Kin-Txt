@@ -18,9 +18,6 @@ function Header(props) {
                 </NavLink>
                 <nav>
                     <h3>
-                        <NavLink to={"/tape"}>TAPE</NavLink>
-                    </h3>
-                    <h3>
                         <NavLink to={"/reports"}>REPORTS</NavLink>
                     </h3>
                     <h3>
