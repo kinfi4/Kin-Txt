@@ -1,16 +1,17 @@
 import "react-notifications-component/dist/theme.css";
-import React from "react";
+
+import React, {useEffect} from "react";
 import {Route, Switch} from "react-router-dom";
-import {useEffect} from "react";
 import {ReactNotifications} from "react-notifications-component";
+
+import store from "../redux/store";
+import {loadUser} from "../redux/reducers/authReducer";
 
 import Header from "./header/Header";
 import ModalWindow from "../common/modal/ModalWindow";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import Statistics from "./body/Reports/Reports";
-import Tape from "./body/Tape/Tape";
-import store from "../redux/store";
 import ComparisonWindow from "./body/Comparison/ComparisonWindow";
 import ModelsList from "./body/Models/ModelsList";
 import ModelCreateForm from "./body/Models/ModelForm/ModelCreateForm/ModelCreateForm";
@@ -19,7 +20,6 @@ import TemplatesList from "./body/VIsualizationTemplates/TemplatesList";
 import TemplateCreateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateCreateForm/TemplateCreateForm";
 import TemplateUpdateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateUpdateForm/TemplateUpdateForm";
 
-import {loadUser} from "../redux/reducers/authReducer";
 
 export function Main() {
     return (
@@ -44,7 +44,6 @@ export function Main() {
                     )}
                 />
                 <Route path={"/models"} exact render={() => <ModelsList />} />
-                <Route exact path={"/tape"} render={() => <Tape />} />
                 <Route
                     path={"/templates/create"}
                     render={() => <TemplateCreateForm />}

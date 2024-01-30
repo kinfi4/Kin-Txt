@@ -19,3 +19,15 @@ class ReportDataNotFound(KinNewsCoreException):
 
 class GenerationTemplateNotFound(KinNewsCoreException):
     pass
+
+
+class BaseAuthError(KinNewsCoreException):
+    pass
+
+
+class UsernameAlreadyTakenError(BaseAuthError):
+    pass
+
+
+class LoginFailedError(BaseAuthError):
+    pass

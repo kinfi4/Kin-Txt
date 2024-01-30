@@ -1,11 +1,13 @@
 import React, {useState} from "react";
-import {setFilterOutWords} from "../../../../../redux/reducers/wordCloud";
 import {connect} from "react-redux";
-import TapeCss from "../../../Tape/Tape.module.css";
+import {AiFillDelete} from "react-icons/ai";
+
+import commonCss from "../../../../../common/CommonStyles.module.css";
+import generateReportCss from "../../GenerateReportMenu/styles/GenerateReport.module.css";
+
+import {setFilterOutWords} from "../../../../../redux/reducers/wordCloud";
 import Input from "../../../../../common/input/Input";
 import Button from "../../../../../common/button/Button";
-import generateReportCss from "../../GenerateReportMenu/styles/GenerateReport.module.css";
-import {AiFillDelete} from "react-icons/ai";
 import {showMessage} from "../../../../../utils/messages";
 
 const SelectFilteredWords = (props) => {
@@ -33,7 +35,7 @@ const SelectFilteredWords = (props) => {
     }
 
     return (
-        <div className={TapeCss.enterLinkContainer}>
+        <div className={commonCss.enterLinkContainer}>
             <h4 style={{marginBottom: "40px"}}>
                 THE WORDS YOU CHOSE WILL BE FILTERED OUT OF YOUR WORD CLOUDS
             </h4>

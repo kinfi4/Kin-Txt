@@ -2,15 +2,47 @@ import logging
 
 import sqlalchemy.sql.functions as func
 from sqlalchemy import select, insert, update, delete
+from sqlalchemy.exc import IntegrityError
+
+from kin_statistics_api.domain.entities import User, UserLoginEntity
+from kin_statistics_api.exceptions import UsernameAlreadyTakenError
 from kin_txt_core.database import Database
 
-from kin_statistics_api.infrastructure.models import user_report_table, user_generate_reports_table
+from kin_statistics_api.infrastructure.models import user_report_table, user_generate_reports_table, user_table
 
 
 class ReportsAccessManagementRepository:
     def __init__(self, db: Database):
         self._logger = logging.getLogger(self.__class__.__name__)
         self._db = db
+
+    def get_user(self, username: str) -> UserLoginEntity | None:
+        self._logger.info("[UserRepository] Get user from db by username")
+
+        select_query = (
+            select(user_table)
+            .where(user_table.c.username == username)
+        )
+
+        with self._db.connection() as conn:
+            user = conn.execute(select_query).mappings().one_or_none()
+
+            if user is None:
+                return None
+
+            return UserLoginEntity(username=user["username"], password=user["password_hash"])
+
+    def create_user(self, username: str, password_hash: str) -> User:
+        self._logger.info("[UserRepository] Creating user")
+
+        insert_query = insert(user_table).values(username=username, password_hash=password_hash)
+
+        with self._db.connection() as conn:
+            try:
+                conn.execute(insert_query)
+                return User(username=username)
+            except IntegrityError:
+                raise UsernameAlreadyTakenError(f"User with {username=} already exists, please select another username")
 
     def get_user_report_ids(self, username: str) -> list[int]:
         select_query = (

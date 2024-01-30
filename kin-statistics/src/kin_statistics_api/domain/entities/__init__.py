@@ -6,6 +6,6 @@ from .report import (
     StatisticalReport,
     WordCloudReport,
 )
-from .user import User
+from .user import User, UserLoginEntity, UserRegistrationEntity
 from .report_filters import ReportsFetchSettings, OrderByOptions
 from .generation_template import GenerationTemplate

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {FETCH_ERROR} from "./channelsReducer";
+import {FETCH_ERROR} from "./authReducer";
 import {GENERIC_REPORTS_BUILDER_URL, MODEL_TYPES_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
 import APIRequester from "../../common/apiCalls/APIRequester";

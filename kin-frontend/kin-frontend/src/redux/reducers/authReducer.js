@@ -1,15 +1,13 @@
-import axios from "axios";
-import {NEWS_SERVICE_URL} from "../../config";
+import {STATISTICS_SERVICE_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
-import {FETCH_ERROR} from "./channelsReducer";
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
+import APIRequester from "../../common/apiCalls/APIRequester";
 
 const AUTH_ERROR = "AUTH_ERROR";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 const LOGIN_FAIL = "LOGIN_FAIL";
 const REGISTRATION_ERROR = "REGISTRATION_ERROR";
+export const FETCH_ERROR = "FETCH_ERROR";
+
 
 export const LOGOUT = "LOGOUT";
 
@@ -19,97 +17,87 @@ const initialState = {
     user: null,
 };
 
-// CHECK THE TOKEN AND LOAD THE USER
-export const loadUser = () => (dispatch, getState) => {
-    const headers = {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    };
 
-    const token = getState().auth.token;
-    if (token) {
-        headers["Authorization"] = `Token ${token}`;
-    }
+export const loadUser = () => async (dispatch, getState) => {
+    const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
 
-    axios
-        .get(NEWS_SERVICE_URL + "/me", {
-            headers: headers,
-        })
-        .then((res) => {
-            if (res.status !== 200) {
-                dispatch({type: AUTH_ERROR});
-            } else {
-                dispatch({type: LOGIN_SUCCESS, token: token});
-            }
-        })
-        .catch((er) => {
+    try {
+        const response = await apiRequester.get("/accounts/me");
+
+        if (response.status !== 200) {
             dispatch({type: AUTH_ERROR});
-        });
+        } else {
+            dispatch({type: LOGIN_SUCCESS, token: getState().auth.token});
+        }
+    } catch (error) {
+        dispatch({type: AUTH_ERROR});
+    }
 };
 
-// LOGIN
-export const login = (username, password) => (dispatch) => {
-    const headers = {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    };
+export const login = (username, password) => async (dispatch) => {
+    const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
 
-    // REQUEST BODY
     const body = JSON.stringify({
         username,
         password,
     });
 
-    axios
-        .post(NEWS_SERVICE_URL + "/login", body, {
-            headers: headers,
-        })
-        .then((res) => {
-            dispatch({type: LOGIN_SUCCESS, token: res.data.token});
-        })
-        .catch((err) => dispatch({type: LOGIN_FAIL}));
+    try {
+        const response = await apiRequester.post("/accounts/login", body);
+
+        if (response.status !== 200) {
+            dispatch({type: LOGIN_FAIL});
+        } else {
+            dispatch({type: LOGIN_SUCCESS, token: response.data.token});
+        }
+    } catch (error) {
+        dispatch({type: LOGIN_FAIL});
+    }
 };
 
-// LOGOUT
 export const logout = (dispatch) => {
     dispatch({type: LOGOUT});
 };
 
-// REGISTER
-export const register = (username, password1, password2) => (dispatch) => {
+export const register = (username, password1, password2) => async (dispatch) => {
+    if (!username || !password1 || !password2) {
+        dispatch({type: REGISTRATION_ERROR, errors: "Please, fill all fields"});
+        return;
+    }
+
+    if (password1 !== password2) {
+        dispatch({type: REGISTRATION_ERROR, errors: "Passwords don't match"});
+        return;
+    }
+
+    const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
+
     const body = {
         username,
         password: password1,
         passwordRepeated: password2,
     };
 
-    axios
-        .post(NEWS_SERVICE_URL + "/register", JSON.stringify(body), {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((res) => {
-            dispatch({type: LOGIN_SUCCESS, token: res.data.token});
-        })
-        .catch((err) => {
-            console.log(err.response.data.errors);
-            dispatch({
-                type: REGISTRATION_ERROR,
-                errors: err.response.data.errors,
-            });
-        });
+    try {
+        const response = await apiRequester.post("/accounts/register", body);
+        dispatch({type: LOGIN_SUCCESS, token: response.data.token});
+    } catch (error) {
+        if (error.response.data.detail) {  // that's Pydantic errors
+            dispatch({type: REGISTRATION_ERROR, errors: error.response.data.detail.map(err => err.msg)});
+        } else if (error.response.data.errors) {
+            dispatch({type: REGISTRATION_ERROR, errors: error.response.data.errors});
+        } else {
+            dispatch({type: REGISTRATION_ERROR, errors: "Something went wrong"});
+        }
+    }
 };
 
-// REDUCER
+
 export function auth(state = initialState, action) {
     switch (action.type) {
         case LOGIN_SUCCESS:
             localStorage.setItem("token", action.token);
-            if (
-                window.location.pathname === "/sign-in" ||
-                window.location.pathname === "/sign-up"
-            ) {
+            if (window.location.pathname === "/sign-in" || window.location.pathname === "/sign-up") {
                 window.location.replace("/reports");
             }
 
@@ -147,10 +135,8 @@ export function auth(state = initialState, action) {
         case AUTH_ERROR:
         case LOGOUT:
             localStorage.removeItem("token");
-            if (
-                window.location.pathname !== "/sign-in" &&
-                window.location.pathname !== "/sign-up"
-            ) {
+
+            if (window.location.pathname !== "/sign-in" && window.location.pathname !== "/sign-up") {
                 window.location.replace("/sign-in");
             }
 

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import TapeCss from "../../../Tape/Tape.module.css";
+import commonCss from "../../../../../common/CommonStyles.module.css"
 import Input from "../../../../../common/input/Input";
 import Button from "../../../../../common/button/Button";
 
@@ -7,7 +7,7 @@ const EditReportModalWindow = (props) => {
     let [data, setData] = useState({reportName: props.reportName});
 
     return (
-        <div className={TapeCss.enterLinkContainer}>
+        <div className={commonCss.enterLinkContainer}>
             <h2 style={{marginBottom: "40px"}}>ENTER NEW NAME</h2>
             <Input
                 value={data.reportName}

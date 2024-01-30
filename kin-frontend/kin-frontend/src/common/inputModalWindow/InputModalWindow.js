@@ -1,5 +1,7 @@
 import React, {useState} from "react";
-import TapeCss from "../../components/body/Tape/Tape.module.css";
+
+import commonCss from "../../common/CommonStyles.module.css";
+
 import Input from "../input/Input";
 import Button from "../button/Button";
 
@@ -13,7 +15,7 @@ const InputModalWindow = ({
     const [input, setInput] = useState({value: ""});
 
     return (
-        <div className={TapeCss.enterLinkContainer}>
+        <div className={commonCss.enterLinkContainer}>
             <h4>{title}</h4>
             <Input
                 value={input.value}

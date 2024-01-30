@@ -1,6 +1,6 @@
 import axios from "axios";
 import {LOGOUT} from "../../redux/reducers/authReducer";
-import {FETCH_ERROR} from "../../redux/reducers/channelsReducer";
+import {FETCH_ERROR} from "../../redux/reducers/authReducer";
 
 export default class APIRequester {
     constructor(url, dispatch = null, reRaiseErrors = false) {
@@ -73,11 +73,15 @@ export default class APIRequester {
     }
 
     _buildHeaders(additionalHeaders = {}) {
-        const token = localStorage.getItem("token");
+        const headers = {
+            ...additionalHeaders
+        }
 
-        return {
-            ...additionalHeaders,
-            Authorization: `Token ${token}`,
-        };
+        const token = localStorage.getItem("token");
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        return headers;
     }
 }

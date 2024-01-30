@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {NavLink} from "react-router-dom";
 
-import TapeCss from "../../../Tape/Tape.module.css";
+import commonCss from "../../../../../common/CommonStyles.module.css";
 import ComparisonCss from "./ChoseComparisonReport.module.css";
 
 import {setComparisonReports} from "../../../../../redux/reducers/comparisonReducer";
@@ -36,7 +36,7 @@ const ChoseReport = ({
     }
 
     return (
-        <div className={TapeCss.enterLinkContainer}>
+        <div className={commonCss.enterLinkContainer}>
             <h3 style={{textAlign: "center", marginBottom: "40px"}}>
                 CHOSE REPORT TO COMPARE WITH
             </h3>

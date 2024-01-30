@@ -12,7 +12,7 @@ INTERNAL_URLS = [
 ]
 
 
-def get_current_user(request: Request, authorization: str = Header(None)):
+def get_current_user(request: Request, authorization: str = Header(None)) -> User:
     if not authorization:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED)
 

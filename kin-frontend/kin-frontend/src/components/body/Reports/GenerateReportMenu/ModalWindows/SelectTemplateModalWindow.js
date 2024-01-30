@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {AiFillDelete} from "react-icons/ai";
 
-import TapeCss from "../../../Tape/Tape.module.css";
+import commonCss from "../../../../../common/CommonStyles.module.css";
 import GenerateReportCss from "../styles/GenerateReport.module.css";
 
 import {hideModalWindow} from "../../../../../redux/reducers/modalWindowReducer";
@@ -19,7 +19,7 @@ const SelectTemplateModalWindow = ({setReportData, hideModalWindow}) => {
     }, []);
 
     return (
-        <div className={TapeCss.enterLinkContainer}>
+        <div className={commonCss.enterLinkContainer}>
             <h2 style={{textAlign: "center", marginBottom: "40px"}}>
                 CHOSE YOUR BLUEPRINT
             </h2>
