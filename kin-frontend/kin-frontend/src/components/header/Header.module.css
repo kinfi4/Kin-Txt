@@ -42,4 +42,8 @@
     font-size: 50px;
     color: #f7fdff;
     text-shadow: 7px 7px 25px #010813;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
