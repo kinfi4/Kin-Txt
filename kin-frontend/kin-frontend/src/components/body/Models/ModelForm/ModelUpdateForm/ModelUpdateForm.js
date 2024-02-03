@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 
-import APIRequester from "../../../../../common/apiCalls/APIRequester";
 import {ModelTypes, MODEL_TYPES_URL, SupportedLanguages, PossibleTruncatePaddingTypes} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import {validateFormData} from "../common/FormDataValidation";
+import APIRequester from "../../../../../domain/apiCalls/APIRequester";
 
 const initialState = {
     modelType: ModelTypes.SKLEARN_MODEL,

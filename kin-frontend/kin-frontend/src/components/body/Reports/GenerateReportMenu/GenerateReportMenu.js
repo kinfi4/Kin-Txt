@@ -24,12 +24,12 @@ import InputModalWindow from "../../../../common/inputModalWindow/InputModalWind
 import SelectTemplateModalWindow from "./ModalWindows/SelectTemplateModalWindow";
 import {loadUserTemplates} from "../../../../redux/reducers/visualizationTemplates";
 import {loadUserModels} from "../../../../redux/reducers/modelsReducer";
-import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {multiSelectStyles} from "./styles/formStyles";
 import FormInput from "../../../../common/formInputName/FormInput";
 import commonStyles from "../../../../common/CommonStyles.module.css";
 import SelectItem from "../../../../common/select/SelectItem";
 import {GenerationBlueprintController} from "./GenerationBlueprintController";
+import {GenerateReportRequestValidator} from "../../../../domain/GenerateReportRequestValidator";
 
 const ACTION_CREATE_OPTION = "create-option";
 const ACTION_REMOVE_OPTION = "remove-value";
@@ -98,6 +98,18 @@ const GenerateReportMenu = ({
         const newList = data.channels.filter((link) => link !== channelLink);
         setData({...data, channels: newList});
     };
+    const onGenerateReport = async () => {
+        const validator = new GenerateReportRequestValidator(data);
+
+        const [isValid, message] = validator.validate();
+        if (!isValid) {
+            showMessage([{message, type: "danger"}]);
+            return;
+        }
+
+        sendGenerationRequest(data);
+        setData(initialGenerateReportState);
+    }
 
     return (
         <>
@@ -339,10 +351,7 @@ const GenerateReportMenu = ({
                     <div className={statsCss.generateReportsControlsContainer}>
                         <div
                             className={mainPageCss.controlButton}
-                            onClick={() => {
-                                sendGenerationRequest(data);
-                                setData(initialGenerateReportState);
-                            }}
+                            onClick={onGenerateReport}
                             style={{
                                 backgroundColor: "#2CA884",
                                 fontSize: "22px",

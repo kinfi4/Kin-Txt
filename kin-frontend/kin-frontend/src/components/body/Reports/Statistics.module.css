@@ -18,7 +18,7 @@
     -moz-box-sizing: border-box; /* Firefox, other Gecko */
     box-sizing: border-box; /* Opera/IE 8+ */
 
-    padding-top: 100px;
+    padding-top: 60px;
     display: flex;
     /*justify-content: center;*/
     flex-direction: column;

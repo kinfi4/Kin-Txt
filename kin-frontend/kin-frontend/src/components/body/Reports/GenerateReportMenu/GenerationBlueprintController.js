@@ -1,6 +1,6 @@
-import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {STATISTICS_SERVICE_URL} from "../../../../config";
 import {showMessage} from "../../../../utils/messages";
+import APIRequester from "../../../../domain/apiCalls/APIRequester";
 
 export class GenerationBlueprintController {
     constructor(setReportData, setBlueprintsList, hideModalWindow) {

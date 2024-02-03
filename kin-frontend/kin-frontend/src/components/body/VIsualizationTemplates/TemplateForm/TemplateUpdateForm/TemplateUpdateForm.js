@@ -2,9 +2,9 @@ import React, {useEffect} from "react";
 import TemplateDefaultForm from "../TemplateDefaultForm/TemplateDefaultForm";
 import {updateTemplate} from "../../../../../redux/reducers/visualizationTemplates";
 import {connect} from "react-redux";
-import APIRequester from "../../../../../common/apiCalls/APIRequester";
 import {MODEL_TYPES_URL} from "../../../../../config";
 import {showMessage} from "../../../../../utils/messages";
+import APIRequester from "../../../../../domain/apiCalls/APIRequester";
 
 const TemplateUpdateForm = ({templateId, updateTemplate}) => {
     const [data, setData] = React.useState({name: "", charts: []});

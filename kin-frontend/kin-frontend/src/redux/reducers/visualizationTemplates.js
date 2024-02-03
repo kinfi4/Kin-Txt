@@ -1,5 +1,5 @@
 import {MODEL_TYPES_URL} from "../../config";
-import APIRequester from "../../common/apiCalls/APIRequester";
+import APIRequester from "../../domain/apiCalls/APIRequester";
 
 let initialState = {
     templates: [],

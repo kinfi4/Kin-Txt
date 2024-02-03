@@ -18,8 +18,8 @@ import {
     startLoading,
     stopLoading,
 } from "../../../../redux/reducers/reportsReducer";
-import APIRequester from "../../../../common/apiCalls/APIRequester";
 import {showMessage} from "../../../../utils/messages";
+import APIRequester from "../../../../domain/apiCalls/APIRequester";
 
 const ReportVisualization = ({
     reportId,

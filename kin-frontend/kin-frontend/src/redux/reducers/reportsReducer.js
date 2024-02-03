@@ -1,8 +1,8 @@
 import {STATISTICS_SERVICE_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
 import {translateDateToString} from "../../utils/utils";
-import APIRequester from "../../common/apiCalls/APIRequester";
 import {hideModalWindow} from "./modalWindowReducer";
+import APIRequester from "../../domain/apiCalls/APIRequester";
 
 const reportsFilters = {
     page: 0,
@@ -101,13 +101,6 @@ export const fetchUserReports = () => async (dispatch, getState) => {
 };
 
 export const generateReport = (data) => async (dispatch) => {
-    if (!data.channels.length) {
-        showMessage([
-            {message: "You didn't specify any channel!", type: "danger"},
-        ]);
-        return;
-    }
-
     const startDateString = translateDateToString(data.startDate);
     const endDateString = translateDateToString(data.endDate);
 

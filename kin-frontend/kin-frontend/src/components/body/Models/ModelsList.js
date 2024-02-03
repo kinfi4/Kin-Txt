@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import commonStyles from "../../../common/CommonStyles.module.css";
 import selectReportMenuCss from "../Reports/SelectReport/SelectReportMenu.module.css";
 import mainPageCss from "../MainPage.module.css";
 import statisticsCss from "../Reports/Statistics.module.css";
-import {Link, NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {useRouteMatch} from "react-router-dom/cjs/react-router-dom";
 import modelsCss from "./styles/ModelsList.module.css";
 import {AiFillDelete, AiFillEdit} from "react-icons/ai";

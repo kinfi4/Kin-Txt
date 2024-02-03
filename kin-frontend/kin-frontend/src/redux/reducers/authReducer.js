@@ -1,6 +1,6 @@
 import {STATISTICS_SERVICE_URL} from "../../config";
 import {showMessage} from "../../utils/messages";
-import APIRequester from "../../common/apiCalls/APIRequester";
+import APIRequester from "../../domain/apiCalls/APIRequester";
 
 const AUTH_ERROR = "AUTH_ERROR";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
