@@ -31,3 +31,22 @@ code {
 a {
     text-decoration: none !important;
 }
+
+/* Customizes the entire scrollbar */
+::-webkit-scrollbar {
+    width: 2px; /* width of the entire scrollbar */
+    height: 5px; /* height of the entire scrollbar */
+}
+/* Customizes the background of the track */
+::-webkit-scrollbar-track {
+    background: #15202b; /* color of the tracking area */
+}
+#header::-webkit-scrollbar-thumb {
+    background: #15202b; /* color of the scroll thumb */
+}
+/* Customizes the scrollbar handle */
+::-webkit-scrollbar-thumb {
+    background: #b87dc2; /* color of the scroll thumb */
+    border-radius: 8px;
+    box-shadow: 5px 5px 15px #070c11;
+}

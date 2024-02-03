@@ -9,7 +9,7 @@ import headerCss from "./Header.module.css";
 function Header(props) {
     return (
         <>
-            <header className={headerCss.header}>
+            <header className={headerCss.header} id="header">
                 <NavLink to={"/reports"}>
                     <div className={headerCss.logo}>
                         <img src={logoImg} alt="Logo" width={"90px"} />
