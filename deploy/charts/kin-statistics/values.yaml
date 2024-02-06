@@ -21,6 +21,7 @@ imagePullSecrets: []
 
 
 configmapName: kin-statistics-configmap
+pvcName: kin-statistics-pvc
 
 podSecurityContext: {}
 securityContext: {}

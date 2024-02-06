@@ -23,6 +23,7 @@ imagePullSecrets: []
 
 
 configmapName: kin-generic-models-configmap
+pvcName: kin-generic-models-pvc
 
 podSecurityContext: {}
 securityContext: {}

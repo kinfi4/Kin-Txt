@@ -34,6 +34,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: {{ .Values.settings.USER_REPORTS_FOLDER_PATH }}
+              name: storage
           envFrom:
             - configMapRef:
                 name: {{ .Values.configmapName }}
@@ -94,3 +97,7 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
                 key: database-host
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.pvcName }}
