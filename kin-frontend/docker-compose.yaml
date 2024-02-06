@@ -7,22 +7,5 @@ services:
       dockerfile: ./etc/Dockerfile
     image: "kin-frontend"
     container_name: "kin-frontend"
-    volumes:
-      - ./kin-frontend/src:/app/src
-      - ./kin-frontend/public:/app/public
-      - ./kin-frontend/package.json:/app/package.json
-      - ./kin-frontend/package-lock.json:/app/package-lock.json
-      - ./kin-frontend/.prettierrc:/app/.prettierrc
-      - ./kin-frontend/.prettierignore:/app/.prettierignore
     ports:
-      - "3000:3000"
-    env_file:
-      - ./etc/env/.dev.env
-    command: npm start
-    networks:
-      - kin-network
-
-networks:
-  kin-network:
-    external:
-      name: kin-network
+      - "3000:80"
