@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "kin-generic-models-consumer"
+  labels:
+    {{- include "kin-generic-models.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kin-generic-models.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kin-generic-models.labels" . | nindent 8 }}
+	    {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-consumer
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python", "-m", "kin_generic_builder", "consume"]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.configmapName }}
+                optional: false
+          env:
+          - name: RABBITMQ_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.message_broker_url.secretName }}
+                key: message-broker-connection-string
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: secret-key
+          - name: KIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: kin-token
+          - name: CELERY_BROKER_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.celery.secretName }}
+                key: celery-broker-url
+          - name: CELERY_RESULT_BACKEND
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.celery.secretName }}
+                key: celery-result-backend
+          - name: REDDIT_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.redit.secretName }}
+                key: client-id
+          - name: REDDIT_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.redit.secretName }}
+                key: client-secret
+          - name: REDDIT_USER_AGENT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.redit.secretName }}
+                key: user-agent
+          - name: TELEGRAM_API_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.telegram.secretName }}
+                key: api-id
+          - name: TELEGRAM_API_HASH
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.telegram.secretName }}
+                key: api-hash
+          - name: TELEGRAM_SESSION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.telegram.secretName }}
+                key: session-string
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: allowed-hosts

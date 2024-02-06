@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "kin-statistics-api"
+  labels:
+    {{- include "kin-statistics.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kin-statistics.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kin-statistics.labels" . | nindent 8 }}
+	    {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-api
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: [ "alembic", "upgrade", "head", "&&", "python", "-m", "kin_statistics_api", "run-server" ]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.configmapName }}
+                optional: false
+          env:
+          - name: RABBITMQ_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.message_broker_url.secretName }}
+                key: message-broker-connection-string
+          - name: MONGO_DB_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.mongo_url.secretName }}
+                key: mongo-db-connection-string
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: secret-key
+          - name: KIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: kin-token
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: allowed-hosts
+          - name: CELERY_BROKER_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.celery.secretName }}
+                key: celery-broker-url
+          - name: CELERY_RESULT_BACKEND
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.celery.secretName }}
+                key: celery-result-backend
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
+                key: database-name
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
+                key: database-user
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
+                key: database-password
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
+                key: database-host

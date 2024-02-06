@@ -1,0 +1,8 @@
+piVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Values.configmapName }}
+data:
+    MODELS_STORAGE_PATH: {{ .Values.settings.MODELS_STORAGE_PATH }}
+    LOG_LEVEL: {{ .Values.settings.LOG_LEVEL }}
+    TOKEN_LIFE_MINUTES: {{ .Values.settings.TOKEN_LIFE_MINUTES }}

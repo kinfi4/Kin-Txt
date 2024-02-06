@@ -1,0 +1,46 @@
+secrets:
+  message_broker_url:
+    secretName: message_broker_url
+  mongo_url:
+    secretName: mongo_url
+  common_secrets:
+    secretName: common_secrets
+  celery:
+    secretName: celery
+  telegram:
+    secretName: telegram
+  redit:
+    secretName: redit
+
+replicaCount: 1
+
+image:
+  repository: kin-builtin-models-reports-builder
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+
+
+configmapName: kin-builtin-models-configmap
+
+podSecurityContext: {}
+securityContext: {}
+resources: {}
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 8000
+
+
+settings:
+  DEBUG: 1
+  MODELS_STORAGE_PATH: /models
+  LOG_LEVEL: INFO
+  RABBITMQ_QUEUE_NAME: builtin_models_queue
+  STATISTICS_SERVICE_URL: http://kin-statistics-api:8000/api/statistics/v1
+  MODEL_TYPES_SERVICE_URL: http://kin-model-types-api:8000/api/model-types/v1
+  TF_CPP_MIN_LOG_LEVEL: 2
+  CELERY_REDIRECT_STDOUTS_LEVEL: INFO

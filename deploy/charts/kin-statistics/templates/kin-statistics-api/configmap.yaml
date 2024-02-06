@@ -1,0 +1,9 @@
+piVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Values.configmapName }}
+data:
+    LOG_LEVEL: {{ .Values.settings.LOG_LEVEL }}
+    TOKEN_LIFE_MINUTES: {{ .Values.settings.TOKEN_LIFE_MINUTES }}
+    DEBUG: {{ .Values.settings.DEBUG }}
+    USER_REPORTS_FOLDER_PATH: {{ .Values.settings.USER_REPORTS_FOLDER_PATH }}

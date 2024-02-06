@@ -1,0 +1,11 @@
+piVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Values.configmapName }}
+data:
+    LOG_LEVEL: {{ .Values.settings.LOG_LEVEL }}
+    STATISTICS_API_URL: {{ .Values.settings.STATISTICS_API_URL }}
+    MODEL_TYPES_API_URL: {{ .Values.settings.MODEL_TYPES_API_URL }}
+    GENERIC_MODELS_API_URL: {{ .Values.settings.GENERIC_MODELS_API_URL }}
+
+    NGINX_PORT: {{ .Values.settings.NGINX_PORT }}

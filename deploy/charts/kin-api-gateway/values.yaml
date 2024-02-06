@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: kin-api-gateway-nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+
+
+configmapName: kin-api-gateway-configmap
+
+podSecurityContext: {}
+securityContext: {}
+resources: {}
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+
+settings:
+  LOG_LEVEL: INFO
+  STATISTICS_API_URL: http://kin-statistics-api:8000
+  MODEL_TYPES_API_URL: http://kin-model-types-api:8000
+  GENERIC_MODELS_API_URL: http://kin-generic-builder-api:8000
+
+  NGINX_PORT: 80

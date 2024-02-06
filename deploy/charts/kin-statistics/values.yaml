@@ -1,0 +1,40 @@
+secrets:
+  message_broker_url:
+    secretName: message_broker_url
+  mongo_url:
+    secretName: mongo_url
+  common_secrets:
+    secretName: common_secrets
+  celery:
+    secretName: celery
+  kin_statistics_secrets:
+    secretName: kin_statistics_secrets
+
+replicaCount: 1
+
+image:
+  repository: kin-statistics
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+
+
+configmapName: kin-statistics-configmap
+
+podSecurityContext: {}
+securityContext: {}
+resources: {}
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 8000
+
+
+settings:
+  DEBUG: 1
+  LOG_LEVEL: INFO
+  TOKEN_LIFE_MINUTES: 1200
+  USER_REPORTS_FOLDER_PATH: /app/kin_statistics_api/data/reports/
