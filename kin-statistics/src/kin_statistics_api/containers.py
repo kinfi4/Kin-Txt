@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, TypeVar
 
 from dependency_injector import containers, providers, resources
 from pymongo import MongoClient
@@ -21,6 +21,8 @@ from kin_statistics_api.constants import REPORTS_STORING_EXCHANGE
 from kin_txt_core.database import Database
 from kin_txt_core.messaging import AbstractEventSubscriber, AbstractEventProducer
 from kin_txt_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
+
+TMongoRepository = TypeVar("TMongoRepository", TemplatesRepository, ReportsMongoRepository)
 
 
 class SubscriberResource(resources.Resource):
@@ -49,7 +51,11 @@ class SubscriberResource(resources.Resource):
 
 
 class MongodbRepositoryResource(resources.Resource):
-    def init(self, repository_class: Type[TemplatesRepository | ReportsMongoRepository], connection_string: str) -> ReportsMongoRepository:
+    def init(
+        self,
+        repository_class: Type[TMongoRepository],
+        connection_string: str,
+    ) -> TMongoRepository:
         client = MongoClient(connection_string)
 
         return repository_class(mongo_client=client)

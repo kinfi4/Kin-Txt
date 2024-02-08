@@ -16,7 +16,7 @@ router = APIRouter(prefix="/reports-data")
 
 @router.post("/save")
 @inject
-def get_report_data(
+def save_report_data(
     report_id: int = Form(...),
     file_type: str = Form(...),
     report_data_file: UploadFile = File(...),

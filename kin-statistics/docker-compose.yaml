@@ -15,8 +15,8 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./etc/kin-stats/migrations:/app/migrations
-      - ./etc/kin-stats/alembic.ini:/app/alembic.ini
+      - ./etc/service/migrations:/app/migrations
+      - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
       - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
@@ -35,8 +35,8 @@ services:
     networks:
       - kin-network
     volumes:
-      - ./etc/kin-stats/migrations:/app/migrations
-      - ./etc/kin-stats/alembic.ini:/app/alembic.ini
+      - ./etc/service/migrations:/app/migrations
+      - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
       - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
