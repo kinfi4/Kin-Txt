@@ -1,21 +1,13 @@
 secrets:
-  message_broker_url:
-    secretName: message_broker_url
-  mongo_url:
-    secretName: mongo_url
   common_secrets:
-    secretName: common_secrets
-  celery:
-    secretName: celery
-  kin_statistics_secrets:
-    secretName: kin_statistics_secrets
+    secretName: common-secrets
 
 replicaCount: 1
 
 image:
-  repository: kin-statistics
-  pullPolicy: IfNotPresent
-  tag: ""
+  repository: kinfi4/kin-statistics
+  pullPolicy: Always
+  tag: latest
 
 imagePullSecrets: []
 
@@ -39,3 +31,6 @@ settings:
   LOG_LEVEL: INFO
   TOKEN_LIFE_MINUTES: 1200
   USER_REPORTS_FOLDER_PATH: /app/kin_statistics_api/data/reports/
+
+  CELERY_BROKER_URL: ""
+  CELERY_RESULT_BACKEND: ""

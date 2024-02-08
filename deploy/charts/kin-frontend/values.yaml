@@ -1,11 +1,21 @@
 replicaCount: 1
 
 image:
-  repository: kin-frontend
+  repository: kinfi4/kin-frontend
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
+
+ingress:
+  enabled: true
+  annotations: {}
+  className: ""
+  host: "localhost"
+  path: "/"
+  pathType: Prefix
+  tls: false  # Enable TLS if true
+  tlsSecret: ""  # Name of the TLS secret (if TLS is enabled)
 
 
 configmapName: kin-frontend-configmap

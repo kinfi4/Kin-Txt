@@ -4,12 +4,12 @@ services:
   model-types-api:
     build:
       context: .
-      dockerfile: etc/kin-model-types/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-model-types'
-    container_name: 'kin-statistics-api'
+    container_name: 'kin-model-types-api'
     command: bash -c "python -m kin_model_types run-server"
     env_file:
-      - etc/kin-model-types/env/.dev.env
+      - etc/service/env/.dev.env
     ports:
       - "8004:8000"
     networks:
@@ -24,12 +24,12 @@ services:
   model-types-consumer:
     build:
       context: .
-      dockerfile: etc/kin-model-types/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-model-types'
-    container_name: 'kin-statistics-consumer'
+    container_name: 'kin-model-types-consumer'
     command: bash -c "python -m kin_model_types consume"
     env_file:
-      - etc/kin-model-types/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:

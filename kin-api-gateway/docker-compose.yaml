@@ -4,10 +4,10 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./etc/kin-api-gateway/Dockerfile
+      dockerfile: ./etc/service/Dockerfile
     container_name: kin-api-gateway
     env_file:
-      - ./etc/kin-api-gateway/env/.dev.env
+      - ./etc/service/env/.dev.env
     restart: 'no'
     networks:
       - kin-network

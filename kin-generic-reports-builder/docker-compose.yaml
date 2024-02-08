@@ -4,12 +4,12 @@ services:
   generic-builder-consumer:
     build:
       context: .
-      dockerfile: etc/kin-reports-builder/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-generic-reports-builder'
     container_name: 'kin-generic-builder-consumer'
     command: bash -c "python -m kin_generic_builder consume"
     env_file:
-      - etc/kin-reports-builder/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:
@@ -22,12 +22,12 @@ services:
   generic-builder-api:
     build:
       context: .
-      dockerfile: etc/kin-reports-builder/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-generic-reports-builder'
     container_name: 'kin-generic-builder-api'
     command: bash -c "python -m kin_generic_builder run-server"
     env_file:
-      - etc/kin-reports-builder/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:
@@ -40,12 +40,12 @@ services:
   generic-builder-celery-worker:
     build:
       context: .
-      dockerfile: etc/kin-reports-builder/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-generic-reports-builder'
     container_name: 'kin-generic-builder-celery-worker'
     command: bash -c "python -m kin_generic_builder run-tasks"
     env_file:
-      - etc/kin-reports-builder/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:

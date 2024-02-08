@@ -4,12 +4,12 @@ services:
   statistics-api:
     build:
       context: .
-      dockerfile: ./etc/kin-stats/Dockerfile
+      dockerfile: ./etc/service/Dockerfile
     image: 'kin-statistics-api'
     container_name: 'kin-statistics-api'
     command: bash -c "alembic upgrade head && python -m kin_statistics_api run-server"
     env_file:
-      - ./etc/kin-stats/env/.dev.env
+      - ./etc/service/env/.dev.env
     ports:
       - "8001:8000"
     networks:
@@ -26,12 +26,12 @@ services:
   statistics-consumer:
     build:
       context: .
-      dockerfile: ./etc/kin-stats/Dockerfile
+      dockerfile: ./etc/service/Dockerfile
     image: 'kin-statistics-consumer'
     container_name: 'kin-statistics-consumer'
     command: bash -c "python -m kin_statistics_api run-rabbitmq"
     env_file:
-      - ./etc/kin-stats/env/.dev.env
+      - ./etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:

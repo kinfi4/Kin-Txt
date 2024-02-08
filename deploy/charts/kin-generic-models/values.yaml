@@ -1,12 +1,6 @@
 secrets:
-  message_broker_url:
-    secretName: message_broker_url
-  mongo_url:
-    secretName: mongo_url
   common_secrets:
-    secretName: common_secrets
-  celery:
-    secretName: celery
+    secretName: common-secrets
   telegram:
     secretName: telegram
   redit:
@@ -15,9 +9,9 @@ secrets:
 replicaCount: 1
 
 image:
-  repository: kin-generic-reports-builder
+  repository: kinfi4/kin-generic-reports-builder
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 
@@ -41,10 +35,13 @@ settings:
   MODELS_STORAGE_PATH: /models
   LOG_LEVEL: INFO
   RABBITMQ_QUEUE_NAME: builtin_models_queue
-  STATISTICS_SERVICE_URL: http://kin-statistics-api:8000/api/statistics/v1
-  MODEL_TYPES_SERVICE_URL: http://kin-model-types-api:8000/api/model-types/v1
+  STATISTICS_SERVICE_URL: http://kin-statistics:8000/api/statistics/v1
+  MODEL_TYPES_SERVICE_URL: http://kin-model-types:8000/api/model-types/v1
 
   TF_CPP_MIN_LOG_LEVEL: 2
   CELERY_REDIRECT_STDOUTS_LEVEL: INFO
 
   STOP_WORDS_STORAGE_PATH: /app/kin_generic_builder/data/stop-words
+
+  CELERY_BROKER_URL: redis://:ivDD1GD0Tu@redis-master:6379/5
+  CELERY_RESULT_BACKEND: redis://:ivDD1GD0Tu@redis-master:6379/5

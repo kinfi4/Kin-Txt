@@ -25,7 +25,7 @@ spec:
         - name: {{ .Chart.Name }}-consumer
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["python", "-m", "kin_builtin_models", "consume"]
           resources:
@@ -38,7 +38,7 @@ spec:
           - name: RABBITMQ_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.message_broker_url.secretName }}
+                name: {{ .Values.secrets.common_secrets.secretName }}
                 key: message-broker-connection-string
           - name: SECRET_KEY
             valueFrom:
@@ -50,16 +50,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secrets.common_secrets.secretName }}
                 key: kin-token
-          - name: CELERY_BROKER_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-broker-url
-          - name: CELERY_RESULT_BACKEND
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-result-backend
           - name: REDDIT_CLIENT_ID
             valueFrom:
               secretKeyRef:

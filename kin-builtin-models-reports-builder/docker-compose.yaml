@@ -4,12 +4,12 @@ services:
   builtin-reports-builder-consumer:
     build:
       context: .
-      dockerfile: etc/kin-reports-builder/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-builtin-models-reports-builder'
     container_name: 'builtin-reports-builder-consumer'
     command: bash -c "python -m kin_builtin_models consume"
     env_file:
-      - etc/kin-reports-builder/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:
@@ -22,12 +22,12 @@ services:
   builtin-reports-builder-celery-worker:
     build:
       context: .
-      dockerfile: etc/kin-reports-builder/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: 'kin-builtin-models-reports-builder'
     container_name: 'builtin-reports-builder-celery-worker'
     command: bash -c "python -m kin_builtin_models run-tasks"
     env_file:
-      - etc/kin-reports-builder/env/.dev.env
+      - etc/service/env/.dev.env
     networks:
       - kin-network
     volumes:

@@ -1,19 +1,13 @@
 secrets:
-  message_broker_url:
-    secretName: message_broker_url
-  mongo_url:
-    secretName: mongo_url
   common_secrets:
-    secretName: common_secrets
-  celery:
-    secretName: celery
+    secretName: common-secrets
 
 replicaCount: 1
 
 image:
-  repository: kin-model-types
+  repository: kinfi4/kin-model-types
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 
@@ -32,6 +26,9 @@ service:
 
 
 settings:
+  DEBUG: 1
   MODELS_STORAGE_PATH: /models
   LOG_LEVEL: INFO
   TOKEN_LIFE_MINUTES: 1200
+  CELERY_BROKER_URL: ""
+  CELERY_RESULT_BACKEND: ""

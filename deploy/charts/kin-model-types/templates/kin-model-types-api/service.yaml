@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "kin-model-types-service"
+  name: "kin-model-types"
   labels:
     {{- include "kin-model-types.labels" . | nindent 4 }}
 spec:

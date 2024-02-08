@@ -1,3 +1,5 @@
+deploy/secrets/
+
 # Django #
 *.log
 *.pot

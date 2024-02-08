@@ -25,8 +25,9 @@ spec:
         - name: {{ .Chart.Name }}-api
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: [ "alembic", "upgrade", "head", "&&", "python", "-m", "kin_statistics_api", "run-server" ]
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command: ["/bin/sh", "-c"]
+          args: ["alembic upgrade head && python -m kin_statistics_api run-server"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -45,12 +46,12 @@ spec:
           - name: RABBITMQ_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.message_broker_url.secretName }}
+                name: {{ .Values.secrets.common_secrets.secretName }}
                 key: message-broker-connection-string
           - name: MONGO_DB_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.mongo_url.secretName }}
+                name: {{ .Values.secrets.common_secrets.secretName }}
                 key: mongo-db-connection-string
           - name: SECRET_KEY
             valueFrom:
@@ -67,36 +68,26 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secrets.common_secrets.secretName }}
                 key: allowed-hosts
-          - name: CELERY_BROKER_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-broker-url
-          - name: CELERY_RESULT_BACKEND
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-result-backend
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
-                key: database-name
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: statistics-database-name
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
-                key: database-user
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: statistics-database-user
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
-                key: database-password
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: statistics-database-password
           - name: DATABASE_HOST
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.kin_statistics_secrets.secretName }}
-                key: database-host
+                name: {{ .Values.secrets.common_secrets.secretName }}
+                key: statistics-database-host
       volumes:
         - name: storage
           persistentVolumeClaim:

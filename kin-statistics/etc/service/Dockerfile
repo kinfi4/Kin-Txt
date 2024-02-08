@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 WORKDIR /app
 COPY ./src/pyproject.toml ./src/poetry.lock* /app/
 
-COPY ./etc/kin-stats/migrations/ /app/migrations
-COPY ./etc/kin-stats/alembic.ini /app/alembic.ini
+COPY ./etc/service/migrations/ /app/migrations
+COPY ./etc/service/alembic.ini /app/alembic.ini
 COPY ./src/kin_statistics_api/ /app/kin_statistics_api
 COPY ./submodules /submodules
 

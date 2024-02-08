@@ -14,8 +14,10 @@ config = context.config
 # here we allow ourselves to pass interpolation vars to alembic.ini
 # fron the host env
 section = config.config_ini_section
-config.set_section_option(section, "DB_USER", os.environ.get("DATABASE_USER"))
-config.set_section_option(section, "DB_PASSWORD", os.environ.get("DATABASE_PASSWORD"))
+config.set_section_option(section, "DATABASE_USER", os.environ.get("DATABASE_USER"))
+config.set_section_option(section, "DATABASE_PASSWORD", os.environ.get("DATABASE_PASSWORD"))
+config.set_section_option(section, "DATABASE_NAME", os.environ.get("DATABASE_NAME"))
+config.set_section_option(section, "DATABASE_HOST", os.environ.get("DATABASE_HOST"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

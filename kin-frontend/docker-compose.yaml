@@ -4,7 +4,7 @@ services:
   kin-frontend:
     build:
       context: .
-      dockerfile: ./etc/Dockerfile
+      dockerfile: etc/service/Dockerfile
     image: "kin-frontend"
     container_name: "kin-frontend"
     ports:

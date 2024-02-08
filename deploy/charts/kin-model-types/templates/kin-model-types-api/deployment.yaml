@@ -25,7 +25,7 @@ spec:
         - name: {{ .Chart.Name }}-api
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           command: [ "python", "-m", "kin_model_types", "run-server" ]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -42,12 +42,12 @@ spec:
           - name: RABBITMQ_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.message_broker_url.secretName }}
+                name: {{ .Values.secrets.common_secrets.secretName }}
                 key: message-broker-connection-string
           - name: MONGO_DB_CONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secrets.mongo_url.secretName }}
+                name: {{ .Values.secrets.common_secrets.secretName }}
                 key: mongo-db-connection-string
           - name: SECRET_KEY
             valueFrom:
@@ -64,13 +64,3 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secrets.common_secrets.secretName }}
                 key: allowed-hosts
-          - name: CELERY_BROKER_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-broker-url
-          - name: CELERY_RESULT_BACKEND
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secrets.celery.secretName }}
-                key: celery-result-backend
