@@ -101,9 +101,9 @@ const GenerateReportMenu = ({
     const onGenerateReport = async () => {
         const validator = new GenerateReportRequestValidator(data);
 
-        const [isValid, message] = validator.validate();
+        const [isValid, messages] = validator.validate();
         if (!isValid) {
-            showMessage([{message, type: "danger"}]);
+            showMessage(messages.map(message => {return {message, type: "danger"}}));
             return;
         }
 

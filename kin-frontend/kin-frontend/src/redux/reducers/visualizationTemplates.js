@@ -1,5 +1,7 @@
 import {MODEL_TYPES_URL} from "../../config";
 import APIRequester from "../../domain/apiCalls/APIRequester";
+import {VisualizationTemplateValidator} from "../../domain/VisualizationTemplateValidator";
+import {showMessage} from "../../utils/messages";
 
 let initialState = {
     templates: [],
@@ -27,6 +29,13 @@ export const deleteTemplate = (templateId) => async (dispatch) => {
 };
 
 export const createTemplate = (templateData) => async (dispatch) => {
+    const validator = new VisualizationTemplateValidator(templateData);
+    const [isValid, errorMessages] = validator.validate();
+    if(!isValid) {
+        showMessage(errorMessages.map(message => {return {message, type: "danger"}}));
+        return;
+    }
+
     const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
     const response = await apiRequester.post(
@@ -42,6 +51,13 @@ export const createTemplate = (templateData) => async (dispatch) => {
 
 export const updateTemplate =
     (templateId, templateData) => async (dispatch) => {
+        const validator = new VisualizationTemplateValidator(templateData);
+        const [isValid, errorMessages] = validator.validate();
+        if(!isValid) {
+            showMessage(errorMessages.map(message => {return {message, type: "danger"}}));
+            return;
+        }
+
         const apiRequester = new APIRequester(MODEL_TYPES_URL, dispatch);
 
         const response = await apiRequester.put(

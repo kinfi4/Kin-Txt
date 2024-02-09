@@ -35,6 +35,11 @@ export const loadUser = () => async (dispatch, getState) => {
 };
 
 export const login = (username, password) => async (dispatch) => {
+    if(!username || !password) {
+        showMessage([{message: "Please, enter the credentials", type: "danger"}])
+        return;
+    }
+
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, null, true);
 
     const body = JSON.stringify({
