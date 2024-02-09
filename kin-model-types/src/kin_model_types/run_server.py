@@ -13,4 +13,4 @@ def run_app() -> None:
         "reload": is_dev_env,
     }
 
-    uvicorn.run("kin_model_types.app:create_app", **options)
+    uvicorn.run("kin_model_types.app:create_app", **options)  # type: ignore

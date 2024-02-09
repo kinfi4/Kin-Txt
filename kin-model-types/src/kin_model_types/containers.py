@@ -1,4 +1,4 @@
-from typing import Type, TypeAlias, TypeVar
+from typing import Type, TypeVar
 
 from dependency_injector import providers, containers, resources
 from pymongo import MongoClient
@@ -12,8 +12,7 @@ from kin_model_types.events.events import ModelValidationFinished, ModelValidati
 from kin_model_types.domain.services.model import ModelService
 
 
-MongoRepositories: TypeAlias = VisualizationTemplateRepository | ModelRepository
-TMongoRepository = TypeVar("TMongoRepository", bound=MongoRepositories)
+TMongoRepository = TypeVar("TMongoRepository", VisualizationTemplateRepository, ModelRepository)
 
 
 class SubscriberResource(resources.Resource):
@@ -33,7 +32,7 @@ class SubscriberResource(resources.Resource):
 
 class MongodbRepositoryResource(resources.Resource):
     def init(self, repository_class: Type[TMongoRepository], connection_string: str) -> TMongoRepository:
-        client = MongoClient(connection_string)
+        client: MongoClient = MongoClient(connection_string)
 
         return repository_class(mongo_client=client)
 

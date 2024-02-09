@@ -1,5 +1,5 @@
 import logging
-from typing import TypeAlias, Mapping
+from typing import TypeAlias
 
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from kin_model_types.domain.entities import VisualizationTemplate
 from kin_model_types.exceptions import UserTemplateNotFoundException
 
-TemplateDict: TypeAlias = Mapping[str, ObjectId | str | list[str]]
+TemplateDict: TypeAlias = dict[str, ObjectId | str | list[str]]
 
 
 class VisualizationTemplateRepository:

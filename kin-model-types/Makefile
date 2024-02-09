@@ -9,6 +9,9 @@ run-silent:
 run:
 	docker compose up
 
+mypy:
+	docker compose run -u $(UUID) --rm --no-deps model-types-api mypy kin_model_types/
+
 logs:
 	docker compose logs -f 
 

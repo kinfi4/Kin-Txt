@@ -52,7 +52,7 @@ def create_app(*args, **kwargs) -> FastAPI:
 
     init_cors(app, settings)
 
-    app.container = container
+    app.container = container  # type: ignore
 
     return app
 

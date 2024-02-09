@@ -17,7 +17,7 @@ class ModelValidationEntity(BaseModel):
     code: str
     owner_username: str = Field(..., alias="ownerUsername")
     model_type: ModelTypes = Field(..., alias="modelType")
-    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
+    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")  # type: ignore
     original_model_file_name: str | None = Field(None, alias="originalModelFileName")
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
     preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
@@ -35,7 +35,7 @@ class CreateModelEntity(BaseModel):
     name: str
     code: str
     model_type: ModelTypes = Field(..., alias="modelType")
-    category_mapping: CategoryMapping = Field(..., alias="categoryMapping", )
+    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")  # type: ignore
     original_model_file_name: str | None = Field(None, alias="originalModelFileName")
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
     preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
@@ -72,6 +72,6 @@ class CustomModelRegistrationEntity(BaseModel):
     name: str
     code: str
     owner_username: str = Field(..., alias="ownerUsername")
-    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")
+    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")  # type: ignore
     validation_needed: bool = Field(False, alias="validationNeeded")
     preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")

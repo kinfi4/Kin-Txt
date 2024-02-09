@@ -17,8 +17,16 @@ click = "8.1.7"
 pymongo = "^4.6.1"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.7.1"
+mypy = "1.8.0"
+types-requests = "^2.31.0.20240125"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+follow_imports_for_stubs = false
+strict_optional = false
