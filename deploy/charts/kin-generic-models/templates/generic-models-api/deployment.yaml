@@ -35,7 +35,7 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           volumeMounts:
-            - mountPath: {{ .Values.settings.MODELS_STORAGE_PATH }}
+            - mountPath: {{ .Values.settings.MODEL_STORAGE_PATH }}
               name: models-storage
           envFrom:
             - configMapRef:

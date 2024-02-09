@@ -4,7 +4,7 @@ metadata:
     name: {{ .Values.configmapName }}
 data:
     DEBUG: '{{ .Values.settings.DEBUG }}'
-    MODELS_STORAGE_PATH: '{{ .Values.settings.MODELS_STORAGE_PATH }}'
+    MODEL_STORAGE_PATH: '{{ .Values.settings.MODEL_STORAGE_PATH }}'
     STOP_WORDS_STORAGE_PATH: '{{ .Values.settings.STOP_WORDS_STORAGE_PATH }}'
 
     LOG_LEVEL: '{{ .Values.settings.LOG_LEVEL }}'

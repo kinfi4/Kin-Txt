@@ -31,7 +31,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: {{ .Values.settings.MODELS_STORAGE_PATH }}
+            - mountPath: {{ .Values.settings.MODEL_STORAGE_PATH }}
               name: models-storage
           envFrom:
             - configMapRef:

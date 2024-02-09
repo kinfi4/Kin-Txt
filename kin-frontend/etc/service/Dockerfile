@@ -3,10 +3,10 @@ FROM node:18.12.1 as build
 
 WORKDIR /app
 
-COPY etc/kin-frontend/env/build-env /etc/kin-frontend/env/build-env
+COPY etc/service/env/build-env /etc/kin-frontend/env/build-env
 COPY scripts/set-envs-for-build.sh scripts/set-envs-for-build.sh
-RUN chmod +x scripts/set-envs-for-build-and-push.sh
-RUN ./scripts/set-envs-for-build-and-push.sh
+RUN chmod +x scripts/set-envs-for-build.sh
+RUN ./scripts/set-envs-for-build.sh
 
 COPY kin-frontend/package.json .
 RUN npm install

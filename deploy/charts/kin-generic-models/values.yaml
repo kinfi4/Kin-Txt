@@ -32,7 +32,7 @@ service:
 
 settings:
   DEBUG: 1
-  MODELS_STORAGE_PATH: /models
+  MODEL_STORAGE_PATH: /models
   LOG_LEVEL: INFO
   RABBITMQ_QUEUE_NAME: builtin_models_queue
   STATISTICS_SERVICE_URL: http://kin-statistics:8000/api/statistics/v1

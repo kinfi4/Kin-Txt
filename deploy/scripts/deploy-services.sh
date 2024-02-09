@@ -4,9 +4,9 @@
 charts=(
 #    "../charts/kin-statistics"
 #    "../charts/kin-builtin-models"
-    "../charts/kin-generic-models"
+#    "../charts/kin-generic-models"
 #    "../charts/kin-model-types"
-#    "../charts/kin-api-gateway"
+    "../charts/kin-api-gateway"
 #    "../charts/kin-frontend"
 )
 

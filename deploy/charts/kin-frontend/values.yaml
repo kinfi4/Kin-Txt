@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: kinfi4/kin-frontend
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: latest
 
 imagePullSecrets: []

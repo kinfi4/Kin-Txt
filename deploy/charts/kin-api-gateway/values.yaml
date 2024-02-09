@@ -25,6 +25,6 @@ settings:
   LOG_LEVEL: INFO
   STATISTICS_API_URL: http://kin-statistics:8000
   MODEL_TYPES_API_URL: http://kin-model-types:8000
-  GENERIC_MODELS_API_URL: http://kin-generic-builder:8000
+  GENERIC_MODELS_API_URL: http://kin-generic-models:8000
 
   NGINX_PORT: 80
