@@ -43,7 +43,7 @@ class BlobsService(UnpackKerasArchiveMixin):
         chuck_hash: str,
     ) -> None:
         await self._validate_chunk_file(chunk, blob_type)
-        chunk = await chunk.read()
+        chunk_bytes = await chunk.read()
 
         user_folder = os.path.join(self._storage_path, user.username)
         if not os.path.exists(user_folder):
@@ -55,7 +55,7 @@ class BlobsService(UnpackKerasArchiveMixin):
 
         chunk_path = os.path.join(model_folder, f"{blob_type.value}_chunk_{chunk_index}")
         with open(chunk_path, "wb") as f:
-            f.write(chunk)
+            f.write(chunk_bytes)
 
         await self._verify_file_hash(chunk_path, chuck_hash)
 
@@ -96,5 +96,8 @@ class BlobsService(UnpackKerasArchiveMixin):
             raise FileIntegrityError(f"File {file_path} has incorrect hash")
 
     async def _validate_chunk_file(self, chunk: UploadFile, blob_type: BlobType) -> None:
-        if blob_type == BlobType.STOP_WORDS and chunk.filename.split(".")[-1] not in self._ALLOWED_STOP_WORDS_EXTENSIONS:
-            raise FileValidationError(f"File {chunk.filename} has incorrect extension for stop-words file, expected .txt, .csv or .json")
+        file_extension = chunk.filename.split(".")[-1] if chunk.filename is not None else ""
+        if blob_type == BlobType.STOP_WORDS and file_extension not in self._ALLOWED_STOP_WORDS_EXTENSIONS:
+            raise FileValidationError(
+                f"File {chunk.filename} has incorrect extension for stop-words file, expected .txt, .csv or .json"
+            )

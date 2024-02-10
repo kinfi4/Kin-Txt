@@ -1,9 +1,12 @@
 import logging
 import random
+from typing import Annotated
+from typing_extensions import Doc
 
 import joblib
 from scipy.sparse import csr_matrix
 
+from kin_generic_builder.types import SklearnTokenizer, SklearnPredictor
 from kin_txt_core.reports_building.domain.services.validation.base_validator import BaseValidator
 from kin_txt_core.reports_building.types import CategoryMapping, ValidationResult
 from kin_txt_core.reports_building.domain.entities import ModelEntity
@@ -18,7 +21,8 @@ from kin_txt_core.reports_building.exceptions import (
     UnsupportedTokenizerException,
     UnableToLoadTokenizerError,
     ModelUnsupportedPredictionError,
-    ModelPredictionError, BaseValidationError,
+    ModelPredictionError,
+    BaseValidationError,
 )
 
 
@@ -87,8 +91,8 @@ class SkLearnModelValidator(BaseValidator):
 
     def _validate_predictions(
         self,
-        model: SK_SUPPORTED_MODELS,
-        tokenizer: SK_SUPPORTED_TOKENIZERS,
+        model: Annotated[SklearnPredictor, Doc("Must the a model from SK_SUPPORTED_MODELS list")],
+        tokenizer: Annotated[SklearnTokenizer, Doc("Must the a tokenizer from SK_SUPPORTED_TOKENIZERS list")],
         category_mapping: CategoryMapping,
     ) -> None:
         vocab = tokenizer.get_feature_names_out()
@@ -120,7 +124,7 @@ class SkLearnModelValidator(BaseValidator):
 
         self._logger.info(f"[SkLearnModelValidator] {model.__class__.__name__} model was checked to be working with category mapping.")
 
-    def _make_prediction(self, model: SK_SUPPORTED_MODELS, tokenized_message: csr_matrix) -> int:
+    def _make_prediction(self, model: SklearnPredictor, tokenized_message: csr_matrix) -> int:
         try:
             return model.predict(tokenized_message)[0]
         except Exception as error:

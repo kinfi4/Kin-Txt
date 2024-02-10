@@ -7,7 +7,10 @@ _logger = logging.getLogger(__name__)
 
 
 class StopWordsLoaderMixin:
-    def load_stop_words(self, stop_words_file_path: str) -> tuple[bool, list[str]]:
+    def load_stop_words(self, stop_words_file_path: str | None) -> tuple[bool, list[str]]:
+        if not stop_words_file_path:
+            return False, []
+
         try:
             for loader in [self._load_json, self._load_csv, self._load_txt]:
                 success, words_list = loader(stop_words_file_path)

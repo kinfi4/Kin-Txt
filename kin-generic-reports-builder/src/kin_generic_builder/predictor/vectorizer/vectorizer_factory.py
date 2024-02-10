@@ -18,7 +18,7 @@ class VectorizerFactory:
         if model.model_type == ModelTypes.KERAS:
             return self._build_keras_vectorizer(model)
 
-        raise NotImplemented("Model type is not supported")
+        raise NotImplementedError("Model type is not supported")
 
     def _build_sklearn_vectorizer(self, model: ModelEntity) -> SklearnVectorizer:
         loaded_vectorizer_model = joblib.load(model.get_tokenizer_binaries_path(self._model_storage_path))

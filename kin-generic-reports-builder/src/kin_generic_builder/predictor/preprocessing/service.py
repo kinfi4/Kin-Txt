@@ -55,8 +55,8 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin,
 
     def vectorize(self, texts: Iterable[str], preprocess: bool = False) -> csr_matrix | list:
         if preprocess:
-            texts = texts if isinstance(texts, pd.Series) else pd.Series(texts)
-            texts = texts.apply(self.preprocess_text)
+            texts_series = texts if isinstance(texts, pd.Series) else pd.Series(texts)
+            texts = texts_series.apply(self.preprocess_text)
 
         return self._vectorizer.vectorize(texts)
 

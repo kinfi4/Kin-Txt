@@ -15,3 +15,6 @@ logs:
 restart:
 	docker compose stop
 	docker compose up -d 
+
+mypy:
+	docker compose run --rm generic-builder-consumer mypy kin_generic_builder

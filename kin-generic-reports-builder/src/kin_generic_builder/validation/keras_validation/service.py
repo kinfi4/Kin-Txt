@@ -40,7 +40,6 @@ class KerasModelValidator(BaseValidator):
         return True, None
 
     def _validate_model(self, model_entity: ModelEntity) -> None:
-
         try:
             model = load_model(model_entity.get_model_binaries_path(self._model_storage_path))
             self._logger.info(f"[KerasModelValidator] {model_entity.owner_username} model was loaded successfully.")

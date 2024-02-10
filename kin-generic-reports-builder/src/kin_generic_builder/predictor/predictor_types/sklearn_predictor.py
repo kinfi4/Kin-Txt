@@ -1,3 +1,4 @@
+from scipy.sparse import csr_matrix
 from sklearn.svm import SVC
 
 from kin_txt_core.datasources.common.entities import ClassificationEntity
@@ -16,7 +17,7 @@ class SkLearnPredictor(IPredictor):
         return self._text_preprocessor.preprocess_text(text)
 
     def predict(self, entity: ClassificationEntity) -> str:
-        vectors = self._text_preprocessor.vectorize([entity.text], preprocess=True)
+        vectors: csr_matrix = self._text_preprocessor.vectorize([entity.text], preprocess=True)
 
         prediction_result = self._model.predict(vectors.toarray())[0]
         return self._get_predicted_news_type_label(prediction_result)

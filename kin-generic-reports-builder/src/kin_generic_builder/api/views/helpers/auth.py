@@ -5,7 +5,7 @@ from kin_txt_core.exceptions import AuthenticationFailedError
 
 from kin_generic_builder.api.entities import User
 
-INTERNAL_URLS = []
+INTERNAL_URLS: list[str] = []
 
 
 def get_current_user(request: Request, authorization: str = Header(None)):

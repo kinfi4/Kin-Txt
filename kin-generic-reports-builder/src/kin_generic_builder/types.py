@@ -1,5 +1,6 @@
-from typing import Protocol
+from typing import Protocol, Any
 
+from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer, HashingVectorizer
 
 from kin_txt_core.reports_building.domain.entities import ModelEntity
@@ -13,3 +14,16 @@ class Validator(Protocol):
 
     def validate_model(self, model_entity: ModelEntity) -> None:
         ...
+
+
+class SklearnPredictor(Protocol):
+    def predict(self, *args: Any, **kwargs: Any) -> Any:
+        ...
+
+
+class SklearnTokenizer(Protocol):
+    def get_feature_names_out(self) -> list[str]:
+        ...
+
+    def transform(self, texts: list[str]) -> csr_matrix:
+        pass
