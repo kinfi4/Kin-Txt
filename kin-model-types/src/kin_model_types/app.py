@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 def init_containers(settings: Settings) -> Container:
     container = Container()
-    container.config.from_pydantic(settings)
+    container.config.from_dict(settings.dict())
     container.init_resources()
 
     container.wire(

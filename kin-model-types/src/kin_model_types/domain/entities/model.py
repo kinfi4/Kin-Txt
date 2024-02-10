@@ -1,6 +1,6 @@
 import json
 
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, ConfigDict, BaseModel, Field
 
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.types import CategoryMapping
@@ -10,6 +10,8 @@ from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 
 class ModelFilters(BaseModel):
     model_status: ModelStatuses | None = Field(None, alias="modelStatus")
+
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class ModelValidationEntity(BaseModel):
@@ -22,13 +24,14 @@ class ModelValidationEntity(BaseModel):
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
     preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
 
 
 class ModelEntity(ModelValidationEntity):
     model_status: ModelStatuses = Field(..., alias="modelStatus")
     validation_message: str | None = Field(None, alias="validationMessage")
+
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class CreateModelEntity(BaseModel):
@@ -40,10 +43,10 @@ class CreateModelEntity(BaseModel):
     original_tokenizer_file_name: str | None = Field(None, alias="originalTokenizerFileName")
     preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
 
-    @validator("category_mapping", pre=True)
+    @field_validator("category_mapping", mode="before")
+    @classmethod
     def parse_json(cls, mappings_value: dict | str) -> dict:
         if isinstance(mappings_value, str):
             try:
