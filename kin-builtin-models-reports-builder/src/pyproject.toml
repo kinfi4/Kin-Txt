@@ -17,3 +17,4 @@ en_core_web_lg = {url = "https://github.com/explosion/spacy-models/releases/down
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
