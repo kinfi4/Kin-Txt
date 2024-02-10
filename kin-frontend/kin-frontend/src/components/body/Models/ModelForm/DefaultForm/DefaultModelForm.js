@@ -8,7 +8,7 @@ import statsCss from "../../../Reports/Statistics.module.css";
 
 import {
     BinariesTypes,
-    GENERIC_REPORTS_BUILDER_URL,
+    GENERIC_REPORTS_BUILDER_URL, ModelStatuses,
     ModelTypes,
     SupportedLanguages,
 } from "../../../../../config";
@@ -22,6 +22,7 @@ import {showMessage} from "../../../../../utils/messages";
 import SettingsToggle from "./AdvancedSettings/SettingsToggle";
 import AdvancedSettingsForm from "./AdvancedSettings/AdvancedSettingsForm";
 import SelectItem from "../../../../../common/select/SelectItem";
+import NotReadyModelForm from "./NotReadyModelForm/NotReadyModelForm";
 
 const DefaultModelForm = ({
     data,
@@ -33,6 +34,30 @@ const DefaultModelForm = ({
     const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] = React.useState(0);
     const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] = React.useState(false);
     const [validatingUploadedTokenizerFiles, setValidatingUploadedTokenizerFiles] = React.useState(false);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (!data.preventPageReload) {
+                return;
+            }
+
+            // Standard for most browsers
+            e.preventDefault();
+            // For some older browsers
+            e.returnValue = "";
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [data.preventPageReload]);
+
+    // If the model is not ready, we show a different form
+    if(data.modelStatus === ModelStatuses.CREATED || data.modelStatus === ModelStatuses.VALIDATING) {
+        return <NotReadyModelForm />
+    }
 
     let modelBlobName = null;
     if (data.modelFile) {
@@ -144,25 +169,6 @@ const DefaultModelForm = ({
         setModelFileUploadProgress(0);
         setTokenizerFileUploadProgress(0);
     };
-
-    useEffect(() => {
-        const handleBeforeUnload = (e) => {
-            if (!data.preventPageReload) {
-                return;
-            }
-
-            // Standard for most browsers
-            e.preventDefault();
-            // For some older browsers
-            e.returnValue = "";
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, [data.preventPageReload]);
 
     return (
         <div className={statsStyles.statsContainer}>
