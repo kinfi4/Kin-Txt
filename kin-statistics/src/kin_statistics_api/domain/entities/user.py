@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, root_validator, validator
+from pydantic import field_validator, model_validator, ConfigDict, BaseModel, Field
 
 
 class User(BaseModel):
@@ -14,22 +14,20 @@ class UserLoginEntity(BaseModel):
 class UserRegistrationEntity(BaseModel):
     username: str
     password: str
-    password_repeated: str = Field(..., alias='passwordRepeated')
+    password_repeated: str = Field(..., alias="passwordRepeated")
 
-    @root_validator()
-    def validate_passwords_equal(cls, fields: dict[str, str]) -> dict[str, str]:
-        password1, password2 = fields.get('password'), fields.get('password_repeated')
-        if password1 is None or password2 is None or password1 != password2:
-            raise ValueError('Passwords must be equal!')
+    model_config = ConfigDict(populate_by_name=True)
 
-        return fields
+    @model_validator(mode="after")
+    def validate_passwords_equal(self) -> "UserRegistrationEntity":
+        if self.password is None or self.password_repeated is None or self.password != self.password_repeated:
+            raise ValueError("Passwords must be equal!")
 
-    @validator('*', pre=True)
-    def empty_str_to_none(cls, value):
-        if value == '':
+        return self
+
+    @field_validator('*', mode="before")
+    def empty_str_to_none(cls, value: str) -> str | None:
+        if value == "":
             return None
 
         return value
-
-    class Config:
-        allow_population_by_field_name = True

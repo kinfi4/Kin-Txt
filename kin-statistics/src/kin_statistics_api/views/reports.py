@@ -4,9 +4,19 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse, Response
 
+from kin_txt_core.pagination import PaginatedDataEntity
+
 from kin_txt_core.exceptions import KinNewsCoreException
 from kin_statistics_api.containers import Container
-from kin_statistics_api.domain.entities import GenerateReportEntity, ReportPutEntity, User, ReportsFetchSettings
+from kin_statistics_api.domain.entities import (
+    GenerateReportEntity,
+    ReportPutEntity,
+    User,
+    ReportsFetchSettings,
+    ReportIdentificationEntity,
+    StatisticalReport,
+    WordCloudReport,
+)
 from kin_statistics_api.domain.services import ManagingReportsService, UserService
 from kin_statistics_api.exceptions import ReportAccessForbidden
 from kin_statistics_api.views.helpers.auth import get_current_user
@@ -16,16 +26,14 @@ _logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/reports")
 
 
-@router.get("")
+@router.get("", response_model=PaginatedDataEntity[ReportIdentificationEntity])
 @inject
 def get_reports(
     fetch_settings: ReportsFetchSettings = Depends(),
     current_user: User = Depends(get_current_user),
     reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
 ):
-    report_identities = reports_service.get_user_reports_names(current_user.username, fetch_settings=fetch_settings)
-
-    return JSONResponse(content=report_identities.dict(by_alias=True))
+    return reports_service.get_user_reports_names(current_user.username, fetch_settings=fetch_settings)
 
 
 @router.post("")
@@ -54,7 +62,7 @@ def generate_report_request(
     return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content={"message": "Generating report process started successfully!"})
 
 
-@router.get("/{report_id}")
+@router.get("/{report_id}", response_model=StatisticalReport | WordCloudReport)
 @inject
 def get_report_details(
     report_id: int,
@@ -68,10 +76,10 @@ def get_report_details(
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
-    return JSONResponse(content=report.dict(by_alias=True, with_serialization=True))
+    return report
 
 
-@router.put("/{report_id}")
+@router.put("/{report_id}", response_model=StatisticalReport | WordCloudReport)
 @inject
 def update_report(
     report_id: int,
@@ -86,7 +94,7 @@ def update_report(
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
-    return JSONResponse(content=report_identity.dict(by_alias=True, with_serialization=True))
+    return report_identity
 
 
 @router.delete("/{report_id}")

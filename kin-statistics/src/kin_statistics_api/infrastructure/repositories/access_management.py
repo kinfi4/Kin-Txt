@@ -1,7 +1,7 @@
 import logging
 
 import sqlalchemy.sql.functions as func
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import select, insert, update, delete, Select
 from sqlalchemy.exc import IntegrityError
 
 from kin_statistics_api.domain.entities import User, UserLoginEntity
@@ -61,10 +61,12 @@ class ReportsAccessManagementRepository:
         """
 
         with self._db.connection() as conn:
-            select_max_report_id = (
+            select_max_report_id: Select = (
                 select(func.max(user_report_table.c.report_id).label("max_report_id"))
             )
+
             row = conn.execute(select_max_report_id).mappings().one()
+
             max_report_id = row["max_report_id"] if row["max_report_id"] is not None else 0
 
             self._logger.info(f"Setting report access rights of report_id: {max_report_id + 1} to user: {username}")

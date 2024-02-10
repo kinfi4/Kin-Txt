@@ -16,7 +16,7 @@ from kin_statistics_api.constants import ReportProcessingResult, ReportTypes, IT
 
 
 class ReportsMongoRepository(IReportRepository):
-    def __init__(self, mongo_client: MongoClient):
+    def __init__(self, mongo_client: MongoClient) -> None:
         self._mongo_client = mongo_client
         self._reports_db = mongo_client["statistics_service"]
         self._reports_collection = self._reports_db["reports"]
@@ -29,16 +29,21 @@ class ReportsMongoRepository(IReportRepository):
             {"$set": {"processing_status": status}},
         )
 
-    def get_report_names(self, report_ids: list[int], apply_settings: ReportsFetchSettings | None = None) -> list[ReportIdentificationEntity]:
+    def get_report_names(
+        self,
+        report_ids: list[int],
+        apply_settings: ReportsFetchSettings | None = None,
+    ) -> list[ReportIdentificationEntity]:
         filters = {"report_id": {"$in": report_ids}}
         filters.update(self._build_mongo_filters(apply_settings))
 
         reports_cursor = self._reports_collection.find(filters)
 
-        if apply_settings.order_by is not None:
-            reports_cursor = reports_cursor.sort(apply_settings.order_by, -1 if apply_settings.descending else 1)
-        if apply_settings.page is not None:
-            reports_cursor = reports_cursor.skip(apply_settings.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
+        if apply_settings is not None:
+            if apply_settings.order_by is not None:
+                reports_cursor = reports_cursor.sort(apply_settings.order_by, -1 if apply_settings.descending else 1)
+            if apply_settings.page is not None:
+                reports_cursor = reports_cursor.skip(apply_settings.page*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
         return [
             self._map_dict_to_identification_entity(report_dict)
@@ -46,7 +51,10 @@ class ReportsMongoRepository(IReportRepository):
         ]
 
     def save_user_report(self, report: BaseReport) -> None:
-        self._logger.info(f"[ReportsMongoRepository] Saving user report with id: {report.report_id} and status: {report.processing_status}")
+        self._logger.info(
+            f"[ReportsMongoRepository] "
+            f"Saving user report with id: {report.report_id} and status: {report.processing_status}"
+        )
 
         report_dict = report.dict()
         self._reports_collection.replace_one(

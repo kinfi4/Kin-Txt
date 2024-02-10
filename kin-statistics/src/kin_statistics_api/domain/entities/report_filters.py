@@ -1,7 +1,7 @@
 from enum import Enum
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 
 from kin_statistics_api.constants import ReportProcessingResult, ReportTypes
 
@@ -21,5 +21,4 @@ class ReportsFetchSettings(BaseModel):
     descending: bool = True
     order_by: OrderByOptions | None = Field(OrderByOptions.date, alias="orderBy")
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)

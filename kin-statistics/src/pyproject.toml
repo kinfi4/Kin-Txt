@@ -11,7 +11,7 @@ python = "~3.10"
 kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
 
 alembic = "1.9.2"
-fastapi = "0.89.1"
+fastapi = "0.109.2"
 pymongo = "4.3.2"
 python-multipart = "0.0.5"
 uvicorn = "0.20.0"
@@ -26,3 +26,9 @@ mypy = "^1.7.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+# ignore import-untyped
+ignore_missing_imports = true
+

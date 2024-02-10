@@ -1,7 +1,6 @@
 from datetime import date, datetime
-from typing import Any, Union
 
-from pydantic import BaseModel, Field, ValidationError, root_validator, validator
+from pydantic import field_validator, model_validator, ConfigDict, BaseModel, Field, ValidationError
 
 from kin_txt_core.constants import DEFAULT_DATE_FORMAT
 from kin_txt_core.datasources.constants import DataSourceTypes
@@ -28,39 +27,31 @@ class GenerateReportEntity(BaseModel):
     datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
     model_type: ModelTypes = Field(..., alias="modelType")
 
-    @validator("channel_list", pre=True, allow_reuse=True)
+    model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
+
+    @field_validator("channel_list", mode="before")
     def validate_channels(cls, channels: list[str]) -> list[str]:
         if len(channels) > Settings().max_channel_per_report_count or not channels:
             raise ValidationError("You passed invalid list of channels to process!")
 
         return channels
 
-    @validator("start_date", pre=True)
-    def validate_and_cast_start_date(cls, value: Union[str, date]):
+    @field_validator("start_date", "end_date", mode="before")
+    def validate_and_cast_start_date(cls, value: str | date):
         if isinstance(value, str):
             return _cast_string_to_date(value)
 
         return value
 
-    @validator("end_date", pre=True)
-    def validate_and_cast_end_date(cls, value: Union[str, date]):
-        if isinstance(value, str):
-            return _cast_string_to_date(value)
-
-        return value
-
-    @root_validator()
-    def validate_start_and_end_dates_difference(cls, fields: dict[str, Any]):
-        if fields["end_date"] < fields["start_date"]:
+    @model_validator(mode="after")
+    def validate_start_and_end_dates_difference(self) -> "GenerateReportEntity":
+        if self.end_date < self.start_date:
             raise ValueError("Start date must be earlier than end date.")
 
-        if (fields["end_date"] - fields["start_date"]).days > 365:
+        if (self.end_date - self.start_date).days > 365:
             raise ValueError("The period of time between start and end dates must be less than 1 year")
 
-        if fields["report_type"] == ReportTypes.STATISTICAL and fields.get("template_id") is None:
+        if self.report_type == ReportTypes.STATISTICAL and self.template_id is None:
             raise ValueError("Template id must be specified for statistical report type.")
 
-        return fields
-
-    class Config:
-        allow_population_by_field_name = True
+        return self

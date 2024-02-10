@@ -56,7 +56,7 @@ class MongodbRepositoryResource(resources.Resource):
         repository_class: Type[TMongoRepository],
         connection_string: str,
     ) -> TMongoRepository:
-        client = MongoClient(connection_string)
+        client: MongoClient = MongoClient(connection_string)
 
         return repository_class(mongo_client=client)
 

@@ -1,7 +1,8 @@
 from typing import Any, Optional
 from datetime import datetime
 
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, field_serializer, ConfigDict, BaseModel, Field
+from pydantic_core.core_schema import FieldSerializationInfo
 
 from kin_txt_core.constants import DEFAULT_DATETIME_FORMAT
 from kin_txt_core.types.reports import (
@@ -25,24 +26,19 @@ class BaseReport(BaseModel):
 
     report_failed_reason: str | None = Field(None, alias="reportFailedReason")
 
-    @validator("generation_date", pre=True)
+    model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("generation_date", mode="before")
     def parse_generation_date(cls, value: str | datetime) -> datetime:
         if isinstance(value, str):
             return datetime.strptime(value, DEFAULT_DATETIME_FORMAT)  # parse a string into datetime
 
         return value
 
-    def dict(self, with_serialization=True, **kwargs: Any) -> dict[str, Any]:
-        model_dict = super().dict(**kwargs)
-
-        if with_serialization:
-            model_dict["generationDate"] = self.generation_date.strftime(DEFAULT_DATETIME_FORMAT)
-
-        return model_dict
-
-    class Config:
-        allow_population_by_field_name = True
-        json_encoders = {datetime: lambda v: v.strftime(DEFAULT_DATETIME_FORMAT)}
+    @field_serializer("generation_date", when_used="json")
+    @staticmethod
+    def serialize_generation_date(value: datetime, _info: FieldSerializationInfo) -> str:
+        return value.strftime(DEFAULT_DATETIME_FORMAT)
 
 
 class StatisticalReport(BaseReport):
@@ -52,8 +48,7 @@ class StatisticalReport(BaseReport):
 
     data: dict[RawContentTypes, DataByCategory | DataByDateChannelCategory] | None = Field(None, alias="data")
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
     @classmethod
     def from_dict(cls, dict_report: dict[str, Any]) -> "StatisticalReport":
@@ -86,8 +81,7 @@ class WordCloudReport(BaseReport):
         dict[str, dict[str, list[tuple[str, int]]]]
     ] = Field(None, alias="dataByChannelByCategory")
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
     @classmethod
     def from_dict(cls, dict_report: dict[str, Any]) -> "WordCloudReport":
@@ -108,10 +102,16 @@ class WordCloudReport(BaseReport):
 
 
 class ReportPutEntity(BaseModel):
-    name: str = Field(max_length=80)
+    name: str = Field(..., max_length=80)
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("name", mode="before")
+    def name_must_be_unique(cls, value: str) -> str:
+        if len(value) < 1:
+            raise ValueError("Name must be at least 1 character long!")
+
+        return value
 
 
 class ReportIdentificationEntity(BaseReport):

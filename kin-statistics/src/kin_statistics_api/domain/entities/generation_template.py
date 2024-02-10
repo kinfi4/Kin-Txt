@@ -1,6 +1,6 @@
-from datetime import datetime, date
+from datetime import datetime
 
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, field_serializer, ConfigDict, BaseModel, Field
 
 from kin_txt_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
@@ -8,7 +8,7 @@ from kin_txt_core.reports_building.constants import ModelTypes
 
 
 class GenerationTemplate(BaseModel):
-    id: str | None
+    id: str | None = None
     name: str
 
     channel_list: list[str] = Field(..., alias="channelList")
@@ -21,13 +21,14 @@ class GenerationTemplate(BaseModel):
     datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
     model_type: ModelTypes = Field(..., alias="modelType")
 
-    class Config:
-        allow_population_by_field_name = True
-        json_encoders = {
-            datetime: lambda dt: dt.isoformat(),
-        }
+    model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
 
-    @validator("from_date", "to_date", pre=True)
+    @field_serializer("from_date", "to_date", when_used="json")
+    @staticmethod
+    def serialize_date(value: datetime, _info) -> str:
+        return value.isoformat()
+
+    @field_validator("from_date", "to_date", mode="before")
     def parse_date(cls, value: str | datetime) -> datetime:
         if isinstance(value, datetime):
             return value
