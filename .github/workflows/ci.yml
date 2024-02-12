@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
+          fetch-depth: 0  # Ensures the entire git history is checked out
 
       - name: Check for changes in kin-model-types
         id: check_changes
@@ -43,6 +44,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
+          fetch-depth: 0  # Ensures the entire git history is checked out
 
       - name: Check for changes in kin-statistics
         id: check_changes
