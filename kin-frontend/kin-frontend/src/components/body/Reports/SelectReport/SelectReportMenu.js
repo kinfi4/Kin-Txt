@@ -53,8 +53,8 @@ const SelectReportMenu = ({
                 </table>
 
                 <Pagination
-                    currentPage={currentPage}
-                    setPage={updatePage}
+                    currentPageIndex={currentPage}
+                    setPageIndex={updatePage}
                     totalPages={totalPages}
                 />
             </div>
@@ -73,11 +73,9 @@ let mapDispatchToProps = (dispatch) => {
     return {
         updatePage: (page) => dispatch(updateReportsPage(page)),
         fetchUserReports: () => dispatch(fetchUserReports()),
-        updateReportName: (reportId, reportName) =>
-            dispatch(updateReportName(reportId, reportName)),
+        updateReportName: (reportId, reportName) => dispatch(updateReportName(reportId, reportName)),
         deleteReport: (reportId) => dispatch(deleteReport(reportId)),
-        showModal: (content, width, height) =>
-            dispatch(showModalWindow(content, width, height)),
+        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
     };
 };
 

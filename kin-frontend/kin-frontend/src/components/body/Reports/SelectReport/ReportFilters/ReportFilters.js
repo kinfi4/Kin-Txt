@@ -30,7 +30,7 @@ const ReportFilters = ({
 
     return (
         <tr className={reportFiltersCss.filtersContainer}>
-            <th width={"500px"}>
+            <th width={"40%"}>
                 <Input
                     placeholder={"Report name"}
                     onChange={onReportNameFilterChange}
@@ -39,11 +39,11 @@ const ReportFilters = ({
                 />
             </th>
 
-            <th width={"95px"}>Status</th>
+            <th width={"20%"}>Status</th>
 
-            <th width={"80px"}>Date</th>
+            <th width={"20%"}>Date</th>
 
-            <th>
+            <th width={"20%"}>
                 <h2>
                     <Link to={`${path}/generate`}>
                         <span

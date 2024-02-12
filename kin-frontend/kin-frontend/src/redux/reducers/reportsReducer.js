@@ -50,23 +50,21 @@ const reportFiltersToQueryParams = (filters) => {
     return queryParams;
 };
 
-export const updateFilters =
-    (page, name, dateFrom, dateTo, processingStatus) =>
-    (dispatch, getState) => {
-        dispatch({
-            type: UPDATE_FILTERS,
-            page,
-            name,
-            dateFrom,
-            dateTo,
-            processingStatus,
-        });
+export const updateFilters = (page, name, dateFrom, dateTo, processingStatus) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_FILTERS,
+        page,
+        name,
+        dateFrom,
+        dateTo,
+        processingStatus,
+    });
 
-        dispatch(fetchUserReports());
-    };
+    dispatch(fetchUserReports());
+};
 
 export const updateReportsPage = (page) => (dispatch, getState) => {
-    dispatch({type: UPDATE_REPORTS_PAGE, page});
+    dispatch(updateFilters(page));
     dispatch(fetchUserReports());
 };
 
@@ -124,6 +122,11 @@ export const generateReport = (data) => async (dispatch) => {
 };
 
 export const updateReportName = (reportId, reportName) => async (dispatch) => {
+    if(!reportName) {
+        showMessage([{message: "Report name cannot be empty!", type: "danger"}]);
+        return;
+    }
+
     const apiRequester = new APIRequester(STATISTICS_SERVICE_URL, dispatch);
 
     const response = await apiRequester.put(`/reports/${reportId}`, {

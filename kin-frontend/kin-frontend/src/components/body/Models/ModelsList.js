@@ -94,10 +94,10 @@ const ModelsList = ({modelsList, deleteModel, loadUserModels}) => {
                         <table className={selectReportMenuCss.reportTable}>
                             <thead>
                                 <tr className={modelsCss.filtersBlock}>
-                                    <th width={"320px"}>Name</th>
-                                    <th width={"180px"}>Status</th>
-                                    <th width={"200px"}>Model Type</th>
-                                    <th>
+                                    <th width={"50%"}>Name</th>
+                                    <th width={"15%"}>Status</th>
+                                    <th width={"15%"}>Model Type</th>
+                                    <th width={"20%"}>
                                         <Link to={`${path}/create`}>
                                             <span
                                                 className={
