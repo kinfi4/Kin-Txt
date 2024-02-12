@@ -30,6 +30,7 @@ jobs:
           fi
 
       - name: Set up Docker
+        if: steps.check_changes.outputs.changes == 'true'
         uses: docker/setup-buildx-action@v1
 
       - name: Build and Test kin-model-types
@@ -58,6 +59,7 @@ jobs:
           fi
 
       - name: Set up Docker
+        if: steps.check_changes.outputs.changes == 'true'
         uses: docker/setup-buildx-action@v1
 
       - name: Build and Test kin-statistics
