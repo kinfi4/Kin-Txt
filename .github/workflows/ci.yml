@@ -12,32 +12,54 @@ permissions:
 jobs:
   ci-kin-model-types:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'kin-model-types/') || contains(github.event.head_commit.added, 'kin-model-types/')
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
 
+      - name: Check for changes in kin-model-types
+        id: check_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD -- kin-model-types/; then
+            echo "No changes in kin-model-types"
+            echo "::set-output name=changes::false"
+          else
+            echo "Changes detected in kin-model-types"
+            echo "::set-output name=changes::true"
+          fi
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v1
 
       - name: Build and Test kin-model-types
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
           cd kin-model-types
           docker build -f etc/service/Dockerfile -t kin-model-types .
           docker run --rm kin-model-types /bin/sh -c "mypy kin_model_types"
   ci-kin-statistics:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'kin-statistics/') || contains(github.event.head_commit.added, 'kin-statistics/')
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
 
+      - name: Check for changes in kin-statistics
+        id: check_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD -- kin-statistics/; then
+            echo "No changes in kin-statistics"
+            echo "::set-output name=changes::false"
+          else
+            echo "Changes detected in kin-statistics"
+            echo "::set-output name=changes::true"
+          fi
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v1
 
       - name: Build and Test kin-statistics
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
           cd kin-statistics
           docker build -f etc/service/Dockerfile -t kin-statistics .
