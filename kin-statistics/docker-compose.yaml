@@ -47,3 +47,4 @@ networks:
   kin-network:
     external:
       name: kin-network
+
