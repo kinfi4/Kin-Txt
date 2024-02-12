@@ -11,8 +11,6 @@ const InsertModelFiles = ({
     tokenizerName = null,
     modelFileUploadProgress,
     tokenizerFileUploadProgress,
-    validatingUploadedModelFiles = false,
-    validatingUploadedTokenizerFiles = false,
 }) => {
     if (
         modelType === ModelTypes.SKLEARN_MODEL ||
@@ -26,10 +24,6 @@ const InsertModelFiles = ({
                 onTokenizerFileChange={onTokenizerFileChange}
                 modelFileUploadProgress={modelFileUploadProgress}
                 tokenizerFileUploadProgress={tokenizerFileUploadProgress}
-                validatingUploadedModelFiles={validatingUploadedModelFiles}
-                validatingUploadedTokenizerFiles={
-                    validatingUploadedTokenizerFiles
-                }
             />
         );
     }

@@ -54,6 +54,10 @@ export const SupportedLanguages = {
                 return language;
             }
         }
+    },
+
+    isSupported(language) {
+        return Object.values(SupportedLanguages).includes(language);
     }
 };
 

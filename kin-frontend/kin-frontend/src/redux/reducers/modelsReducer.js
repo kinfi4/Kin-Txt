@@ -48,8 +48,7 @@ export const deleteModel = (modelId) => (dispatch) => {
 };
 
 export const validateAndSaveModel =
-    (model, setInitialState, updating = false) =>
-    async (dispatch) => {
+    (model, setInitialState, updating = false) => async (dispatch) => {
         const token = localStorage.getItem("token");
 
         const data = {
@@ -122,7 +121,6 @@ export const validateAndSaveModel =
                 {message: "Model validation has started...", type: "success"},
             ]);
         } catch (error) {
-            console.log(error.response.data.errors);
             dispatch(deleteModelBinaries(model.code));
             dispatch({type: FETCH_ERROR, errors: error.response.data.errors});
         }

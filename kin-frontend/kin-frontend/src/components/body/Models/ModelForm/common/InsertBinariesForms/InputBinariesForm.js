@@ -14,8 +14,6 @@ const InputBinariesForm = ({
     onTokenizerFileChange,
     modelFileUploadProgress,
     tokenizerFileUploadProgress,
-    validatingUploadedModelFiles = false,
-    validatingUploadedTokenizerFiles = false,
 }) => {
     const modelIsSet = modelName !== null;
     const tokenizerIsSet = tokenizerName !== null;
@@ -25,23 +23,23 @@ const InputBinariesForm = ({
         ? tokenizerName
         : "Choose a file with tokenizer";
 
-    const modelIsLoading = modelFileUploadProgress > 0;
-    const tokenizerIsLoading = tokenizerFileUploadProgress > 0;
+    const modelIsLoading = modelFileUploadProgress.progress > 0;
+    const tokenizerIsLoading = tokenizerFileUploadProgress.progress > 0;
 
     let uploadingModelMessage = "Uploading the model";
-    if (!validatingUploadedModelFiles && modelFileUploadProgress === 100) {
+    if (!modelFileUploadProgress.isValidating && modelFileUploadProgress.progress === 100) {
         uploadingModelMessage = "Model uploaded successfully";
-    } else if (validatingUploadedModelFiles) {
+    } else if (modelFileUploadProgress.isValidating) {
         uploadingModelMessage = "Validating files integrity";
     }
 
     let uploadingTokenizerMessage = "Uploading the tokenizer";
     if (
-        !validatingUploadedTokenizerFiles &&
-        tokenizerFileUploadProgress === 100
+        !tokenizerFileUploadProgress.isValidating &&
+        tokenizerFileUploadProgress.progress === 100
     ) {
         uploadingTokenizerMessage = "Tokenizer uploaded successfully";
-    } else if (validatingUploadedTokenizerFiles) {
+    } else if (tokenizerFileUploadProgress.isValidating) {
         uploadingTokenizerMessage = "Validating files integrity";
     }
 
@@ -103,7 +101,7 @@ const InputBinariesForm = ({
                 {modelIsLoading ? (
                     <div className={styles.animatedProgressBar}>
                         <ProgressBar
-                            percent={modelFileUploadProgress}
+                            percent={modelFileUploadProgress.progress}
                             filledBackground="linear-gradient(to right, #00c6b6, #0f544b)"
                         />
                     </div>
@@ -153,7 +151,7 @@ const InputBinariesForm = ({
                 {tokenizerIsLoading ? (
                     <div className={styles.animatedProgressBar}>
                         <ProgressBar
-                            percent={tokenizerFileUploadProgress}
+                            percent={tokenizerFileUploadProgress.progress}
                             filledBackground="linear-gradient(to right, #00c6b6, #0f544b)"
                         />
                     </div>

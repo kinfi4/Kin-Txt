@@ -5,7 +5,6 @@ import {ModelTypes, MODEL_TYPES_URL, SupportedLanguages, PossibleTruncatePadding
 import {showMessage} from "../../../../../utils/messages";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
-import {validateFormData} from "../common/FormDataValidation";
 import APIRequester from "../../../../../domain/apiCalls/APIRequester";
 
 const initialState = {
@@ -107,12 +106,6 @@ const ModelUpdateForm = ({modelCode, onModelSavingCallback}) => {
     }, []);
 
     const onUpdateButtonClick = () => {
-        const validationResult = validateFormData(data, true);
-
-        if (!validationResult) {
-            return;
-        }
-
         onModelSavingCallback(data, letPageReload);
 
         // update after delay in 100ms

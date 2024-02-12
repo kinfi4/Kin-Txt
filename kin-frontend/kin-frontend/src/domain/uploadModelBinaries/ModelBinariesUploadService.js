@@ -1,5 +1,6 @@
 import axios from "axios";
-import {showMessage} from "../../../../../../utils/messages";
+import {showMessage} from "../../utils/messages";
+import {BinariesTypes} from "../../config";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -11,12 +12,74 @@ export class ModelBinariesUploadService {
         this.modelCode = modelCode;
     }
 
+    async uploadModelData(
+        modelData,
+        setModelFileUploadProgress,
+        setTokenizerFileUploadProgress,
+    ) {
+        let promiseModelUploadSuccess = Promise.resolve(true);
+        let promiseTokenizerUploadSuccess = Promise.resolve(true);
+        let promiseStopWordsUploadSuccess = Promise.resolve(true);
+
+        if (modelData.modelFile) {
+            promiseModelUploadSuccess = this.uploadBlobByChunks(
+                modelData.modelFile,
+                "/blobs/upload",
+                BinariesTypes.MODEL,
+                setModelFileUploadProgress,
+            );
+        }
+
+        if (modelData.tokenizerFile) {
+            promiseTokenizerUploadSuccess = this.uploadBlobByChunks(
+                modelData.tokenizerFile,
+                "/blobs/upload",
+                BinariesTypes.TOKENIZER,
+                setTokenizerFileUploadProgress,
+            );
+        }
+
+        if (modelData.preprocessingConfig.stopWordsFile) {
+            promiseStopWordsUploadSuccess = this.uploadFile(
+                modelData.preprocessingConfig.stopWordsFile,
+                "/blobs/upload",
+                BinariesTypes.STOP_WORDS,
+            )
+        }
+
+        if (!(await promiseModelUploadSuccess)) {
+            showMessage([
+                {
+                    message: `Error while uploading model file...`,
+                    type: "danger",
+                },
+            ]);
+            return;
+        }
+        if (!(await promiseTokenizerUploadSuccess)) {
+            showMessage([
+                {
+                    message: `Error while uploading tokenizer file...`,
+                    type: "danger",
+                },
+            ]);
+            return;
+        }
+        if (!(await promiseStopWordsUploadSuccess)) {
+            showMessage([
+                {
+                    message: `Error while uploading stop words file...`,
+                    type: "danger",
+                },
+            ]);
+        }
+    }
+
     async uploadBlobByChunks(
         blob,
         uploadUrl,
         blobType,
         progressCallback,
-        mergingStartedCallback
     ) {
         const totalChunks = Math.ceil(blob.size / this.chunkSize);
         const chunkProgress = 100 / totalChunks;
@@ -30,7 +93,7 @@ export class ModelBinariesUploadService {
             if (chunkNumber < totalChunks) {
                 if (chunkNumber === totalChunks - 1) {
                     // that means we're uploading the last chunk
-                    mergingStartedCallback(true);
+                    progressCallback({progress: 100, isValidating: true});
                 }
 
                 end = start + this.chunkSize;
@@ -50,7 +113,7 @@ export class ModelBinariesUploadService {
                         return false;
                     }
 
-                    progressCallback(Number((chunkNumber + 1) * chunkProgress));
+                    progressCallback({progress: Number((chunkNumber + 1) * chunkProgress), isValidating: false});
 
                     chunkNumber++;
                     start = end;
@@ -61,8 +124,7 @@ export class ModelBinariesUploadService {
                     return false;
                 }
             } else {
-                progressCallback(100);
-                mergingStartedCallback(false);
+                progressCallback({progress: 100, isValidating: false});
                 return true;
             }
         };

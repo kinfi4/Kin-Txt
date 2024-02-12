@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import Select from "react-select";
 
 import formStyles from "./../ModelFormStyles.module.css";
 import statsStyles from "../../../Reports/Statistics.module.css";
@@ -7,7 +6,6 @@ import commonStyles from "../../../../../common/CommonStyles.module.css";
 import statsCss from "../../../Reports/Statistics.module.css";
 
 import {
-    BinariesTypes,
     GENERIC_REPORTS_BUILDER_URL, ModelStatuses,
     ModelTypes,
     SupportedLanguages,
@@ -17,12 +15,13 @@ import FormInput from "../../../../../common/formInputName/FormInput";
 import MappingForm from "../common/MappingForm/MappingForm";
 import ModelValidationMessageBlock from "./ModelValidationMessageBlock/ModelValidationMessageBlock";
 import BackLink from "../../../../../common/backLink/BackLink";
-import {ModelBinariesUploadService} from "../common/uploadModelBinaries/ModelBinariesUploadService";
+import {ModelBinariesUploadService} from "../../../../../domain/uploadModelBinaries/ModelBinariesUploadService";
 import {showMessage} from "../../../../../utils/messages";
 import SettingsToggle from "./AdvancedSettings/SettingsToggle";
 import AdvancedSettingsForm from "./AdvancedSettings/AdvancedSettingsForm";
 import SelectItem from "../../../../../common/select/SelectItem";
 import NotReadyModelForm from "./NotReadyModelForm/NotReadyModelForm";
+import {ModelValidator} from "../../../../../domain/ModelValidator";
 
 const DefaultModelForm = ({
     data,
@@ -30,10 +29,10 @@ const DefaultModelForm = ({
     onModelSavingCallback,
     isUpdateForm = false,
 }) => {
-    const [modelFileUploadProgress, setModelFileUploadProgress] = React.useState(0);
-    const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] = React.useState(0);
-    const [validatingUploadedModelFiles, setValidatingUploadedModelFiles] = React.useState(false);
-    const [validatingUploadedTokenizerFiles, setValidatingUploadedTokenizerFiles] = React.useState(false);
+    const [modelFileUploadProgress, setModelFileUploadProgress] =
+        React.useState({progress: 0, isValidating: false});
+    const [tokenizerFileUploadProgress, setTokenizerFileUploadProgress] =
+        React.useState({progress: 0, isValidating: false});
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
@@ -73,31 +72,18 @@ const DefaultModelForm = ({
         tokenizerBlobName = data.tokenizerName;
     }
 
-    const blobsAreUploading = modelFileUploadProgress > 0 || tokenizerFileUploadProgress > 0;
+    const blobsAreUploading = modelFileUploadProgress.progress > 0 || tokenizerFileUploadProgress.progress > 0;
 
     const handleModelValidationStart = async () => {
         if (blobsAreUploading) {
             return;
         }
 
-        if (!data.modelFile && !isUpdateForm) {
-            showMessage([{message: `No model file selected`, type: "danger"}]);
+        const modelValidator = new ModelValidator(data);
+        const [isValid, errors] = modelValidator.validate(isUpdateForm);
+        if(!isValid) {
+            showMessage(errors.map((error) => ({message: error, type: "danger"})));
             return;
-        }
-
-        if (!data.tokenizerFile && !isUpdateForm) {
-            showMessage([
-                {message: `No tokenizer file selected`, type: "danger"},
-            ]);
-            return;
-        }
-
-        if(data.preprocessingConfig.stopWordsFile && !data.preprocessingConfig.stopWordsFile.name.split(".").pop().match(/^(txt|csv|json)$/)) {
-            showMessage([
-                {message: `Stop words file must be a .txt, .csv or .json file`, type: "danger"},
-            ]);
-            return;
-
         }
 
         const binariesUploadService = new ModelBinariesUploadService(
@@ -105,69 +91,16 @@ const DefaultModelForm = ({
             1024 * 1024 * 5, // 5MB
             data.code // we need to pass the code of the future model as well, so the server knows where to save the files
         );
-        let promiseModelUploadSuccess = Promise.resolve(true);
-        let promiseTokenizerUploadSuccess = Promise.resolve(true);
-        let promiseStopWordsUploadSuccess = Promise.resolve(true);
 
-        if (data.modelFile) {
-            promiseModelUploadSuccess = binariesUploadService.uploadBlobByChunks(
-                data.modelFile,
-                "/blobs/upload",
-                BinariesTypes.MODEL,
-                setModelFileUploadProgress,
-                setValidatingUploadedModelFiles
-            );
-        }
-
-        if (data.tokenizerFile) {
-            promiseTokenizerUploadSuccess = binariesUploadService.uploadBlobByChunks(
-                data.tokenizerFile,
-                "/blobs/upload",
-                BinariesTypes.TOKENIZER,
-                setTokenizerFileUploadProgress,
-                setValidatingUploadedTokenizerFiles
-            );
-        }
-
-        if (data.preprocessingConfig.stopWordsFile) {
-            promiseStopWordsUploadSuccess = binariesUploadService.uploadFile(
-                data.preprocessingConfig.stopWordsFile,
-                "/blobs/upload",
-                BinariesTypes.STOP_WORDS,
-            )
-        }
-
-        if (!(await promiseModelUploadSuccess)) {
-            showMessage([
-                {
-                    message: `Error while uploading model file...`,
-                    type: "danger",
-                },
-            ]);
-            return;
-        }
-        if (!(await promiseTokenizerUploadSuccess)) {
-            showMessage([
-                {
-                    message: `Error while uploading tokenizer file...`,
-                    type: "danger",
-                },
-            ]);
-            return;
-        }
-        if (!(await promiseStopWordsUploadSuccess)) {
-            showMessage([
-                {
-                    message: `Error while uploading stop words file...`,
-                    type: "danger",
-                },
-            ]);
-            return;
-        }
+        await binariesUploadService.uploadModelData(
+            data,
+            setModelFileUploadProgress,
+            setTokenizerFileUploadProgress,
+        );
 
         onModelSavingCallback();
-        setModelFileUploadProgress(0);
-        setTokenizerFileUploadProgress(0);
+        setModelFileUploadProgress({progress: 0, isValidating: false});
+        setTokenizerFileUploadProgress({progress: 0, isValidating: false});
     };
 
     return (
@@ -227,15 +160,7 @@ const DefaultModelForm = ({
                                 modelName={modelBlobName}
                                 tokenizerName={tokenizerBlobName}
                                 modelFileUploadProgress={modelFileUploadProgress}
-                                tokenizerFileUploadProgress={
-                                    tokenizerFileUploadProgress
-                                }
-                                validatingUploadedModelFiles={
-                                    validatingUploadedModelFiles
-                                }
-                                validatingUploadedTokenizerFiles={
-                                    validatingUploadedTokenizerFiles
-                                }
+                                tokenizerFileUploadProgress={tokenizerFileUploadProgress}
                             />
                         </div>
                         {/*Select model name*/}

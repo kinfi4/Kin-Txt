@@ -2,7 +2,6 @@ import React from "react";
 import {connect} from "react-redux";
 
 import {ModelTypes, PossibleTruncatePaddingTypes, SupportedLanguages} from "../../../../../config";
-import {validateFormData} from "../common/FormDataValidation";
 import {validateAndSaveModel} from "../../../../../redux/reducers/modelsReducer";
 import DefaultModelForm from "../DefaultForm/DefaultModelForm";
 
@@ -36,21 +35,11 @@ const ModelCreateForm = ({createModel}) => {
     const [data, setData] = React.useState(initialState);
     const setInitialState = () => setData(initialState);
 
-    const onCreateButtonClick = () => {
-        const validationResult = validateFormData(data);
-
-        if (!validationResult) {
-            return;
-        }
-
-        createModel(data, setInitialState);
-    };
-
     return (
         <DefaultModelForm
             data={data}
             setData={setData}
-            onModelSavingCallback={onCreateButtonClick}
+            onModelSavingCallback={() => createModel(data, setInitialState)}
         />
     );
 };
