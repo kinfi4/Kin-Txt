@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  statistics-service:
+    build:
+      context: .
+      dockerfile: ./etc/service/Dockerfile
+    image: 'kin-statistics-api'
+    container_name: 'kin-statistics-api'
+    env_file:
+      - ./etc/service/env/.test.env
+    volumes:
+      - ./etc/service/migrations:/app/migrations
+      - ./etc/service/alembic.ini:/app/alembic.ini
+      - ./src/kin_statistics_api:/app/kin_statistics_api
+      - ./src/tests:/app/tests
+      - ./src/setup.cfg:/app/setup.cfg
+      - ./submodules:/submodules
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - tests_cache:/tmp/test_cache
+
+volumes:
+  tests_cache:
+    labels:
+      description: "Volume for storing coverage cache"

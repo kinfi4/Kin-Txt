@@ -21,11 +21,11 @@ def login(
         token = user_service.login(user_data)
     except LoginFailedError:
         return JSONResponse(
-            content={'errors': 'Username and/or password are incorrect'},
+            content={"errors": "Username and/or password are incorrect"},
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
-    return JSONResponse(status_code=status.HTTP_200_OK, content={'token': token})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"token": token})
 
 
 @router.post("/register")
@@ -39,10 +39,10 @@ async def register(
     except UsernameAlreadyTakenError:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={'errors': 'User with specified username already exists'}
+            content={"errors": "User with specified username already exists"}
         )
 
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content={'token': token})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"token": token})
 
 
 @router.get("/me")

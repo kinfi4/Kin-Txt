@@ -18,6 +18,7 @@ services:
       - ./etc/service/migrations:/app/migrations
       - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
+      - ./src/tests:/app/tests
       - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
       - ./src/poetry.lock:/app/poetry.lock
@@ -38,6 +39,7 @@ services:
       - ./etc/service/migrations:/app/migrations
       - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
+      - ./src/tests:/app/tests
       - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
       - ./src/poetry.lock:/app/poetry.lock
