@@ -68,4 +68,5 @@ jobs:
           cd kin-statistics
           docker build -f etc/service/Dockerfile -t kin-statistics .
           docker run --rm kin-statistics /bin/sh -c "mypy kin_statistics_api"
+          docker run --rm kin-statistics --env-file ./etc/service/env/.test.env /bin/sh -c "coverage run -m pytest -s"
      
