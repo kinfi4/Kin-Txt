@@ -20,8 +20,6 @@ media/**/*.jpg
 .idea/
 
 # Env files
-.env
-.env.dev/
 .dev.env
 .env.prod/
 # Backup files # 
@@ -96,8 +94,7 @@ celerybeat-schedule.*
 # Environments 
 .venv 
 venv/ 
-ENV/ 
-env.bak/ 
+env.bak/
 venv.bak/ 
 
 # mkdocs documentation 

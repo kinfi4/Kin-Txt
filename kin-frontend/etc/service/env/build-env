@@ -1,0 +1,3 @@
+REACT_APP_STATISTICS_SERVICE_URL="http://kin-api-gateway:80/api/statistics/v1"
+REACT_APP_MODEL_TYPES_URL="http://kin-api-gateway:80/api/model-types/v1"
+REACT_APP_GENERIC_REPORTS_BUILDER_URL="http://kin-api-gateway:80/api/generic-builder/v1"
