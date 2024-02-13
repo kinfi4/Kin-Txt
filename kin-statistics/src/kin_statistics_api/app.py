@@ -29,7 +29,7 @@ def init_containers(settings: Settings):
 def init_cors(app: FastAPI, settings: Settings):
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.allowed_hosts,
+        allow_origins=settings.allowed_hosts.split(","),
         allow_headers=['*'],
         allow_methods=['*'],
         allow_credentials=True

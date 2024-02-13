@@ -15,6 +15,6 @@ class Settings(BaseSettings):
     max_channel_per_report_count: int = Field(12, validation_alias="MAX_SUBSCRIPTIONS_ALLOWED")
     mongodb_connection_string: str = Field(..., validation_alias="MONGO_DB_CONNECTION_STRING")
     rabbitmq_connection_string: str = Field(..., validation_alias="RABBITMQ_CONNECTION_STRING")
-    allowed_hosts: list[str] = Field(..., validation_alias="ALLOWED_HOSTS")
+    allowed_hosts: str = Field(..., validation_alias="ALLOWED_HOSTS")
 
     database: PostgresSettings = PostgresSettings()

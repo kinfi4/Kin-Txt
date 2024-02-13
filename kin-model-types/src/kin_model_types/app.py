@@ -31,7 +31,7 @@ def init_containers(settings: Settings) -> Container:
 def init_cors(app: FastAPI, settings: Settings):
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.allowed_hosts,
+        allow_origins=settings.allowed_hosts.split(","),  # type: ignore
         allow_headers=['*'],
         allow_methods=['*'],
         allow_credentials=True

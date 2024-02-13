@@ -12,4 +12,4 @@ class Settings(BaseSettings):
     rabbitmq_connection_string: str = Field(..., validation_alias="RABBITMQ_CONNECTION_STRING")
 
     models_storage_path: str = Field(..., validation_alias="MODELS_STORAGE_PATH")
-    allowed_hosts: list[str] = Field(..., validation_alias="ALLOWED_HOSTS")
+    allowed_hosts: str = Field(..., validation_alias="ALLOWED_HOSTS")

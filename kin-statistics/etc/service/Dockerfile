@@ -16,6 +16,7 @@ COPY ./etc/service/migrations/ /app/migrations
 COPY ./etc/service/alembic.ini /app/alembic.ini
 COPY ./src/kin_statistics_api/ /app/kin_statistics_api
 COPY ./submodules /submodules
+COPY ./src/tests /app/tests
 
 RUN poetry install
 
