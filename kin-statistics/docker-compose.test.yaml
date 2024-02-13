@@ -24,3 +24,4 @@ volumes:
   tests_cache:
     labels:
       description: "Volume for storing coverage cache"
+
