@@ -2,12 +2,14 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 
 from kin_statistics_api.containers import Container
 from kin_statistics_api.settings import Settings
 from kin_statistics_api import views, constants, events
 from kin_statistics_api.domain import use_cases
 from kin_statistics_api.views import api_router
+from kin_statistics_api.exception_handlers import pydantic_validation_exception_handler
 
 
 _logger = logging.getLogger(__name__)
@@ -45,6 +47,7 @@ def create_app(*args, **kwargs):
     )
 
     app.include_router(router=api_router)
+    app.add_exception_handler(RequestValidationError, pydantic_validation_exception_handler)
 
     container = init_containers(settings)
 
