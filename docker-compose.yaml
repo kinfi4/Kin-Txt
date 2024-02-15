@@ -54,8 +54,8 @@ services:
 
 networks:
   kin-network:
-    external:
-      name: kin-network
+    name: kin-network
+    external: true
 
 volumes:
   pgdata:
