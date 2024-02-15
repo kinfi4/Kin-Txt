@@ -27,7 +27,7 @@ def create_app(*args, **kwargs) -> FastAPI:
     )
 
     app.include_router(router=api_router)
-    app.exception_handler(RequestValidationError, pydantic_validation_exception_handler)
+    app.exception_handler(RequestValidationError, pydantic_validation_exception_handler)  # type: ignore
 
     init_cors(app, settings)
 

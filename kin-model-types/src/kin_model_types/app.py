@@ -49,7 +49,7 @@ def create_app(*args, **kwargs) -> FastAPI:
     )
 
     app.include_router(router=api_router)
-    app.add_exception_handler(RequestValidationError, pydantic_validation_exception_handler)
+    app.add_exception_handler(RequestValidationError, pydantic_validation_exception_handler)  # type: ignore
 
     container = init_containers(settings)
 
