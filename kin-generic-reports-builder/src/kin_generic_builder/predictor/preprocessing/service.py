@@ -10,10 +10,10 @@ from scipy.sparse.csr import csr_matrix
 from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 from kin_txt_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
+from kin_generic_builder.predictor.preprocessing.lemmatizer import Lemmatizer
 from kin_generic_builder.predictor.preprocessing.stop_words_loader_mixin import StopWordsLoaderMixin
 from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 from kin_generic_builder.constants import emoji_regex_compiled
-from kin_txt_core.reports_building.domain.services.predicting.preprocessing.lemmatizer import Lemmatizer
 
 
 class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin, Lemmatizer):

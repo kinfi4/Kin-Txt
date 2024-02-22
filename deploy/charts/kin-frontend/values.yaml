@@ -24,7 +24,6 @@ podSecurityContext: {}
 securityContext: {}
 resources: {}
 podAnnotations: {}
-podLabels: {}
 
 service:
   type: ClusterIP

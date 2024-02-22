@@ -11,9 +11,9 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=kin-news
-      - POSTGRES_USER=kin-news-user
-      - POSTGRES_PASSWORD=kin-news-password
+      - POSTGRES_DB=kin-txt
+      - POSTGRES_USER=kin-txt-user
+      - POSTGRES_PASSWORD=kin-txt-password
 
   redis:
     image: redis:6.2-alpine
@@ -31,8 +31,8 @@ services:
     image: "mongo:6.0.3"
     container_name: "mongo"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=kin-news-user
-      - MONGO_INITDB_ROOT_PASSWORD=kin-news-password
+      - MONGO_INITDB_ROOT_USERNAME=kin-txt-user
+      - MONGO_INITDB_ROOT_PASSWORD=kin-txt-password
     ports:
       - "27017:27017"
     volumes:
@@ -44,8 +44,8 @@ services:
     image: "rabbitmq:3-management"
     container_name: "rabbitmq"
     environment:
-      - RABBITMQ_DEFAULT_USER=kin-news-user
-      - RABBITMQ_DEFAULT_PASS=kin-news-password
+      - RABBITMQ_DEFAULT_USER=kin-txt-user
+      - RABBITMQ_DEFAULT_PASS=kin-txt-password
     ports:
       - '5672:5672'
       - '15672:15672'
