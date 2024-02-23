@@ -3,7 +3,7 @@
 # Navigate to the project root directory
 cd "$(dirname "$0")/../.."
 
-# Point your Docker CLI to Minikube's Docker daemon
+# Point Docker CLI to Minikube's Docker daemon
 eval $(minikube docker-env)
 
 # List of your service directories
@@ -21,8 +21,6 @@ for service in "${services[@]}"; do
   echo "Building Docker image for $service..."
   cd "$(dirname "$0")/../../$service"
 
-  # Assuming the Dockerfile is located in the service directory
-  # and the image name is the same as the service directory name
   docker build -t "$service:latest" -f "./etc/service/Dockerfile" .
 
   cd -

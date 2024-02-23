@@ -2,12 +2,12 @@
 
 
 charts=(
-#    "../charts/kin-statistics"
-#    "../charts/kin-builtin-models"
-#    "../charts/kin-generic-models"
-#    "../charts/kin-model-types"
+    "../charts/kin-statistics"
+    "../charts/kin-builtin-models"
+    "../charts/kin-generic-models"
+    "../charts/kin-model-types"
     "../charts/kin-api-gateway"
-#    "../charts/kin-frontend"
+    "../charts/kin-frontend"
 )
 
 
@@ -17,8 +17,6 @@ for chartPath in "${charts[@]}"; do
     # Navigate to the chart directory
     cd "$chartPath" || { echo "Failed to navigate to $chartPath"; exit 1; }
 
-    # Install or upgrade the Helm chart
-    # Note: This assumes Helm 3, adjust if using Helm 2
     serviceName=$(basename "$chartPath")
     helm upgrade --install "$serviceName" . || { echo "Deployment of $serviceName failed"; exit 1; }
 

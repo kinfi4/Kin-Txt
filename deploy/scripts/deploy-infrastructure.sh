@@ -7,10 +7,8 @@ install_storage_class() {
         echo "StorageClass 'local-disk' already exists. Skipping installation."
     else
         echo "Installing StorageClass 'local-disk' from kin-infrastructure chart..."
-        # Navigate to the chart directory and install
         helm install kin-infra ../charts/kin-infrastructure
-        # Navigate back to the original directory
-        cd -
+        cd - || exit 1;
         echo "StorageClass 'local-disk' installed."
     fi
 }
