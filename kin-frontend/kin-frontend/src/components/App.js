@@ -19,6 +19,7 @@ import ModelUpdateForm from "./body/Models/ModelForm/ModelUpdateForm/ModelUpdate
 import TemplatesList from "./body/VIsualizationTemplates/TemplatesList";
 import TemplateCreateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateCreateForm/TemplateCreateForm";
 import TemplateUpdateForm from "./body/VIsualizationTemplates/TemplateForm/TemplateUpdateForm/TemplateUpdateForm";
+import ResourceNotFound from "./body/NotFound/ResourceNotFound";
 
 
 export function Main() {
@@ -55,7 +56,7 @@ export function Main() {
                     )}
                 />
                 <Route path={"/templates"} render={() => <TemplatesList />} />
-                <Route path={"/"} render={() => <Statistics />} />
+                <Route path={"/"} render={() => <ResourceNotFound />} />
             </Switch>
         </>
     );
