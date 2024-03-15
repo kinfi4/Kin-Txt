@@ -14,6 +14,7 @@ import SelectFilteredWords from "../../helpers/SelectFilteredWords";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {WORD_CLOUD_REPORT} from "../../../../../../config";
 import BackLink from "../../../../../../common/backLink/BackLink";
+import ReportWarningsBlock from "../../helpers/ReportWarningsBlock";
 
 const WordCloudReport = ({
     showComparisonButton = true,
@@ -52,6 +53,13 @@ const WordCloudReport = ({
             <BackLink url={"/reports"} top={"120px"} left={"25px"} />
 
             <div className={visualizationCss.visualizationContainer}>
+                {
+                    report.reportWarnings ?
+                        <ReportWarningsBlock warningsList={report.reportWarnings} />
+                        :
+                        <></>
+                }
+
                 <div className={visualizationCss.header}>
                     <span>
                         {report.name}
@@ -84,105 +92,197 @@ const WordCloudReport = ({
                     )}
                 </div>
 
-                {
-                    reportIsEmpty ?
-                        <span className={visualizationCss.emptyReportMessage}>
-                            Sorry, but it seems like there's no data found :(( <br/>
-                            Verify the channels list, datasource and dates range.
-                        </span>
-                        :
-                        <>
-                            <div className={visualizationCss.wordCloudFilters}>
-                                <div style={{position: "relative"}}>
-                                    <FilteringBlock
-                                        currentOption={filters.categoryFilter}
-                                        options={[
-                                            {
-                                                label: "All",
-                                                onClick: () =>
-                                                    setFilters({
-                                                        ...filters,
-                                                        categoryFilter: "All",
-                                                    }),
-                                            },
-                                            ...report.postsCategories.map((el) => {
-                                                return {
-                                                    label: el,
-                                                    onClick: () =>
-                                                        setFilters({
-                                                            ...filters,
-                                                            categoryFilter: el,
-                                                        }),
-                                                };
+                <div style={{width: "100%"}}>
+                    <div className={visualizationCss.wordCloudFilters}>
+                        <div>
+                            <FilteringBlock
+                                currentOption={filters.categoryFilter}
+                                options={[
+                                    {
+                                        label: "All",
+                                        onClick: () =>
+                                            setFilters({
+                                                ...filters,
+                                                categoryFilter: "All",
                                             }),
-                                        ]}
-                                    />
-                                </div>
+                                    },
+                                    ...report.postsCategories.map((el) => {
+                                        return {
+                                            label: el,
+                                            onClick: () =>
+                                                setFilters({
+                                                    ...filters,
+                                                    categoryFilter: el,
+                                                }),
+                                        };
+                                    }),
+                                ]}
+                            />
+                        </div>
 
-                                <div style={{position: "relative"}}>
-                                    <FilteringBlock
-                                        currentOption={filters.channelFilter}
-                                        options={[
-                                            {
-                                                label: "All Channels",
+                        <div>
+                            <FilteringBlock
+                                currentOption={filters.channelFilter}
+                                options={[
+                                    {
+                                        label: "All Channels",
+                                        onClick: () =>
+                                            setFilters({
+                                                ...filters,
+                                                channelFilter: "All Channels",
+                                            }),
+                                    },
+                                    ...Object.keys(report.dataByChannel).map(
+                                        (el) => {
+                                            return {
+                                                label: el,
                                                 onClick: () =>
                                                     setFilters({
                                                         ...filters,
-                                                        channelFilter: "All Channels",
+                                                        channelFilter: el,
                                                     }),
-                                            },
-                                            ...Object.keys(report.dataByChannel).map(
-                                                (el) => {
-                                                    return {
-                                                        label: el,
-                                                        onClick: () =>
-                                                            setFilters({
-                                                                ...filters,
-                                                                channelFilter: el,
-                                                            }),
-                                                    };
-                                                }
-                                            ),
-                                        ]}
-                                    />
-                                </div>
+                                            };
+                                        },
+                                    ),
+                                ]}
+                            />
+                        </div>
 
-                                <div style={{position: "relative"}}>
-                                    <div
-                                        className={visualizationCss.filterOutWordsButton}
-                                        onClick={() =>
-                                            showModal(<SelectFilteredWords />, 500, 800)
-                                        }
-                                    >
-                                        <div>
-                                            <FiFilter style={{marginRight: "5px"}} /> Filter
-                                            out words
-                                        </div>
-                                    </div>
+                        <div>
+                            <div
+                                className={visualizationCss.filterOutWordsButton}
+                                onClick={() =>
+                                    showModal(<SelectFilteredWords />, 500, 800)
+                                }
+                            >
+                                <div>
+                                    <FiFilter style={{marginRight: "5px"}} /> Filter
+                                    out words
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div className={visualizationCss.wordCloudContainer}>
+                    <WordCloud
+                        data={words}
+                        width={1500}
+                        height={1500}
+                        random={() => 0.5}
+                        padding={calcPadding(words.length)}
+                        fontSize={(word) =>
+                            calcFontSize(
+                                word,
+                                words,
+                                theBiggestWordValue,
+                                theSmallestWordValue,
+                            )
+                        }
+                        fill={(w, i) => colors[i % colors.length]}
+                        rotate={() => 0}
+                    />
+                </div>
 
-                            <div className={visualizationCss.wordCloudContainer}>
-                                <WordCloud
-                                    data={words}
-                                    width={1500}
-                                    height={1500}
-                                    random={() => 0.5}
-                                    padding={calcPadding(words.length)}
-                                    fontSize={(word) =>
-                                        calcFontSize(
-                                            word,
-                                            words,
-                                            theBiggestWordValue,
-                                            theSmallestWordValue
-                                        )
-                                    }
-                                    fill={(w, i) => colors[i % colors.length]}
-                                    rotate={() => 0}
-                                />
-                            </div>
-                        </>
-                }
+
+                {/*{*/}
+                {/*    reportIsEmpty ?*/}
+                {/*        <span className={visualizationCss.emptyReportMessage}>*/}
+                {/*            Sorry, but it seems like there's no data found :(( <br />*/}
+                {/*            Verify the channels list, datasource and dates range.*/}
+                {/*        </span>*/}
+                {/*        :*/}
+                {/*        <>*/}
+                {/*            <div className={visualizationCss.wordCloudFilters}>*/}
+                {/*                <div>*/}
+                {/*                    <FilteringBlock*/}
+                {/*                        currentOption={filters.categoryFilter}*/}
+                {/*                        options={[*/}
+                {/*                            {*/}
+                {/*                                label: "All",*/}
+                {/*                                onClick: () =>*/}
+                {/*                                    setFilters({*/}
+                {/*                                        ...filters,*/}
+                {/*                                        categoryFilter: "All",*/}
+                {/*                                    }),*/}
+                {/*                            },*/}
+                {/*                            ...report.postsCategories.map((el) => {*/}
+                {/*                                return {*/}
+                {/*                                    label: el,*/}
+                {/*                                    onClick: () =>*/}
+                {/*                                        setFilters({*/}
+                {/*                                            ...filters,*/}
+                {/*                                            categoryFilter: el,*/}
+                {/*                                        }),*/}
+                {/*                                };*/}
+                {/*                            }),*/}
+                {/*                        ]}*/}
+                {/*                    />*/}
+                {/*                </div>*/}
+
+                {/*                <div>*/}
+                {/*                    <FilteringBlock*/}
+                {/*                        currentOption={filters.channelFilter}*/}
+                {/*                        options={[*/}
+                {/*                            {*/}
+                {/*                                label: "All Channels",*/}
+                {/*                                onClick: () =>*/}
+                {/*                                    setFilters({*/}
+                {/*                                        ...filters,*/}
+                {/*                                        channelFilter: "All Channels",*/}
+                {/*                                    }),*/}
+                {/*                            },*/}
+                {/*                            ...Object.keys(report.dataByChannel).map(*/}
+                {/*                                (el) => {*/}
+                {/*                                    return {*/}
+                {/*                                        label: el,*/}
+                {/*                                        onClick: () =>*/}
+                {/*                                            setFilters({*/}
+                {/*                                                ...filters,*/}
+                {/*                                                channelFilter: el,*/}
+                {/*                                            }),*/}
+                {/*                                    };*/}
+                {/*                                }*/}
+                {/*                            ),*/}
+                {/*                        ]}*/}
+                {/*                    />*/}
+                {/*                </div>*/}
+
+                {/*                <div>*/}
+                {/*                    <div*/}
+                {/*                        className={visualizationCss.filterOutWordsButton}*/}
+                {/*                        onClick={() =>*/}
+                {/*                            showModal(<SelectFilteredWords />, 500, 800)*/}
+                {/*                        }*/}
+                {/*                    >*/}
+                {/*                        <div>*/}
+                {/*                            <FiFilter style={{marginRight: "5px"}} /> Filter*/}
+                {/*                            out words*/}
+                {/*                        </div>*/}
+                {/*                    </div>*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+
+                {/*            <div className={visualizationCss.wordCloudContainer}>*/}
+                {/*                <WordCloud*/}
+                {/*                    data={words}*/}
+                {/*                    width={1500}*/}
+                {/*                    height={1500}*/}
+                {/*                    random={() => 0.5}*/}
+                {/*                    padding={calcPadding(words.length)}*/}
+                {/*                    fontSize={(word) =>*/}
+                {/*                        calcFontSize(*/}
+                {/*                            word,*/}
+                {/*                            words,*/}
+                {/*                            theBiggestWordValue,*/}
+                {/*                            theSmallestWordValue*/}
+                {/*                        )*/}
+                {/*                    }*/}
+                {/*                    fill={(w, i) => colors[i % colors.length]}*/}
+                {/*                    rotate={() => 0}*/}
+                {/*                />*/}
+                {/*            </div>*/}
+                {/*        </>*/}
+                {/*}*/}
 
             </div>
         </>

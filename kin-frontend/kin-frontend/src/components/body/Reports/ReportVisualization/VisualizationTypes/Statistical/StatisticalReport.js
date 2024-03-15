@@ -17,6 +17,7 @@ import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReducer";
 import BackLink from "../../../../../../common/backLink/BackLink";
 import {ReportBuilder} from "./Charts/ReportBuilder";
+import ReportWarningsBlock from "../../helpers/ReportWarningsBlock";
 
 const StatisticalReport = ({showComparisonButton = true, report, ...props}) => {
     const [exportOptions, setExportOptions] = useState({
@@ -64,6 +65,13 @@ const StatisticalReport = ({showComparisonButton = true, report, ...props}) => {
             <BackLink url={"/reports"} top={"120px"} left={"25px"} />
 
             <div className={visualizationCss.visualizationContainer}>
+                {
+                    report.reportWarnings ?
+                        <ReportWarningsBlock warningsList={report.reportWarnings} />
+                        :
+                        <></>
+                }
+
                 <div className={visualizationCss.header}>
                     <span>
                         {report.name}
