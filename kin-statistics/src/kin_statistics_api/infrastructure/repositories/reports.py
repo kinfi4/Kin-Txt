@@ -118,9 +118,9 @@ class ReportsMongoRepository(IReportRepository):
 
     def _map_dict_to_entity(self, dict_report: Mapping[str, Any]) -> StatisticalReport | WordCloudReport:
         if dict_report.get("report_type") == ReportTypes.WORD_CLOUD:
-            return WordCloudReport.from_dict(dict(dict_report))
+            return WordCloudReport(**dict(dict_report))
 
-        return StatisticalReport.from_dict(dict(dict_report))
+        return StatisticalReport(**dict(dict_report))
 
     def _build_mongo_filters(self, apply_filters: ReportsFetchSettings | None) -> dict[str, Any]:
         if apply_filters is None:
