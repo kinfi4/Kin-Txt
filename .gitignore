@@ -150,3 +150,8 @@ yarn-error.log*
 .npm/
 yarn.lock
 
+
+
+
+kin-statistics/src/kin_statistics_api/data/reports/*.json
+kin-statistics/src/kin_statistics_api/data/reports/*.csv
