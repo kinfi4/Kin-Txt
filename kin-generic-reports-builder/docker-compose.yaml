@@ -17,7 +17,7 @@ services:
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
       - ./submodules:/submodules
-      - /home/kinfi4/compiled-models-builders/kin-news/:/models
+      - kin-reports-generic-models:/models
 
   generic-builder-api:
     build:
@@ -35,10 +35,13 @@ services:
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
       - ./submodules:/submodules
-      - /home/kinfi4/compiled-models-builders/kin-news/:/models
+      - kin-reports-generic-models:/models
 
 
 networks:
   kin-network:
     name: kin-network
     external: true
+
+volumes:
+    kin-reports-generic-models:
