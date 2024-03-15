@@ -78,10 +78,6 @@ function Register(props) {
     );
 }
 
-let mapStateToProps = (state) => {
-    return {};
-};
-
 let mapDispatchToProps = (dispatch) => {
     return {
         register: (username, password1, password2) =>
@@ -89,4 +85,4 @@ let mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(() => null, mapDispatchToProps)(Register);

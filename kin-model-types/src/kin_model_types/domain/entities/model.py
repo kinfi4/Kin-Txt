@@ -5,7 +5,7 @@ from pydantic import field_validator, ConfigDict, BaseModel, Field
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.types import CategoryMapping
 from kin_txt_core.reports_building.constants import ModelTypes
-from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
+from kin_txt_core.reports_building.domain.entities.preprocessing import PreprocessingConfig
 
 
 class ModelFilters(BaseModel):

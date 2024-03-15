@@ -19,25 +19,6 @@ services:
       - ./submodules:/submodules
       - kin-reports-builder-models:/models
 
-  builtin-reports-builder-celery-worker:
-    build:
-      context: .
-      dockerfile: etc/service/Dockerfile
-    image: 'kin-builtin-models-reports-builder'
-    container_name: 'builtin-reports-builder-celery-worker'
-    command: bash -c "python -m kin_builtin_models run-tasks"
-    env_file:
-      - etc/service/env/.dev.env
-    networks:
-      - kin-network
-    volumes:
-      - ./src/kin_builtin_models:/app/kin_builtin_models
-      - ./src/poetry.lock:/app/poetry.lock
-      - ./src/pyproject.toml:/app/pyproject.toml
-      - ./submodules:/submodules
-      - kin-reports-builder-models:/models
-    depends_on:
-      - builtin-reports-builder-consumer
 
 networks:
   kin-network:

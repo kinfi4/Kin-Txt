@@ -5,7 +5,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 
 from kin_model_types.constants import ModelStatuses
-from kin_model_types.domain.entities import ModelEntity, CreateModelEntity, ModelFilters
+from kin_model_types.domain.entities.model import ModelEntity, CreateModelEntity, ModelFilters
 from kin_model_types.exceptions.base import UserModelNotFoundException
 from kin_model_types.types import CategoryMapping
 from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
