@@ -37,25 +37,6 @@ services:
       - ./submodules:/submodules
       - /home/kinfi4/compiled-models-builders/kin-news/:/models
 
-  generic-builder-celery-worker:
-    build:
-      context: .
-      dockerfile: etc/service/Dockerfile
-    image: 'kin-generic-reports-builder'
-    container_name: 'kin-generic-builder-celery-worker'
-    command: bash -c "python -m kin_generic_builder run-tasks"
-    env_file:
-      - etc/service/env/.dev.env
-    networks:
-      - kin-network
-    volumes:
-      - ./src/kin_generic_builder:/app/kin_generic_builder
-      - ./src/poetry.lock:/app/poetry.lock
-      - ./src/pyproject.toml:/app/pyproject.toml
-      - ./submodules:/submodules
-      - /home/kinfi4/compiled-models-builders/kin-news/:/models
-    depends_on:
-      - generic-builder-consumer
 
 networks:
   kin-network:

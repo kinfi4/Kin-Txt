@@ -1,7 +1,7 @@
 import click
 
 from kin_txt_core.messaging.rabbit.dtos import Subscription
-from kin_txt_core.reports_building.app import run_celery, run_consumer
+from kin_txt_core.reports_building.app import run_consumer
 
 from kin_generic_builder.constants import GENERALE_EXCHANGE
 from kin_generic_builder.events.handlers import handle_delete_event
@@ -14,14 +14,6 @@ from kin_generic_builder.api.server import run_app
 @click.group()
 def cli():
     pass
-
-
-@cli.command()
-def run_tasks() -> None:
-    run_celery(
-        predictor_factory=KinTxtGenericPredictorFactory(),
-        validator_factory=get_validator_factory()
-    )
 
 
 @cli.command()

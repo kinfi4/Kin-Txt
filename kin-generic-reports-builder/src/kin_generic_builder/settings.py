@@ -8,4 +8,4 @@ class Settings(BaseSettings):
     model_storage_path: str = Field(..., validation_alias="MODEL_STORAGE_PATH")
     allowed_hosts: str = Field(..., validation_alias="ALLOWED_HOSTS")
 
-    model_config = ConfigDict(protected_namespaces=("settings_",))
+    model_config = ConfigDict(protected_namespaces=())
