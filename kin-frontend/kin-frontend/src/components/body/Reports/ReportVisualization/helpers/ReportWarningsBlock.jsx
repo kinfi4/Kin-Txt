@@ -11,19 +11,15 @@ const ReportWarningsBlock = ({warningsList}) => {
                 width: "100%",
                 marginTop: "40px",
                 borderRadius: "5px",
-                border: "1px solid #dcc1a6",
+                border: "1px solid #d77916",
                 padding: "10px 20px",
-                color: "#dcc1a6",
+                color: "#e09636",
                 fontSize: "18px",
             }}
         >
-            <p
-                style={{
-                    fontWeight: "bold",
-                }}
-            >
-                Pay attention! <br/>
-                The report was generated with warnings :
+            <p>
+                <b>Pay attention!</b> <br/>
+                The report was generated with warnings:
                 <ul>
                     {
                         warningsList.map((warning, index) => (

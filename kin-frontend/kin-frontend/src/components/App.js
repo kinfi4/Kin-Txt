@@ -7,8 +7,9 @@ import {ReactNotifications} from "react-notifications-component";
 import store from "../redux/store";
 import {loadUser} from "../redux/reducers/authReducer";
 
-import Header from "./header/Header";
 import ModalWindow from "../common/modal/ModalWindow";
+
+import Header from "./header/Header";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import Statistics from "./body/Reports/Reports";
@@ -56,6 +57,7 @@ export function Main() {
                     )}
                 />
                 <Route path={"/templates"} render={() => <TemplatesList />} />
+                <Route path={"/"} exact render={() => <Statistics />} />
                 <Route path={"/"} render={() => <ResourceNotFound />} />
             </Switch>
         </>

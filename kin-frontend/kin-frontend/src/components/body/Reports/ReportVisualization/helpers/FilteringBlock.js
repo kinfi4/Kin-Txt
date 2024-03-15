@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import filteringCss from "./Filtering.module.css";
+import filteringCss from "./styles/Filtering.module.css";
 import {HiOutlineBarsArrowDown} from "react-icons/hi2";
 import {capitalizeFirstLetter} from "../../../../../utils/utils";
 

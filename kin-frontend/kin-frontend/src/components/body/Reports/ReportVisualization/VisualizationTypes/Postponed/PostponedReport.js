@@ -34,6 +34,7 @@ const PostponedReport = ({report, deleteReport}) => {
                 </div>
                 <div>
                     <img
+                        width="250px"
                         src={processingImageFailedIcon}
                         alt="Processing Failed"
                     />
