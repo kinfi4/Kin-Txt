@@ -78,3 +78,21 @@ export const PossibleTruncatePaddingTypes = {
         }
     },
 };
+
+export const ClassificationScopes = {
+    ENTIRE_POST: "entire_post",
+    TOKENS: "tokens",
+
+    getOptionsForSelect: () => {
+        return [{value: "entire_post", label: "Entire post"}, {value: "tokens", label: "Tokens"}];
+    },
+    getLabelFromValue: (value) => {
+        if(value === ClassificationScopes.ENTIRE_POST) {
+            return "Entire post";
+        } else if(value === ClassificationScopes.TOKENS) {
+            return "Tokens";
+        } else {
+            return null;
+        }
+    },
+}

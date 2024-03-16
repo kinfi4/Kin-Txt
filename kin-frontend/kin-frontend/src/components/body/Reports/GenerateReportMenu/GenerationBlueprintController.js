@@ -37,6 +37,7 @@ export class GenerationBlueprintController {
             name: response.data.reportName,
             modelType: response.data.modelType,
             datasourceType: response.data.datasourceType,
+            classificationScope: response.data.classificationScope,
         });
 
         this.hideModalWindow();
@@ -121,6 +122,7 @@ export class GenerationBlueprintController {
             reportName: data.name,
             modelType: data.modelType,
             datasourceType: data.datasourceType,
+            classificationScope: data.classificationScope,
         };
 
         const apiRequester = new APIRequester(

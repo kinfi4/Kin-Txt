@@ -1,4 +1,4 @@
-import {STATISTICAL_REPORT} from "../config";
+import {ClassificationScopes, STATISTICAL_REPORT} from "../config";
 
 export class GenerateReportRequestValidator {
     constructor(data) {
@@ -24,6 +24,14 @@ export class GenerateReportRequestValidator {
         if (!this.data.templateId && this.data.reportType === STATISTICAL_REPORT) {
             isValid = false;
             errorMessages.push("You have to specify template");
+        }
+
+        if(
+            this.data.reportType === STATISTICAL_REPORT &&
+            this.data.classificationScope === ClassificationScopes.TOKENS
+        ) {
+            isValid = false;
+            errorMessages.push("Statistical report currently does not support token classification scope");
         }
 
         return [isValid, errorMessages]

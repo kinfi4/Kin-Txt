@@ -116,7 +116,16 @@ class ReportsMongoRepository(IReportRepository):
             generation_date=dict_report["generation_date"],
         )
 
-    def _map_dict_to_entity(self, dict_report: Mapping[str, Any]) -> StatisticalReport | WordCloudReport:
+    def _map_dict_to_entity(self, dict_report: Mapping[str, Any]) -> BaseReport | StatisticalReport | WordCloudReport:
+        """
+            Returns BaseReport if report is still processing
+            Returns WordCloudReport if report is of type WordCloud
+            Returns StatisticalReport if report is of type Statistical
+        """
+
+        if dict_report.get("processing_status") in (ReportProcessingResult.NEW, ReportProcessingResult.PROCESSING):
+            return BaseReport(**dict(dict_report))
+
         if dict_report.get("report_type") == ReportTypes.WORD_CLOUD:
             return WordCloudReport(**dict(dict_report))
 

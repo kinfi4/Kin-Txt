@@ -105,7 +105,7 @@ class ManagingReportsService:
             processing_status=new_report.processing_status,
         )
 
-    def get_user_detailed_report(self, username: str, report_id: int) -> StatisticalReport | WordCloudReport:
+    def get_user_detailed_report(self, username: str, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
         self._check_user_access(username, report_ids=[report_id])
 
         return self._reports_repository.get_report(report_id)

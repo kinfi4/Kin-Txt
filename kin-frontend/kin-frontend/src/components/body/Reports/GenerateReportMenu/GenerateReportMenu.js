@@ -12,6 +12,7 @@ import {
 } from "../../../../redux/reducers/modalWindowReducer";
 import {generateReport} from "../../../../redux/reducers/reportsReducer";
 import {
+    ClassificationScopes,
     DatasourceTypes,
     STATISTICAL_REPORT,
     STATISTICS_SERVICE_URL,
@@ -43,6 +44,7 @@ const initialGenerateReportState = {
     name: "",
     datasourceType: DatasourceTypes.TELEGRAM,
     modelType: VisualizationPossibleModelTypes.SKLEARN_MODEL,
+    classificationScope: ClassificationScopes.ENTIRE_POST,
 };
 
 const GenerateReportMenu = ({
@@ -204,17 +206,17 @@ const GenerateReportMenu = ({
                         </label>
 
                         <SelectItem
-                            defaultValue={{
-                                value: STATISTICAL_REPORT,
-                                label: "Statistical report",
-                            }}
                             name="reportType"
                             value={{
                                 value: data.reportType,
                                 label: data.reportType,
                             }}
                             onChange={(newValue) =>
-                                setData({...data, reportType: newValue.value})
+                                setData({
+                                    ...data,
+                                    reportType: newValue.value,
+                                    classificationScope: ClassificationScopes.ENTIRE_POST,
+                                })
                             }
                             options={[
                                 {
@@ -261,42 +263,71 @@ const GenerateReportMenu = ({
                         />
                     </div>
 
-                    {data.reportType === STATISTICAL_REPORT && (
-                        <div
-                            className={
-                                statsCss.generateReportFormFieldContainer
-                            }
-                        >
-                            <label
-                                id="templateId"
-                                className={statsCss.generateReportFormLabel}
+                    {
+                        data.reportType === STATISTICAL_REPORT && (
+                            <div className={statsCss.generateReportFormFieldContainer}
                             >
-                                Visualization template:
-                            </label>
+                                <label
+                                    id="templateId"
+                                    className={statsCss.generateReportFormLabel}
+                                >
+                                    Visualization template:
+                                </label>
 
-                            <SelectItem
-                                name="templateId"
-                                value={{
-                                    value: data.templateId,
-                                    label: userTemplates.find(
-                                        (t) => t.id === data.templateId
-                                    )?.name,
-                                }}
-                                onChange={(newValue) =>
-                                    setData({
-                                        ...data,
-                                        templateId: newValue.value,
-                                    })
-                                }
-                                options={[
-                                    ...userTemplates.map((template) => ({
-                                        value: template.id,
-                                        label: template.name,
-                                    })),
-                                ]}
-                            />
-                        </div>
-                    )}
+                                <SelectItem
+                                    name="templateId"
+                                    value={{
+                                        value: data.templateId,
+                                        label: userTemplates.find(
+                                            (t) => t.id === data.templateId
+                                        )?.name,
+                                    }}
+                                    onChange={(newValue) =>
+                                        setData({
+                                            ...data,
+                                            templateId: newValue.value,
+                                        })
+                                    }
+                                    options={[
+                                        ...userTemplates.map((template) => ({
+                                            value: template.id,
+                                            label: template.name,
+                                        })),
+                                    ]}
+                                />
+                            </div>
+                        )
+                    }
+
+                    {
+                        data.reportType === WORD_CLOUD_REPORT && (
+                            <div className={statsCss.generateReportFormFieldContainer}
+                            >
+                                <label
+                                    id="classificationScope"
+                                    className={statsCss.generateReportFormLabel}
+                                >
+                                    Classification scope:
+                                </label>
+
+                                <SelectItem
+                                    name="classificationScope"
+                                    value={{
+                                        value: data.classificationScope,
+                                        label: ClassificationScopes.getLabelFromValue(data.classificationScope),
+                                    }}
+                                    onChange={(selectedItem) =>
+                                        setData({
+                                            ...data,
+                                            classificationScope: selectedItem.value,
+                                        })
+                                    }
+                                    options={ClassificationScopes.getOptionsForSelect()}
+                                />
+                            </div>
+
+                        )
+                    }
 
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label
@@ -316,7 +347,7 @@ const GenerateReportMenu = ({
                                 setData({...data, datasourceType: newValue.value})
                             }
                             options={Object.entries(DatasourceTypes).map(
-                                (item) => ({value: item[1], label: item[1]})
+                                (item) => ({value: item[1], label: item[1]}),
                             )}
                         />
                     </div>

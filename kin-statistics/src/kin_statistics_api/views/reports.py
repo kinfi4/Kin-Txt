@@ -15,7 +15,7 @@ from kin_statistics_api.domain.entities import (
     ReportsFetchSettings,
     ReportIdentificationEntity,
     StatisticalReport,
-    WordCloudReport,
+    WordCloudReport, BaseReport,
 )
 from kin_statistics_api.domain.services import ManagingReportsService, UserService
 from kin_statistics_api.exceptions import ReportAccessForbidden
@@ -62,7 +62,7 @@ def generate_report_request(
     return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content={"message": "Generating report process started successfully!"})
 
 
-@router.get("/{report_id}", response_model=StatisticalReport | WordCloudReport)
+@router.get("/{report_id}", response_model=BaseReport | StatisticalReport | WordCloudReport)
 @inject
 def get_report_details(
     report_id: int,

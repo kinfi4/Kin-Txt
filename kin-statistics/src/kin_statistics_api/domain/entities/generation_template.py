@@ -4,7 +4,7 @@ from pydantic import field_validator, field_serializer, ConfigDict, BaseModel, F
 
 from kin_txt_core.datasources.constants import DataSourceTypes
 from kin_statistics_api.constants import ReportTypes
-from kin_txt_core.reports_building.constants import ModelTypes
+from kin_txt_core.reports_building.constants import ModelTypes, ClassificationScopes
 
 
 class GenerationTemplate(BaseModel):
@@ -20,6 +20,7 @@ class GenerationTemplate(BaseModel):
     report_name: str = Field(..., alias="reportName")
     datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
     model_type: ModelTypes = Field(..., alias="modelType")
+    classification_scope: ClassificationScopes = Field(ClassificationScopes.ENTIRE_POST, alias="classificationScope")
 
     model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
 
