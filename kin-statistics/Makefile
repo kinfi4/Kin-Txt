@@ -20,7 +20,7 @@ mypy:
 	docker compose run -u $(UUID) --rm --no-deps statistics-api mypy kin_statistics_api/
 
 tests:
-	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage run -m pytest -s
+	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage run -m pytest -vv -s
 
 coverage:
 	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage report

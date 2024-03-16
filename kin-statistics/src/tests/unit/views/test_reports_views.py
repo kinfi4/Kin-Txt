@@ -44,6 +44,7 @@ class TestReportsViews:
                     "generationDate": "01/01/2022 00:00",
                     "processingStatus": "Ready",
                     "reportFailedReason": None,
+                    "reportWarnings": None,
                 }
             ],
             "totalPages": 1,

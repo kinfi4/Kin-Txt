@@ -20,7 +20,7 @@ class IReportRepository(ABC):
         pass
 
     @abstractmethod
-    def get_report(self, report_id: int) -> StatisticalReport | WordCloudReport:
+    def get_report(self, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
         pass
 
     @abstractmethod

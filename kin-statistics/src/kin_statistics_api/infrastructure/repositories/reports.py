@@ -77,7 +77,7 @@ class ReportsMongoRepository(IReportRepository):
 
         return self._map_dict_to_identification_entity(updated_report)
 
-    def get_report(self, report_id: int) -> StatisticalReport | WordCloudReport:
+    def get_report(self, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
         dict_report = self._reports_collection.find_one({
             "report_id": report_id
         })
