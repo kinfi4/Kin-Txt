@@ -24,7 +24,7 @@ class EnglishSentimentPredictor(IPredictor):
 
         self.en_nlp = spacy.load("en_core_web_lg")
 
-    def predict(self, entity: ClassificationEntity) -> str:
+    def predict_post(self, entity: ClassificationEntity) -> str:
         inputs = self.tokenizer(entity.text, return_tensors="pt", padding=True, truncation=True, max_length=512)
         outputs = self.model(**inputs)
         prediction = torch.nn.functional.softmax(outputs.logits, dim=-1)
@@ -38,7 +38,21 @@ class EnglishSentimentPredictor(IPredictor):
 
         return text
 
+    def predict_post_tokens(self, entity: ClassificationEntity) -> dict[str, list[str]]:
+        preprocessed_text = self._make_wc_preprocessing(entity.text)
+
+        words_to_category_mapping = {
+            "Negative": [],
+            "Positive": [],
+        }
+
+        for word in preprocessed_text.split():
+            prediction = self.predict_post(ClassificationEntity(text=word))
+            words_to_category_mapping[prediction].append(word)
+
+        return words_to_category_mapping
+
     def _make_wc_preprocessing(self, text: str) -> str:
         doc = self.en_nlp(text)
-        filtered_tokens = [token for token in doc if not token.is_stop and not token.is_punct and not token.is_space]
+        filtered_tokens = [token for token in doc if not token.is_stop and token.is_alpha]
         return " ".join([token.lemma_ for token in filtered_tokens])
