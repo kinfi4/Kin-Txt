@@ -1,11 +1,7 @@
 import React from "react";
 import {
-    Legend,
-    LineChart,
-    Line,
     YAxis,
     XAxis,
-    CartesianGrid,
     Area,
     AreaChart,
 } from "recharts";

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import WordCloud from "react-d3-cloud";
 import {connect} from "react-redux";
 import {FiFilter} from "react-icons/fi";
 
@@ -8,13 +7,13 @@ import visualizationCss from "../../ReportsVisualization.module.css";
 import {transformLargeNumberToReadable} from "../../../../../../utils/utils";
 import {transformReportToWordsList} from "../../helpers/DataTransformers";
 import FilteringBlock from "../../helpers/FilteringBlock";
-import {calcFontSize, calcPadding} from "../../helpers/WordCloudHelpers";
 import {showModalWindow} from "../../../../../../redux/reducers/modalWindowReducer";
 import SelectFilteredWords from "../../helpers/SelectFilteredWords";
 import ChoseReportToCompare from "../../Comparison/ChoseReportToCompare";
 import {WORD_CLOUD_REPORT} from "../../../../../../config";
 import BackLink from "../../../../../../common/backLink/BackLink";
 import ReportWarningsBlock from "../../helpers/ReportWarningsBlock";
+import {WordCloudBuilder} from "../../../../../../domain/reports/WordCloudBuilder";
 
 const WordCloudReport = ({
     showComparisonButton = true,
@@ -22,16 +21,6 @@ const WordCloudReport = ({
     wordsList,
     showModal,
 }) => {
-    const colors = [
-        "#408f5e",
-        "#2F6B9A",
-        "#82a6c2",
-        "#BA97B4",
-        "#2CA884",
-        "#E39E21",
-        "#00C6B5",
-        "#BF8520",
-    ];
     const [filters, setFilters] = useState({
         channelFilter: "All Channels",
         categoryFilter: "All",
@@ -43,10 +32,9 @@ const WordCloudReport = ({
         filters.categoryFilter,
         wordsList
     );
-    let theBiggestWordValue = Math.max(...words.map((el) => el.value));
-    let theSmallestWordValue = Math.min(...words.map((el) => el.value));
 
     const reportIsEmpty = report.totalWords === 0;
+    const wcBuilder = WordCloudBuilder.fromWordsList(words);
 
     return (
         <>
@@ -71,25 +59,25 @@ const WordCloudReport = ({
                         </div>
                     </span>
 
-                    {showComparisonButton && !reportIsEmpty ? (
-                        <div
-                            className={visualizationCss.exportButton}
-                            onClick={() => {
-                                showModal(
-                                    <ChoseReportToCompare
-                                        reportType={WORD_CLOUD_REPORT}
-                                        currentReportId={report.reportId}
-                                    />,
-                                    500,
-                                    800
-                                );
-                            }}
-                        >
-                            COMPARE
-                        </div>
-                    ) : (
-                        <></>
-                    )}
+                    {
+                        showComparisonButton && !reportIsEmpty ? (
+                            <div
+                                className={visualizationCss.exportButton}
+                                onClick={() => {
+                                    showModal(
+                                        <ChoseReportToCompare
+                                            reportType={WORD_CLOUD_REPORT}
+                                            currentReportId={report.reportId}
+                                        />,
+                                        500,
+                                        800
+                                    );
+                                }}
+                            >
+                                COMPARE
+                            </div>
+                        ) : <></>
+                    }
                 </div>
 
                 {
@@ -166,23 +154,9 @@ const WordCloudReport = ({
                             </div>
 
                             <div className={visualizationCss.wordCloudContainer}>
-                                <WordCloud
-                                    data={words}
-                                    width={1500}
-                                    height={1500}
-                                    random={() => 0.5}
-                                    padding={calcPadding(words.length)}
-                                    fontSize={(word) =>
-                                        calcFontSize(
-                                            word,
-                                            words,
-                                            theBiggestWordValue,
-                                            theSmallestWordValue
-                                        )
-                                    }
-                                    fill={(w, i) => colors[i % colors.length]}
-                                    rotate={() => 0}
-                                />
+                                {
+                                    wcBuilder.build()
+                                }
                             </div>
                         </>
                 }
@@ -193,16 +167,11 @@ const WordCloudReport = ({
 };
 
 let mapStateToProps = (state) => {
-    return {
-        wordsList: state.wordsCloudReducer.wordsList,
-    };
+    return { wordsList: state.wordsCloudReducer.wordsList };
 };
 
 let mapDispatchToProps = (dispatch) => {
-    return {
-        showModal: (content, width, height) =>
-            dispatch(showModalWindow(content, width, height)),
-    };
+    return { showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)) };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WordCloudReport);
