@@ -12,13 +12,15 @@ const FilteringBlock = ({currentOption, options, style}) => {
         if (filteringOptions.optionsActive) {
             return (
                 <div className={filteringCss.filterOptions}>
-                    {options.map((el, idx) => {
-                        return (
-                            <div key={idx} onClick={el.onClick}>
-                                {el.label}
-                            </div>
-                        );
-                    })}
+                    {
+                        options.map((el, idx) => {
+                            return (
+                                <div key={idx} onClick={el.onClick}>
+                                    {el.label}
+                                </div>
+                            );
+                        })
+                    }
                 </div>
             );
         }

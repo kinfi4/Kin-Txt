@@ -152,6 +152,7 @@
     height: 100%;
 }
 .wordCloudFilters {
+    width: 100%;
     display: flex;
     align-items: start;
     justify-content: start;
