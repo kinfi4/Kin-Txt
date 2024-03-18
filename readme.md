@@ -29,7 +29,7 @@ Kin-TXT is structured around six key components, each designed to offer a stream
 
 * **kin-statistics**: Responsible for storing the generated reports. This component not only archives the outcomes of data analysis but also serves as a resource for reviewing and accessing past insights.
 
-<img src="https://github.com/kinfi4/Kin-Txt/blob/master/docs/pictures/Kin-TXT-architecture.jpg?raw=true" width="1000" alt="Architecture Diagram"> 
+<img src="https://github.com/kinfi4/Kin-Txt/blob/master/docs/pictures/Kin-TXT-Architecture.png?raw=true" width="1000" alt="Architecture Diagram"> 
 
 ## Custom Reports-Builder for Advanced Text Classification
 Kin-TXT allows users to easily adapt the platform for their own needs. You can fork Kin-TXT and create a new "reports-builder" to handle specific text classification tasks. This is ideal for projects that need unique logic for analyzing and classifying text data. Whether it's for a specialized project or advanced research, Kin-TXT makes it simple to incorporate your own classification rules and logic.  
