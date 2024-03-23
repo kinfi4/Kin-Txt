@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional, Any
 from datetime import datetime
 
 from pydantic import field_validator, field_serializer, ConfigDict, BaseModel, Field
@@ -51,6 +51,14 @@ class StatisticalReport(BaseReport):
 
     model_config = ConfigDict(populate_by_name=True)
 
+    def get_report_data_dict(self) -> dict[str, Any]:
+        return {
+            "total_messages_count": self.total_messages_count,
+            "posts_categories": self.posts_categories,
+            "visualization_diagrams_list": self.visualization_diagrams_list,
+            "data": self.data,
+        }
+
 
 class WordCloudReport(BaseReport):
     posts_categories: list[str] | None = Field(..., alias="postsCategories")
@@ -68,6 +76,16 @@ class WordCloudReport(BaseReport):
     ] = Field(None, alias="dataByChannelByCategory")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    def get_report_data_dict(self) -> dict[str, Any]:
+        return {
+            "posts_categories": self.posts_categories,
+            "total_words": self.total_words,
+            "total_words_frequency": self.total_words_frequency,
+            "data_by_channel": self.data_by_channel,
+            "data_by_category": self.data_by_category,
+            "data_by_channel_by_category": self.data_by_channel_by_category,
+        }
 
 
 class ReportPutEntity(BaseModel):

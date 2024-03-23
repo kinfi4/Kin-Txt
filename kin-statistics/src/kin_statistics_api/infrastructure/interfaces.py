@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from kin_txt_core.reports_building.constants import ReportTypes
+
 from kin_statistics_api.domain.entities import ReportsFetchSettings
 from kin_statistics_api.domain.entities.report import (
     BaseReport,
@@ -11,8 +13,22 @@ from kin_statistics_api.constants import ReportProcessingResult
 
 
 class IReportRepository(ABC):
+
     @abstractmethod
-    def save_user_report(self, report: BaseReport) -> None:
+    def save_finished_report(self, finished_report: WordCloudReport | StatisticalReport) -> None:
+        pass
+
+    @abstractmethod
+    def create_user_report(
+        self,
+        username: str,
+        report_name: str,
+        report_type: ReportTypes,
+        processing_status: ReportProcessingResult,
+    ) -> int:
+        """
+        Must return report id
+        """
         pass
 
     @abstractmethod

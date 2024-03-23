@@ -1,13 +1,10 @@
-from typing import Type, TypeVar
-
 from dependency_injector import containers, providers, resources
-from pymongo import MongoClient
 
 from kin_statistics_api.domain.services.report_data import ReportDataSaver
 from kin_statistics_api.infrastructure.repositories import (
-    ReportsMongoRepository,
+    ReportsRepository,
     IReportRepository,
-    ReportsAccessManagementRepository,
+    IAMRepository,
     TemplatesRepository,
 )
 from kin_statistics_api.domain.services import (
@@ -21,8 +18,6 @@ from kin_statistics_api.constants import REPORTS_STORING_EXCHANGE
 from kin_txt_core.database import Database
 from kin_txt_core.messaging import AbstractEventSubscriber, AbstractEventProducer
 from kin_txt_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
-
-TMongoRepository = TypeVar("TMongoRepository", TemplatesRepository, ReportsMongoRepository)
 
 
 class SubscriberResource(resources.Resource):
@@ -48,17 +43,6 @@ class SubscriberResource(resources.Resource):
         subscriber.subscribe(REPORTS_STORING_EXCHANGE, StatisticalReportProcessingFinished, on_processing_finished)
 
         return subscriber
-
-
-class MongodbRepositoryResource(resources.Resource):
-    def init(
-        self,
-        repository_class: Type[TMongoRepository],
-        connection_string: str,
-    ) -> TMongoRepository:
-        client: MongoClient = MongoClient(connection_string)
-
-        return repository_class(mongo_client=client)
 
 
 class DatabaseResource(resources.Resource):
@@ -105,21 +89,19 @@ class Repositories(containers.DeclarativeContainer):
     config = providers.Configuration()
     database = providers.DependenciesContainer()
 
-    reports_repository: providers.Resource[IReportRepository] = providers.Resource(
-        MongodbRepositoryResource,
-        repository_class=ReportsMongoRepository,
-        connection_string=config.mongodb_connection_string,
-    )
-
-    reports_access_management_repository: providers.Singleton[ReportsAccessManagementRepository] = providers.Singleton(
-        ReportsAccessManagementRepository,
+    reports_repository: providers.Singleton[IReportRepository] = providers.Singleton(
+        ReportsRepository,
         db=database.database_driver,
     )
 
-    templates_repository: providers.Resource[TemplatesRepository] = providers.Resource(
-        MongodbRepositoryResource,
-        repository_class=TemplatesRepository,
-        connection_string=config.mongodb_connection_string,
+    iam_repository: providers.Singleton[IAMRepository] = providers.Singleton(
+        IAMRepository,
+        db=database.database_driver,
+    )
+
+    templates_repository: providers.Singleton[TemplatesRepository] = providers.Singleton(
+        TemplatesRepository,
+        db=database.database_driver,
     )
 
 
@@ -132,22 +114,22 @@ class Services(containers.DeclarativeContainer):
         ManagingReportsService,
         events_producer=messaging.producer,
         reports_repository=repositories.reports_repository,
-        reports_access_management_repository=repositories.reports_access_management_repository,
+        iam_repository=repositories.iam_repository,
     )
 
     user_service: providers.Singleton[UserService] = providers.Singleton(
         UserService,
-        access_repository=repositories.reports_access_management_repository,
+        iam_repository=repositories.iam_repository,
     )
 
     csv_data_generator: providers.Singleton[CsvFileGenerator] = providers.Singleton(
         CsvFileGenerator,
-        access_repository=repositories.reports_access_management_repository,
+        iam_repository=repositories.iam_repository,
     )
 
     json_data_generator: providers.Singleton[JsonFileGenerator] = providers.Singleton(
         JsonFileGenerator,
-        access_repository=repositories.reports_access_management_repository,
+        iam_repository=repositories.iam_repository,
     )
 
     reports_data_saver: providers.Singleton[ReportDataSaver] = providers.Singleton(

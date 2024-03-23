@@ -9,7 +9,7 @@ class GenerationTemplateService:
     def get_user_template_names(self, username: str) -> list[dict[str, str]]:
         return self._templates_repository.get_user_template_names(username)
 
-    def load_user_template(self, username: str, template_id: str) -> GenerationTemplate:
+    def load_user_template(self, username: str, template_id: int) -> GenerationTemplate:
         return self._templates_repository.load_user_template(username, template_id)
 
     def save_user_template(self, username: str, template: GenerationTemplate) -> None:

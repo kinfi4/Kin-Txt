@@ -1,6 +1,6 @@
 from .reports import (
     IReportRepository,
-    ReportsMongoRepository,
+    ReportsRepository,
 )
-from .access_management import ReportsAccessManagementRepository
+from .iam import IAMRepository
 from .templates import TemplatesRepository

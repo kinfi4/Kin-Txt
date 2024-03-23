@@ -41,7 +41,7 @@ def mock__templates_repository(container: Container) -> mock.MagicMock:
 
 @pytest.fixture(scope="function", autouse=True)
 def mock__access_management_repository(container: Container) -> mock.MagicMock:
-    repository = container.repositories.reports_access_management_repository
+    repository = container.repositories.iam_repository
     with repository.override(mock.MagicMock()):
         yield repository()
 
