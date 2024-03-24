@@ -20,7 +20,7 @@ from kin_statistics_api.constants import ReportProcessingResult, ReportTypes, IT
 
 
 class ReportsRepository(IReportRepository):
-    def __init__(self, db: Database):
+    def __init__(self, db: Database) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._db = db
 
@@ -44,8 +44,26 @@ class ReportsRepository(IReportRepository):
         with self._db.session() as session:
             session: Session
 
-            report = session.query(BaseReport).get(report_id)
+            report = session.query(Report).get(report_id)
             report.processing_status = status
+
+    def get_user_reports(
+        self,
+        username: str,
+        fetch_settings: ReportsFetchSettings | None,
+    ) -> tuple[list[ReportIdentificationEntity], int]:
+        with self._db.session() as session:
+            session: Session
+
+            reports_query = session.query(Report).filter(Report.owner_username == username)
+
+            if fetch_settings is not None:
+                reports_query = self._apply_filters(reports_query, fetch_settings)
+
+        return [
+            self._map_dict_to_identification_entity(cast(Report, report))
+            for report in reports_query.all()
+        ], reports_query.count()
 
     def get_report_names(
         self,
@@ -60,10 +78,10 @@ class ReportsRepository(IReportRepository):
             if apply_settings is not None:
                 reports_query = self._apply_filters(reports_query, apply_settings)
 
-            return [
-                self._map_dict_to_identification_entity(cast(Report, report))
-                for report in reports_query.all()
-            ]
+        return [
+            self._map_dict_to_identification_entity(cast(Report, report))
+            for report in reports_query.all()
+        ]
 
     def create_user_report(
         self,

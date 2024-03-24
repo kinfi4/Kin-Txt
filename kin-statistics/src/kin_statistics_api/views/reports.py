@@ -15,7 +15,8 @@ from kin_statistics_api.domain.entities import (
     ReportsFetchSettings,
     ReportIdentificationEntity,
     StatisticalReport,
-    WordCloudReport, BaseReport,
+    WordCloudReport,
+    BaseReport,
 )
 from kin_statistics_api.domain.services import ManagingReportsService, UserService
 from kin_statistics_api.exceptions import ReportAccessForbidden

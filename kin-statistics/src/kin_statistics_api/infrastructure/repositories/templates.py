@@ -61,7 +61,7 @@ class TemplatesRepository:
 
         template_orm = GenerationTemplateORM(
             owner_username=username,
-            **template.model_dump(),
+            **template.model_dump(exclude_none=True),
         )
 
         with self._db.session() as session:
@@ -69,7 +69,7 @@ class TemplatesRepository:
 
             session.add(template_orm)
 
-    def delete_template(self, username: str, template_id: str) -> None:
+    def delete_template(self, username: str, template_id: int) -> None:
         with self._db.session() as session:
             session: Session
 
@@ -102,4 +102,5 @@ class TemplatesRepository:
             report_name=orm_entity.report_name,
             model_type=orm_entity.model_type,
             datasource_type=orm_entity.datasource_type,
+            classification_scope=orm_entity.classification_scope,
         )

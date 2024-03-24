@@ -13,7 +13,6 @@ class Settings(BaseSettings):
     reports_folder_path: str = Field(..., validation_alias="USER_REPORTS_FOLDER_PATH")
     kin_token: str = Field(..., validation_alias="KIN_TOKEN")
     max_channel_per_report_count: int = Field(12, validation_alias="MAX_SUBSCRIPTIONS_ALLOWED")
-    mongodb_connection_string: str = Field(..., validation_alias="MONGO_DB_CONNECTION_STRING")
     rabbitmq_connection_string: str = Field(..., validation_alias="RABBITMQ_CONNECTION_STRING")
     allowed_hosts: str = Field(..., validation_alias="ALLOWED_HOSTS")
 

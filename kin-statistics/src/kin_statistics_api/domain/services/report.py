@@ -74,17 +74,13 @@ class ManagingReportsService:
         username: str,
         fetch_settings: ReportsFetchSettings | None = None,
     ) -> PaginatedDataEntity[ReportIdentificationEntity]:
-        # TODO: Remove this call, we can just filter reports by username
-        user_reports_ids = self._iam_repository.get_user_report_ids(username)
-        self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
+        report_entities, count = self._reports_repository.get_user_reports(username, fetch_settings=fetch_settings)
 
-        report_entities = self._reports_repository.get_report_names(user_reports_ids, apply_settings=fetch_settings)
-        # TODO: Remove this second query, we can get total count from the first one
-        total_reports_count = self._reports_repository.get_total_reports_count(filters=fetch_settings)
+        self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
 
         return PaginatedDataEntity(
             data=report_entities,
-            total_pages=math.ceil(total_reports_count / ITEMS_PER_PAGE),
+            total_pages=math.ceil(count / ITEMS_PER_PAGE),
             page=fetch_settings.page if fetch_settings else 0,
         )
 

@@ -13,6 +13,13 @@ from kin_statistics_api.constants import ReportProcessingResult
 
 
 class IReportRepository(ABC):
+    @abstractmethod
+    def get_user_reports(
+        self,
+        username: str,
+        fetch_settings: ReportsFetchSettings | None,
+    ) -> tuple[list[ReportIdentificationEntity], int]:
+        pass
 
     @abstractmethod
     def save_finished_report(self, finished_report: WordCloudReport | StatisticalReport) -> None:

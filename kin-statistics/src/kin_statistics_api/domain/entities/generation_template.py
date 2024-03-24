@@ -8,14 +8,14 @@ from kin_txt_core.reports_building.constants import ModelTypes, ClassificationSc
 
 
 class GenerationTemplate(BaseModel):
-    id: str | None = None
+    id: int | None = None
     name: str
 
     channel_list: list[str] = Field(..., alias="channelList")
     from_date: datetime = Field(..., alias="fromDate")
     to_date: datetime = Field(..., alias="toDate")
     report_type: ReportTypes = Field(..., alias="reportType")
-    template_id: str = Field(..., alias="templateId")
+    template_id: int | None = Field(..., alias="templateId")
     model_code: str = Field(..., alias="modelCode")
     report_name: str = Field(..., alias="reportName")
     datasource_type: DataSourceTypes = Field(DataSourceTypes.TELEGRAM, alias="datasourceType")
@@ -23,6 +23,13 @@ class GenerationTemplate(BaseModel):
     classification_scope: ClassificationScopes = Field(ClassificationScopes.ENTIRE_POST, alias="classificationScope")
 
     model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
+
+    @field_validator("template_id", mode="before")
+    def validate_template_id(cls, template_id: int | None) -> int | None:
+        if template_id is None or template_id == "":
+            return None
+
+        return template_id
 
     @field_serializer("from_date", "to_date", when_used="json")
     @staticmethod

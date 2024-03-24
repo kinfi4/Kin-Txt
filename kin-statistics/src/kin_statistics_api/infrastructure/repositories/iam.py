@@ -26,7 +26,7 @@ class IAMRepository:
             if user is None:
                 return None
 
-            return UserLoginEntity(username=user["username"], password=user["password_hash"])
+            return UserLoginEntity(username=user.username, password=user.password_hash)
 
     def create_user(self, username: str, password_hash: str) -> User:
         self._logger.info("[UserRepository] Creating user")

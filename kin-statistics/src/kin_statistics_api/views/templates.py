@@ -41,7 +41,7 @@ def create_generation_template(
 @router.get("/{template_id}", response_model=GenerationTemplate, status_code=status.HTTP_200_OK)
 @inject
 def get_template_details(
-    template_id: str,
+    template_id: int,
     current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
 ):
@@ -56,7 +56,7 @@ def get_template_details(
 @router.delete("/{template_id}")
 @inject
 def delete_template(
-    template_id: str,
+    template_id: int,
     current_user: User = Depends(get_current_user),
     templates_service: GenerationTemplateService = Depends(Provide[Container.services.templates_service]),
 ):

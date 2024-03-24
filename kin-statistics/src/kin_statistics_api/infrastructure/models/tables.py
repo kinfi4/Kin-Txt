@@ -38,7 +38,7 @@ class Report(Base):
 
     report_data: Mapped[JSONB] = mapped_column(JSONB, nullable=True)
 
-    owner_username: Mapped[str] = mapped_column(ForeignKey("user.username", ondelete="CASCADE"), nullable=False)
+    owner_username: Mapped[str] = mapped_column(ForeignKey('user.username', ondelete="CASCADE"), nullable=False)
     user: Mapped[User] = relationship(back_populates="reports")
 
 
@@ -52,7 +52,7 @@ class GenerationTemplate(Base):
     from_date: Mapped[datetime] = mapped_column(nullable=False)
     to_date: Mapped[datetime] = mapped_column(nullable=False)
     report_type: Mapped[ReportTypes] = mapped_column(nullable=False)
-    template_id: Mapped[str] = mapped_column(nullable=True)
+    template_id: Mapped[int] = mapped_column(nullable=True)
     model_code: Mapped[str] = mapped_column(nullable=False)
     report_name: Mapped[str] = mapped_column(nullable=False)
     datasource_type: Mapped[str] = mapped_column(nullable=False)
@@ -62,5 +62,5 @@ class GenerationTemplate(Base):
         default=ClassificationScopes.ENTIRE_POST,
     )
 
-    owner_username: Mapped[str] = mapped_column(ForeignKey("user.username", ondelete="CASCADE"), nullable=False)
+    owner_username: Mapped[str] = mapped_column(ForeignKey('user.username', ondelete="CASCADE"), nullable=False)
     user: Mapped[User] = relationship(back_populates="generation_templates")

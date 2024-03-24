@@ -19,7 +19,7 @@ def _cast_string_to_date(date_string: str) -> date:
 class GenerateReportEntity(BaseModel):
     name: str = Field(..., max_length=80)
     model_code: str = Field(..., alias="modelCode")
-    template_id: str | None = Field(..., alias="templateId")
+    template_id: int | None = Field(..., alias="templateId")
     start_date: date = Field(..., alias="startDate")
     end_date: date = Field(..., alias="endDate")
     channel_list: list[str] = Field(..., alias="channels")
@@ -29,6 +29,13 @@ class GenerateReportEntity(BaseModel):
     classification_scope: ClassificationScopes = Field(ClassificationScopes.ENTIRE_POST, alias="classificationScope")
 
     model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
+
+    @field_validator("template_id", mode="before")
+    def validate_template_id(cls, template_id: int | None) -> int | None:
+        if template_id is None or template_id == "":
+            return None
+
+        return template_id
 
     @field_validator("channel_list", mode="before")
     def validate_channels(cls, channels: list[str]) -> list[str]:
