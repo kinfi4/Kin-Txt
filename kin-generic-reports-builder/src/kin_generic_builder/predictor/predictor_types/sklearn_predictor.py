@@ -13,14 +13,17 @@ class SkLearnPredictor(IPredictor):
         self._model = model
         self._metadata = model_metadata
 
-    def preprocess_text(self, text: str) -> str:
-        return self._text_preprocessor.preprocess_text(text)
-
-    def predict(self, entity: ClassificationEntity) -> str:
+    def predict_post(self, entity: ClassificationEntity) -> str:
         vectors: csr_matrix = self._text_preprocessor.vectorize([entity.text], preprocess=True)
 
         prediction_result = self._model.predict(vectors.toarray())[0]
         return self._get_predicted_news_type_label(prediction_result)
+
+    def predict_post_tokens(self, entity: ClassificationEntity) -> dict[str, list[str]]:
+        raise NotImplementedError("This method is not implemented for KerasPredictor")
+
+    def preprocess_text(self, text: str) -> str:
+        return self._text_preprocessor.preprocess_text(text)
 
     def _get_predicted_news_type_label(self, prediction_result: int) -> str:
         return self._metadata.category_mapping[str(prediction_result)]
