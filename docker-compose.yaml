@@ -15,31 +15,6 @@ services:
       - POSTGRES_USER=kin-txt-user
       - POSTGRES_PASSWORD=kin-txt-password
 
-  redis:
-    image: redis:6.2-alpine
-    container_name: "redis"
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - cache:/data
-    networks:
-      - kin-network
-
-  mongo:
-    image: "mongo:6.0.3"
-    container_name: "mongo"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=kin-txt-user
-      - MONGO_INITDB_ROOT_PASSWORD=kin-txt-password
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data_container:/data/db
-    networks:
-      - kin-network
-
   rabbitmq:
     image: "rabbitmq:3-management"
     container_name: "rabbitmq"
