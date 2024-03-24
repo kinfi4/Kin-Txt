@@ -58,17 +58,7 @@ class CreateModelEntity(BaseModel):
 
 
 class UpdateModelEntity(CreateModelEntity):
-    def dict(self, mong_db_parseable: bool = False, *args, **kwargs) -> dict:
-        default_dict = super().dict(*args, **kwargs)
-        if not mong_db_parseable:
-            return default_dict
-
-        preprocessing_config_dict = default_dict.pop("preprocessing_config")
-        if preprocessing_config_dict:
-            for key, value in preprocessing_config_dict.items():
-                default_dict[f"preprocessing_config.{key}"] = value
-
-        return default_dict
+    pass
 
 
 class CustomModelRegistrationEntity(BaseModel):

@@ -16,3 +16,7 @@ class ImpossibleToUpdateCustomModelException(Exception):
 
 class ImpossibleToDeleteCustomModelException(Exception):
     pass
+
+
+class ModelAlreadyExistsException(Exception):
+    pass

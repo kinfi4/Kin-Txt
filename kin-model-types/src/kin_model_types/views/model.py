@@ -1,7 +1,6 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends, APIRouter, status
 from fastapi.responses import Response, JSONResponse
-from pymongo.errors import DuplicateKeyError
 
 from kin_model_types.containers import Container
 from kin_model_types.domain.entities import (
@@ -16,11 +15,10 @@ from kin_model_types.views.helpers.auth import get_current_user
 from kin_model_types.domain.services.model import ModelService
 from kin_model_types.infrastructure.repositories import ModelRepository
 from kin_model_types.exceptions import (
-    BaseValidationError,
     UserModelNotFoundException,
-    UnsupportedModelTypeError,
     ImpossibleToUpdateCustomModelException,
     ImpossibleToDeleteCustomModelException,
+    ModelAlreadyExistsException,
 )
 
 router = APIRouter(prefix="/models")
@@ -45,10 +43,8 @@ def validate_and_save_model(
 ):
     try:
         models_service.validate_model(current_user.username, model)
-    except DuplicateKeyError:
+    except ModelAlreadyExistsException:
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "Model with this code already exists."})
-    except BaseValidationError:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -62,10 +58,8 @@ def register_custom_user_model(
 ):
     try:
         models_service.register_custom_model(model_entity=model)
-    except DuplicateKeyError:
+    except ModelAlreadyExistsException:
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "Model with this code already exists."})
-    except BaseValidationError:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -82,12 +76,8 @@ def update_model(
         models_service.update_model(current_user.username, model_code, model)
     except ImpossibleToUpdateCustomModelException:
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "It's impossible to update custom model."})
-    except UnsupportedModelTypeError as error:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(error)})
     except UserModelNotFoundException:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"errors": "Model not found."})
-    except BaseValidationError:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": "Something went wrong."})
 
     return Response(status_code=status.HTTP_200_OK)
 

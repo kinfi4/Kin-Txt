@@ -4,7 +4,7 @@ from kin_txt_core.types.reports import VisualizationDiagramTypes, RawContentType
 
 
 class VisualizationTemplate(BaseModel):
-    id: str | None = Field(None)
+    id: int | None = Field(None)
     name: str
     content_types: list[RawContentTypes] | None = Field(None, alias="contentTypes")
     visualization_diagram_types: list[VisualizationDiagramTypes] = Field(..., alias="visualizationDiagramTypes")

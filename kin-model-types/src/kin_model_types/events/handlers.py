@@ -11,13 +11,11 @@ def on_model_validation_finished(
     event: ModelValidationFinished,
     models_repository: ModelRepository = Provide[Container.repositories.model_repository],
 ) -> None:
-    models_repository.update_model(
+    models_repository.update_model_status(
         event.code,
         event.username,
-        {
-            "model_status": ModelStatuses.VALIDATED if event.validation_passed else ModelStatuses.VALIDATION_FAILED,
-            "validation_message": event.message,
-        },
+        status=ModelStatuses.VALIDATED if event.validation_passed else ModelStatuses.VALIDATION_FAILED,
+        validation_message=event.message,
     )
 
 

@@ -18,3 +18,6 @@ logs:
 restart:
 	docker compose stop
 	docker compose up -d 
+
+make-migrations:
+	docker compose run --rm --no-deps model-types-api alembic revision --autogenerate -m "New migration"

@@ -1,8 +1,6 @@
-from typing import Type, TypeVar
-
 from dependency_injector import providers, containers, resources
-from pymongo import MongoClient
 
+from kin_txt_core.database import Database
 from kin_txt_core.messaging import AbstractEventSubscriber, AbstractEventProducer
 from kin_txt_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
 
@@ -12,7 +10,27 @@ from kin_model_types.events.events import ModelValidationFinished, ModelValidati
 from kin_model_types.domain.services.model import ModelService
 
 
-TMongoRepository = TypeVar("TMongoRepository", VisualizationTemplateRepository, ModelRepository)
+class DatabaseResource(resources.Resource):
+    def init(self, host: str, port: int, user: str, password: str, db_name: str) -> Database:
+        db = Database(host=host, port=port, user=user, password=password, database_name=db_name)
+        self._make_reflection(db)
+        return db
+
+    def _make_reflection(self, db_driver: Database) -> None:
+        """
+        We need this code to say sqlalchemy about "user" table that was created in statistics service.
+        Because without that alchemy is not able to understand the relationship between model and user.
+
+        All about reflections: https://docs.sqlalchemy.org/en/20/core/reflection.html
+        """
+        from sqlalchemy import Table
+        from kin_model_types.infrastructure.models.tables import Base
+
+        connection = db_driver.get_db_connection()
+        _ = Table("user", Base.metadata, autoload_with=connection, schema='public')
+
+    def shutdown(self, resource: Database) -> None:
+        resource.close()
 
 
 class SubscriberResource(resources.Resource):
@@ -30,11 +48,17 @@ class SubscriberResource(resources.Resource):
         return subscriber
 
 
-class MongodbRepositoryResource(resources.Resource):
-    def init(self, repository_class: Type[TMongoRepository], connection_string: str) -> TMongoRepository:
-        client: MongoClient = MongoClient(connection_string)
+class DatabaseContainer(containers.DeclarativeContainer):
+    config = providers.Configuration()
 
-        return repository_class(mongo_client=client)
+    database_driver: providers.Resource[Database] = providers.Resource(
+        DatabaseResource,
+        host=config.database.host,
+        port=config.database.port,
+        db_name=config.database.db_name,
+        user=config.database.user,
+        password=config.database.password,
+    )
 
 
 class Messaging(containers.DeclarativeContainer):
@@ -58,17 +82,16 @@ class Messaging(containers.DeclarativeContainer):
 
 class Repositories(containers.DeclarativeContainer):
     config = providers.Configuration()
+    database = providers.DependenciesContainer()
 
-    visualization_template_repository: providers.Resource[MongodbRepositoryResource] = providers.Resource(
-        MongodbRepositoryResource,
-        repository_class=VisualizationTemplateRepository,
-        connection_string=config.mongodb_connection_string,
+    visualization_template_repository: providers.Singleton[VisualizationTemplateRepository] = providers.Singleton(
+        VisualizationTemplateRepository,
+        db=database.database_driver,
     )
 
-    model_repository: providers.Resource[MongodbRepositoryResource] = providers.Resource(
-        MongodbRepositoryResource,
-        repository_class=ModelRepository,
-        connection_string=config.mongodb_connection_string,
+    model_repository: providers.Singleton[ModelRepository] = providers.Singleton(
+        ModelRepository,
+        db=database.database_driver,
     )
 
 
@@ -79,7 +102,6 @@ class DomainServices(containers.DeclarativeContainer):
 
     models_service: providers.Singleton[ModelService] = providers.Singleton(
         ModelService,
-        models_storing_path=config.models_storage_path,
         models_repository=repositories.model_repository,
         events_publisher=messaging.producer,
     )
@@ -87,6 +109,11 @@ class DomainServices(containers.DeclarativeContainer):
 
 class Container(containers.DeclarativeContainer):
     config = providers.Configuration()
+
+    database: providers.Container[DatabaseContainer] = providers.Container(
+        DatabaseContainer,
+        config=config,
+    )
 
     messaging: providers.Container[Messaging] = providers.Container(
         Messaging,
@@ -96,6 +123,7 @@ class Container(containers.DeclarativeContainer):
     repositories: providers.Container[Repositories] = providers.Container(
         Repositories,
         config=config,
+        database=database,
     )
 
     domain_services: providers.Container[DomainServices] = providers.Container(

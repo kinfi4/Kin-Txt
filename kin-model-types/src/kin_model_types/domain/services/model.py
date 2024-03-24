@@ -19,11 +19,9 @@ from kin_model_types.constants import REPORTS_BUILDER_EXCHANGE
 class ModelService:
     def __init__(
         self,
-        models_storing_path: str,
         models_repository: ModelRepository,
         events_publisher: AbstractEventProducer,
     ) -> None:
-        self._models_storing_path = models_storing_path
         self._models_repository = models_repository
         self._events_publisher = events_publisher
 
@@ -43,7 +41,11 @@ class ModelService:
         if current_model.model_type == ModelTypes.BUILTIN:
             raise ImpossibleToUpdateCustomModelException(f"Impossible to update built-in model {model_code}")
 
-        model_to_validate = self._models_repository.update_model(model_code, username, model.dict(exclude_none=True, mong_db_parseable=True))
+        model_to_validate = self._models_repository.update_model(
+            model_code,
+            username,
+            model,
+        )
 
         self._events_publisher.publish(
             REPORTS_BUILDER_EXCHANGE,

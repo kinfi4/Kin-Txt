@@ -1,6 +1,8 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
+from kin_txt_core.settings import PostgresSettings
+
 
 class Settings(BaseSettings):
     secret_key: str = Field(..., validation_alias="SECRET_KEY")
@@ -8,8 +10,8 @@ class Settings(BaseSettings):
     debug: bool = Field(False, validation_alias="DEBUG")
     kin_token: str = Field(..., validation_alias="KIN_TOKEN")
 
-    mongodb_connection_string: str = Field(..., validation_alias="MONGO_DB_CONNECTION_STRING")
     rabbitmq_connection_string: str = Field(..., validation_alias="RABBITMQ_CONNECTION_STRING")
 
-    models_storage_path: str = Field(..., validation_alias="MODELS_STORAGE_PATH")
     allowed_hosts: str = Field(..., validation_alias="ALLOWED_HOSTS")
+
+    database: PostgresSettings = PostgresSettings()

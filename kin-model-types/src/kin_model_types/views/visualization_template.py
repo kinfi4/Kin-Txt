@@ -34,7 +34,7 @@ def create_template(
 @router.get("/{template_id}", response_model=VisualizationTemplate, status_code=status.HTTP_200_OK)
 @inject
 def get_template(
-    template_id: str,
+    template_id: int,
     current_user: User = Depends(get_current_user),
     visualization_template_repository: VisualizationTemplateRepository = Depends(Provide[Container.repositories.visualization_template_repository]),
 ):
@@ -47,7 +47,7 @@ def get_template(
 @router.delete("/{template_id}")
 @inject
 def delete_template(
-    template_id: str,
+    template_id: int,
     current_user: User = Depends(get_current_user),
     visualization_template_repository: VisualizationTemplateRepository = Depends(Provide[Container.repositories.visualization_template_repository]),
 ):
@@ -62,7 +62,7 @@ def delete_template(
 @router.put("/{template_id}")
 @inject
 def update_template(
-    template_id: str,
+    template_id: int,
     template: VisualizationTemplate,
     current_user: User = Depends(get_current_user),
     visualization_template_repository: VisualizationTemplateRepository = Depends(Provide[Container.repositories.visualization_template_repository]),
