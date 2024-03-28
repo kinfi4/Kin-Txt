@@ -1,5 +1,5 @@
-from kin_builtin_models.predictor.predictors.sst_2 import EnglishSentimentPredictor
-from kin_builtin_models.predictor.predictors.ua_ner import UaNerPredictor
+from kin_builtin_models.predictor.predictors.english_sentiment import EnglishSentimentPredictor
+from kin_builtin_models.predictor.predictors.ukranian_ner import UaNerPredictor
 
 from kin_txt_core.reports_building.constants import ModelTypes
 from kin_txt_core.reports_building.domain.entities import (

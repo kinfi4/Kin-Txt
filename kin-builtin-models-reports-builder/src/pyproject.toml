@@ -14,6 +14,7 @@ spacy = "^3.7.1"
 
 en_core_web_lg = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl"}
 uk_core_news_lg = {url = "https://github.com/explosion/spacy-models/releases/download/uk_core_news_lg-3.7.0/uk_core_news_lg-3.7.0-py3-none-any.whl"}
+huggingface-hub = "^0.22.1"
 
 [build-system]
 requires = ["poetry-core"]
