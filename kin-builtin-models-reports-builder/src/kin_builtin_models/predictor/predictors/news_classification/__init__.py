@@ -1,0 +1,2 @@
+from .preprocessor import NewsClassificationPreprocessor
+from .predictor import NewsClassificationBertPredictor

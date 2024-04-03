@@ -8,13 +8,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "~3.10"
 
-kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
-transformers = {extras = ["torch"], version = "^4.36.2"}
+transformers = { version = "^4.36.2" }
+tensorflow = "2.10.0"
 spacy = "^3.7.1"
 
-en_core_web_lg = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl"}
-uk_core_news_lg = {url = "https://github.com/explosion/spacy-models/releases/download/uk_core_news_lg-3.7.0/uk_core_news_lg-3.7.0-py3-none-any.whl"}
-huggingface-hub = "^0.22.1"
+kin-txt-core = { path = "../submodules/kin-txt-core/src", develop = true}
+
+uk_core_news_md = {url = "https://github.com/explosion/spacy-models/releases/download/uk_core_news_md-3.7.0/uk_core_news_md-3.7.0-py3-none-any.whl"}
+ru_core_news_md = {url = "https://github.com/explosion/spacy-models/releases/download/ru_core_news_md-3.7.0/ru_core_news_md-3.7.0-py3-none-any.whl"}
 
 [build-system]
 requires = ["poetry-core"]

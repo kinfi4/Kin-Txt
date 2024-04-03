@@ -17,13 +17,9 @@ services:
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
       - ./submodules:/submodules
-      - kin-reports-builder-models:/models
-
+      - ~/.buildin-kin-txt-models-binaries:/models
 
 networks:
   kin-network:
     name: kin-network
     external: true
-
-volumes:
-    kin-reports-builder-models:
