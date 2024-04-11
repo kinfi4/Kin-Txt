@@ -9,7 +9,6 @@ from kin_model_types.domain.entities import (
     ModelEntity,
     CreateModelEntity,
     UpdateModelEntity,
-    CustomModelRegistrationEntity,
 )
 from kin_model_types.views.helpers.auth import get_current_user
 from kin_model_types.domain.services.model import ModelService
@@ -43,21 +42,6 @@ def validate_and_save_model(
 ):
     try:
         models_service.validate_model(current_user.username, model)
-    except ModelAlreadyExistsException:
-        return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "Model with this code already exists."})
-
-    return Response(status_code=status.HTTP_201_CREATED)
-
-
-@router.post("/register")
-@inject
-def register_custom_user_model(
-    model: CustomModelRegistrationEntity,
-    _: User = Depends(get_current_user),
-    models_service: ModelService = Depends(Provide[Container.domain_services.models_service]),
-):
-    try:
-        models_service.register_custom_model(model_entity=model)
     except ModelAlreadyExistsException:
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"errors": "Model with this code already exists."})
 

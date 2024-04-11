@@ -64,7 +64,7 @@ class UpdateModelEntity(CreateModelEntity):
 class CustomModelRegistrationEntity(BaseModel):
     name: str
     code: str
-    owner_username: str = Field(..., alias="ownerUsername")
-    category_mapping: CategoryMapping = Field(..., alias="categoryMapping")  # type: ignore
-    validation_needed: bool = Field(False, alias="validationNeeded")
-    preprocessing_config: PreprocessingConfig = Field(..., alias="preprocessingConfig")
+    owner_username: str
+    category_mapping: CategoryMapping  # type: ignore
+    preprocessing_config: PreprocessingConfig
+    validation_needed: bool = False

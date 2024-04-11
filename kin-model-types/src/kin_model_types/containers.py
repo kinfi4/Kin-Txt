@@ -3,6 +3,7 @@ from dependency_injector import providers, containers, resources
 from kin_txt_core.database import Database
 from kin_txt_core.messaging import AbstractEventSubscriber, AbstractEventProducer
 from kin_txt_core.messaging.rabbit import RabbitProducer, RabbitClient, RabbitSubscriber
+from kin_txt_core.reports_building.events import ReportsBuilderCreated
 
 from kin_model_types.infrastructure.repositories import VisualizationTemplateRepository, ModelRepository
 from kin_model_types.constants import MODEL_TYPES_EXCHANGE
@@ -40,10 +41,12 @@ class SubscriberResource(resources.Resource):
         from kin_model_types.events.handlers import (
             on_model_validation_finished,
             on_model_validation_started,
+            on_reports_builder_initialization,
         )
 
         subscriber.subscribe(MODEL_TYPES_EXCHANGE, ModelValidationFinished, on_model_validation_finished)
         subscriber.subscribe(MODEL_TYPES_EXCHANGE, ModelValidationStarted, on_model_validation_started)
+        subscriber.subscribe(MODEL_TYPES_EXCHANGE, ReportsBuilderCreated, on_reports_builder_initialization)
 
         return subscriber
 
