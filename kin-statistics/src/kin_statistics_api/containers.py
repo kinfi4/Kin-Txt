@@ -110,34 +110,34 @@ class Services(containers.DeclarativeContainer):
     repositories = providers.DependenciesContainer()
     messaging = providers.DependenciesContainer()
 
-    managing_reports_service: providers.Singleton[ManagingReportsService] = providers.Singleton(
+    managing_reports_service: providers.Factory[ManagingReportsService] = providers.Factory(
         ManagingReportsService,
         events_producer=messaging.producer,
         reports_repository=repositories.reports_repository,
         iam_repository=repositories.iam_repository,
     )
 
-    user_service: providers.Singleton[UserService] = providers.Singleton(
+    user_service: providers.Factory[UserService] = providers.Factory(
         UserService,
         iam_repository=repositories.iam_repository,
     )
 
-    csv_data_generator: providers.Singleton[CsvFileGenerator] = providers.Singleton(
+    csv_data_generator: providers.Factory[CsvFileGenerator] = providers.Factory(
         CsvFileGenerator,
         iam_repository=repositories.iam_repository,
     )
 
-    json_data_generator: providers.Singleton[JsonFileGenerator] = providers.Singleton(
+    json_data_generator: providers.Factory[JsonFileGenerator] = providers.Factory(
         JsonFileGenerator,
         iam_repository=repositories.iam_repository,
     )
 
-    reports_data_saver: providers.Singleton[ReportDataSaver] = providers.Singleton(
+    reports_data_saver: providers.Factory[ReportDataSaver] = providers.Factory(
         ReportDataSaver,
         reports_folder_path=config.reports_folder_path,
     )
 
-    templates_service: providers.Singleton[GenerationTemplateService] = providers.Singleton(
+    templates_service: providers.Factory[GenerationTemplateService] = providers.Factory(
         GenerationTemplateService,
         templates_repository=repositories.templates_repository,
     )

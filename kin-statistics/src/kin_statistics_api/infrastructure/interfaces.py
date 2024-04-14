@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from kin_statistics_api.infrastructure.dtos import ReportIdentitiesQueryResult
 from kin_txt_core.reports_building.constants import ReportTypes
 
 from kin_statistics_api.domain.entities import ReportsFetchSettings
@@ -18,7 +19,7 @@ class IReportRepository(ABC):
         self,
         username: str,
         fetch_settings: ReportsFetchSettings | None,
-    ) -> tuple[list[ReportIdentificationEntity], int]:
+    ) -> ReportIdentitiesQueryResult:
         pass
 
     @abstractmethod

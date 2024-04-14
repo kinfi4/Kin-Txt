@@ -4,6 +4,7 @@ from typing import Any, cast
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
+from kin_statistics_api.infrastructure.dtos import ReportIdentitiesQueryResult
 from kin_txt_core.database import Database
 
 from kin_statistics_api.domain.entities import (
@@ -25,9 +26,8 @@ class ReportsRepository(IReportRepository):
         self._db = db
 
     def save_finished_report(self, finished_report: WordCloudReport | StatisticalReport) -> None:
+        session: Session
         with self._db.session() as session:
-            session: Session
-
             report: Report = session.query(Report).get(finished_report.report_id)
 
             report.processing_status = finished_report.processing_status
@@ -41,8 +41,8 @@ class ReportsRepository(IReportRepository):
             self._logger.info(f"[ReportsRepository] Finished report {report.report_id=} {report.name=} was saved")
 
     def update_report_status(self, report_id: int, status: ReportProcessingResult) -> None:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             report = session.query(Report).get(report_id)
             report.processing_status = status
@@ -51,27 +51,29 @@ class ReportsRepository(IReportRepository):
         self,
         username: str,
         fetch_settings: ReportsFetchSettings | None,
-    ) -> tuple[list[ReportIdentificationEntity], int]:
+    ) -> ReportIdentitiesQueryResult:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             reports_query = session.query(Report).filter(Report.owner_username == username)
 
             if fetch_settings is not None:
                 reports_query = self._apply_filters(reports_query, fetch_settings)
 
-        return [
+        report_entities = [
             self._map_dict_to_identification_entity(cast(Report, report))
             for report in reports_query.all()
-        ], reports_query.count()
+        ]
+
+        return ReportIdentitiesQueryResult(reports=report_entities, count=reports_query.count())
 
     def get_report_names(
         self,
         report_ids: list[int],
         apply_settings: ReportsFetchSettings | None = None,
     ) -> list[ReportIdentificationEntity]:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             reports_query = session.query(Report).filter(Report.report_id.in_(report_ids))
 
@@ -94,8 +96,8 @@ class ReportsRepository(IReportRepository):
         Must return report id
         """
 
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             report = Report(
                 name=report_name,
@@ -117,8 +119,8 @@ class ReportsRepository(IReportRepository):
         if report.processing_status == ReportProcessingResult.PROCESSING:
             raise ImpossibleToModifyProcessingReport("You can not change the report during processing.")
 
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             updated_report = session.query(Report).get(report_id)
             updated_report.name = report_name
@@ -126,8 +128,8 @@ class ReportsRepository(IReportRepository):
         return self._map_dict_to_identification_entity(updated_report)
 
     def get_report(self, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             orm_report = session.query(Report).get(report_id)
 
@@ -137,8 +139,8 @@ class ReportsRepository(IReportRepository):
         return self._map_orm_object_to_entity(orm_report)
 
     def delete_report(self, report_id: int) -> None:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             if (report := session.query(Report).get(report_id)) is None:
                 return None
@@ -146,14 +148,14 @@ class ReportsRepository(IReportRepository):
             session.delete(report)
 
     def report_exists(self, report_id: int) -> bool:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             return session.query(Report).filter(Report.report_id == report_id).count() > 0
 
     def get_total_reports_count(self, filters: ReportsFetchSettings | None) -> int:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             reports_query = session.query(Report)
 

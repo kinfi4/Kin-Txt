@@ -9,13 +9,6 @@ run-silent:
 run:
 	docker compose up
 
-tests:
-	docker compose -f docker-compose.test.yaml rm -f postgres mongo
-	docker compose -f docker-compose.test.yaml up -d postgres mongo
-	docker compose -f docker-compose.test.yaml run --user="root" --rm test-statistics-api python manage.py test api/tests/unit
-	docker compose -f docker-compose.test.yaml run --user="root" --rm test-statistics-api python manage.py test api/tests/int
-	docker compose -f docker-compose.test.yaml rm -f postgres mongo
-
 mypy:
 	docker compose run -u $(UUID) --rm --no-deps statistics-api mypy kin_statistics_api/
 
@@ -23,7 +16,7 @@ tests:
 	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage run -m pytest -vv -s
 
 coverage:
-	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage report
+	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage report -m
 
 logs:
 	docker compose logs -f 

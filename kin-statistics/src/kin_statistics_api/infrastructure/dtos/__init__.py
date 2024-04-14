@@ -1,0 +1,1 @@
+from .reports_query_result import ReportIdentitiesQueryResult

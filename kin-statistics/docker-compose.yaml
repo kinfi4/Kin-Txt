@@ -19,7 +19,6 @@ services:
       - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
       - ./src/tests:/app/tests
-      - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml
@@ -40,7 +39,6 @@ services:
       - ./etc/service/alembic.ini:/app/alembic.ini
       - ./src/kin_statistics_api:/app/kin_statistics_api
       - ./src/tests:/app/tests
-      - ./src/setup.cfg:/app/setup.cfg
       - ./submodules:/submodules
       - ./src/poetry.lock:/app/poetry.lock
       - ./src/pyproject.toml:/app/pyproject.toml

@@ -1,6 +1,7 @@
 import math
 import logging
 
+from kin_statistics_api.infrastructure.dtos import ReportIdentitiesQueryResult
 from kin_txt_core.messaging import AbstractEventProducer
 from kin_txt_core.pagination import PaginatedDataEntity
 
@@ -74,13 +75,18 @@ class ManagingReportsService:
         username: str,
         fetch_settings: ReportsFetchSettings | None = None,
     ) -> PaginatedDataEntity[ReportIdentificationEntity]:
-        report_entities, count = self._reports_repository.get_user_reports(username, fetch_settings=fetch_settings)
+        query_result: ReportIdentitiesQueryResult = self._reports_repository.get_user_reports(
+            username,
+            fetch_settings=fetch_settings,
+        )
 
-        self._logger.info(f"[ManagingReportsService] got user_reports for user: {username}")
+        print(query_result)
+
+        self._logger.info(f"[ManagingReportsService] got reports {query_result.count} identities for user: {username}")
 
         return PaginatedDataEntity(
-            data=report_entities,
-            total_pages=math.ceil(count / ITEMS_PER_PAGE),
+            data=query_result.reports,
+            total_pages=math.ceil(query_result.count / ITEMS_PER_PAGE),
             page=fetch_settings.page if fetch_settings else 0,
         )
 

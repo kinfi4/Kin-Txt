@@ -24,14 +24,15 @@ mypy = "^1.7.1"
 pytest = "^8.0.0"
 coverage = "^7.4.1"
 httpx = "^0.26.0"
+pytest-mock = "~3.10.0"
+factory-boy = "3.2.1"
+pytest-factoryboy = "2.5.1"
+pytest-faker = "2.0.0"
+
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.mypy]
-plugins = ["pydantic.mypy"]
-ignore_missing_imports = true
 
 [tool.coverage.report]
 omit = [
@@ -39,4 +40,30 @@ omit = [
     "*/__init__.py",
     "*/__main__.py",
     "env/*",
+    "*/submodules/*",
 ]
+
+[tool.flake8]
+max-line-length = 200
+per-file-ignores = [
+    "*/__init__.py: F401"
+]
+exclude = [
+    ".git",
+    "__pycache__",
+    "tests",
+]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+
+ignore_missing_imports = true
+follow_imports = "skip"
+follow_imports_for_stubs = false
+cache_dir = "/tmp/test_cache/.mypy_cache"
+strict_optional = false
+exclude = "type_hints.py"

@@ -60,7 +60,10 @@ def generate_report_request(
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
-    return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content={"message": "Generating report process started successfully!"})
+    return JSONResponse(
+        status_code=status.HTTP_202_ACCEPTED,
+        content={"message": "Generating report process started successfully!"},
+    )
 
 
 @router.get("/{report_id}", response_model=BaseReport | StatisticalReport | WordCloudReport)
@@ -73,7 +76,10 @@ def get_report_details(
     try:
         report = reports_service.get_user_detailed_report(current_user.username, report_id)
     except ReportAccessForbidden:
-        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"errors": "You do not have rights to this report!"})
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"errors": "You do not have rights to this report!"},
+        )
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
@@ -91,7 +97,10 @@ def update_report(
     try:
         report_identity = reports_service.set_report_name(current_user.username, report_put_entity.name, report_id)
     except ReportAccessForbidden:
-        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"errors": "You do not have rights to this report!"})
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"errors": "You do not have rights to this report!"},
+        )
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 
@@ -108,7 +117,10 @@ def delete_report(
     try:
         reports_service.delete_report(current_user.username, report_id)
     except ReportAccessForbidden:
-        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"errors": "You do not have rights to this report!"})
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"errors": "You do not have rights to this report!"},
+        )
     except KinNewsCoreException as err:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"errors": str(err)})
 

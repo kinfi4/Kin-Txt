@@ -19,5 +19,3 @@ COPY ./submodules /submodules
 COPY ./src/tests /app/tests
 
 RUN poetry install
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

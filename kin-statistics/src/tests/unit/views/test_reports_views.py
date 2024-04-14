@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from kin_statistics_api.constants import REPORTS_BUILDER_EXCHANGE, API_ROUTE_PATH
 from kin_statistics_api.domain.entities import ReportIdentificationEntity, GenerateReportEntity
 from kin_statistics_api.domain.events import GenerateReportRequestOccurred
+from kin_statistics_api.infrastructure.dtos import ReportIdentitiesQueryResult
 
 
 class TestReportsViews:
@@ -16,16 +17,20 @@ class TestReportsViews:
         mock__access_management_repository: MagicMock,
     ) -> None:
         mock__access_management_repository.get_user_report_ids.return_value = [1]
-        mock__reports_repository.get_report_names.return_value = [
-            ReportIdentificationEntity(
-                report_id=1,
-                name="report_name",
-                report_type="Statistical",
-                generation_date="01/01/2022 00:00",
-                processing_status="Ready",
-            )
-        ]
-        mock__reports_repository.get_total_reports_count.return_value = 1
+        query_result = ReportIdentitiesQueryResult(
+            reports=[
+                ReportIdentificationEntity(
+                    report_id=1,
+                    name="report_name",
+                    report_type="Statistical",
+                    generation_date="01/01/2022 00:00",
+                    processing_status="Ready",
+                )
+            ],
+            count=1,
+        )
+
+        mock__reports_repository.get_user_reports.return_value = query_result
 
         username, auth_headers = username_with_access_token_headers
         client = test_http_client__unauthorized
@@ -59,8 +64,7 @@ class TestReportsViews:
         mock__access_management_repository: MagicMock,
     ) -> None:
         mock__access_management_repository.get_user_report_ids.return_value = []
-        mock__reports_repository.get_report_names.return_value = []
-        mock__reports_repository.get_total_reports_count.return_value = 0
+        mock__reports_repository.get_user_reports.return_value = ReportIdentitiesQueryResult(reports=[], count=0)
 
         username, auth_headers = username_with_access_token_headers
         client = test_http_client__unauthorized

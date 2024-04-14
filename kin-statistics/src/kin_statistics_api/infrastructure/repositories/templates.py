@@ -17,8 +17,8 @@ class TemplatesRepository:
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def get_user_template_names(self, username: str) -> list[dict[str, int | str]]:
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             user_templates_list = (
                 session.query(GenerationTemplateORM.name, GenerationTemplateORM.id)
@@ -37,8 +37,8 @@ class TemplatesRepository:
     def load_user_template(self, username: str, template_id: int) -> GenerationTemplateEntity:
         self._logger.info(f"[TemplatesMongoRepository] Loading {username} template with id: {template_id}")
 
+        session: Session
         with self._db.session() as session:
-            session: Session
 
             generation_template_orm = (
                 session.query(GenerationTemplateORM)
@@ -64,15 +64,13 @@ class TemplatesRepository:
             **template.model_dump(exclude_none=True),
         )
 
+        session: Session
         with self._db.session() as session:
-            session: Session
-
             session.add(template_orm)
 
     def delete_template(self, username: str, template_id: int) -> None:
+        session: Session
         with self._db.session() as session:
-            session: Session
-
             template = (
                 session.query(GenerationTemplateORM)
                 .filter(

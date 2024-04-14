@@ -6,7 +6,7 @@ class GenerationTemplateService:
     def __init__(self, templates_repository: TemplatesRepository) -> None:
         self._templates_repository = templates_repository
 
-    def get_user_template_names(self, username: str) -> list[dict[str, str]]:
+    def get_user_template_names(self, username: str) -> list[dict[str, int | str]]:
         return self._templates_repository.get_user_template_names(username)
 
     def load_user_template(self, username: str, template_id: int) -> GenerationTemplate:
