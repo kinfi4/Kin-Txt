@@ -6,6 +6,8 @@ services:
     container_name: "postgres"
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    ports:
+      - "5431:5432"
     networks:
       - kin-network
     environment:

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  model-types:
+    build:
+      context: .
+      dockerfile: ./etc/service/Dockerfile
+    image: 'kin-model-types'
+    container_name: 'kin-model-types-test'
+    env_file:
+      - ./etc/service/env/.test.env
+    volumes:
+      - ./etc/service/migrations:/app/migrations
+      - ./etc/service/alembic.ini:/app/alembic.ini
+      - ./src/kin_model_types:/app/kin_model_types
+      - ./src/tests:/app/tests
+      - ./submodules:/submodules
+      - ./src/poetry.lock:/app/poetry.lock
+      - ./src/pyproject.toml:/app/pyproject.toml
+      - tests_cache:/tmp/test_cache
+
+volumes:
+  tests_cache:
+    labels:
+      description: "Volume for storing coverage cache"

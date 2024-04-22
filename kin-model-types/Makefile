@@ -12,6 +12,12 @@ run:
 mypy:
 	docker compose run -u $(UUID) --rm --no-deps model-types-api mypy kin_model_types/
 
+tests:
+	docker compose -f docker-compose.test.yaml run --user "root" --rm --no-deps model-types coverage run -a -m pytest -vv -s
+
+silent-tests: 
+	docker compose -f docker-compose.test.yaml run --user "root" --rm --no-deps model-types coverage run -m pytest -v -q --log-cli-level=CRITICAL
+
 logs:
 	docker compose logs -f 
 

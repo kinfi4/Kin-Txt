@@ -14,7 +14,9 @@ from kin_model_types.domain.services.model import ModelService
 class DatabaseResource(resources.Resource):
     def init(self, host: str, port: int, user: str, password: str, db_name: str) -> Database:
         db = Database(host=host, port=port, user=user, password=password, database_name=db_name)
+
         self._make_reflection(db)
+
         return db
 
     def _make_reflection(self, db_driver: Database) -> None:

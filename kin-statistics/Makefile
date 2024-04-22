@@ -15,6 +15,9 @@ mypy:
 tests:
 	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage run -m pytest -vv -s
 
+silent-tests:
+	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage run -m pytest -v -q --log-cli-level=CRITICAL
+
 coverage:
 	docker compose -f docker-compose.test.yaml run --rm statistics-service coverage report -m
 

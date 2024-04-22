@@ -31,7 +31,7 @@ class ModelEntity(ModelValidationEntity):
     model_status: ModelStatuses = Field(..., alias="modelStatus")
     validation_message: str | None = Field(None, alias="validationMessage")
 
-    model_config = ConfigDict(protected_namespaces=())
+    model_config = ConfigDict(populate_by_name=True, protected_namespaces=())
 
 
 class CreateModelEntity(BaseModel):

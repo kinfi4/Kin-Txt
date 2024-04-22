@@ -2,8 +2,8 @@ import logging
 from typing import cast
 
 from sqlalchemy import and_, delete, update
-from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session, joinedload
 
 from kin_txt_core.database import Database
 from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
@@ -11,8 +11,8 @@ from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 from kin_model_types.constants import ModelStatuses
 from kin_model_types.domain.entities.model import ModelEntity, CreateModelEntity, ModelFilters, UpdateModelEntity
 from kin_model_types.exceptions.base import UserModelNotFoundException, ModelAlreadyExistsException
-from kin_model_types.types import CategoryMapping
 from kin_model_types.infrastructure.models import Model as ORMModel, PreprocessingConfig as ORMPreprocessingConfig
+from kin_model_types.types import CategoryMapping
 
 
 class ModelRepository:

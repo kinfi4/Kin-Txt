@@ -32,7 +32,7 @@ class ModelService:
 
         self._events_publisher.publish(
             REPORTS_BUILDER_EXCHANGE,
-            [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
+            [ModelValidationRequestOccurred.model_validate(model_to_validate.model_dump())],
         )
 
     def update_model(self, username: str, model_code: str, model: UpdateModelEntity) -> None:
@@ -49,7 +49,7 @@ class ModelService:
 
         self._events_publisher.publish(
             REPORTS_BUILDER_EXCHANGE,
-            [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
+            [ModelValidationRequestOccurred.model_validate(model_to_validate.model_dump())],
         )
 
     def delete_model(self, username: str, model_code: str) -> None:
@@ -81,7 +81,7 @@ class ModelService:
         if model_entity.validation_needed:
             self._events_publisher.publish(
                 REPORTS_BUILDER_EXCHANGE,
-                [ModelValidationRequestOccurred.parse_obj(model_to_validate.dict())],
+                [ModelValidationRequestOccurred.model_validate(model_to_validate.model_dump())],
             )
 
     def get_model(self, username: str, model_code: str) -> ModelEntity:
