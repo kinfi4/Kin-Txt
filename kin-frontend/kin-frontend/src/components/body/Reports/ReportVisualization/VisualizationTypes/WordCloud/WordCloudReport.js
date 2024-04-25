@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {FiFilter} from "react-icons/fi";
 
@@ -14,6 +14,7 @@ import {WORD_CLOUD_REPORT} from "../../../../../../config";
 import BackLink from "../../../../../../common/backLink/BackLink";
 import ReportWarningsBlock from "../../helpers/ReportWarningsBlock";
 import {WordCloudBuilder} from "../../../../../../domain/reports/WordCloudBuilder";
+import LoadingSpinner from "../../../../../../common/spiner/LoadingSpinner";
 
 const WordCloudReport = ({
     showComparisonButton = true,
@@ -21,6 +22,12 @@ const WordCloudReport = ({
     wordsList,
     showModal,
 }) => {
+    const [rebuilding, setRebuilding] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => setRebuilding(false), 500);
+    }, [rebuilding])
+
     const [filters, setFilters] = useState({
         channelFilter: "All Channels",
         categoryFilter: "All",
@@ -94,20 +101,26 @@ const WordCloudReport = ({
                                     options={[
                                         {
                                             label: "All",
-                                            onClick: () =>
+                                            onClick: () => {
+                                                setRebuilding(true);
+
                                                 setFilters({
                                                     ...filters,
                                                     categoryFilter: "All",
-                                                }),
+                                                });
+                                            }
                                         },
                                         ...report.postsCategories.map((el) => {
                                             return {
                                                 label: el,
-                                                onClick: () =>
+                                                onClick: () => {
+                                                    setRebuilding(true);
+
                                                     setFilters({
                                                         ...filters,
                                                         categoryFilter: el,
-                                                    }),
+                                                    });
+                                                }
                                             };
                                         }),
                                     ]}
@@ -118,21 +131,26 @@ const WordCloudReport = ({
                                     options={[
                                         {
                                             label: "All Channels",
-                                            onClick: () =>
+                                            onClick: () => {
+                                                setRebuilding(true);
                                                 setFilters({
                                                     ...filters,
                                                     channelFilter: "All Channels",
-                                                }),
+                                                });
+                                            }
                                         },
                                         ...Object.keys(report.dataByChannel).map(
                                             (el) => {
                                                 return {
                                                     label: el,
-                                                    onClick: () =>
+                                                    onClick: () => {
+                                                        setRebuilding(true);
+
                                                         setFilters({
                                                             ...filters,
                                                             channelFilter: el,
-                                                        }),
+                                                        });
+                                                    }
                                                 };
                                             }
                                         ),
@@ -147,15 +165,26 @@ const WordCloudReport = ({
                                     }
                                 >
                                     <div>
-                                        <FiFilter style={{marginRight: "5px"}} /> Filter
-                                        out words
+                                        <FiFilter style={{marginRight: "5px"}} />
+                                        Filter out words
                                     </div>
                                 </div>
                             </div>
 
                             <div className={visualizationCss.wordCloudContainer}>
                                 {
-                                    wcBuilder.build()
+                                    rebuilding ?
+                                        <div style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            width: "100%",
+                                            height: "900px"
+                                        }}>
+                                            <LoadingSpinner width={100} height={100} marginTop={"-35%"} />;
+                                        </div>
+                                        :
+                                        wcBuilder.build()
                                 }
                             </div>
                         </>
@@ -171,7 +200,10 @@ let mapStateToProps = (state) => {
 };
 
 let mapDispatchToProps = (dispatch) => {
-    return { showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)) };
+    return {
+        showModal: (content, width, height) => dispatch(showModalWindow(content, width, height)),
+    };
 };
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(WordCloudReport);

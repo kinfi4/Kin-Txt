@@ -10,7 +10,7 @@ import Input from "../../../../../common/input/Input";
 import Button from "../../../../../common/button/Button";
 import {showMessage} from "../../../../../utils/messages";
 
-const SelectFilteredWords = (props) => {
+const SelectFilteredWords = ({...props}) => {
     const [filteredWord, setFilteredWord] = useState({filteredWord: ""});
 
     function addFilteredWord(word) {
@@ -53,19 +53,21 @@ const SelectFilteredWords = (props) => {
             />
 
             <>
-                {props.wordsList.map((w, idx) => {
-                    return (
-                        <div
-                            key={idx}
-                            className={`${generateReportCss.reportBlock}`}
-                        >
-                            {w}
-                            <span onClick={() => removeWordFromList(w)}>
-                                <AiFillDelete />
-                            </span>
-                        </div>
-                    );
-                })}
+                {
+                    props.wordsList.map((w, idx) => {
+                        return (
+                            <div
+                                key={idx}
+                                className={`${generateReportCss.reportBlock}`}
+                            >
+                                {w}
+                                <span onClick={() => removeWordFromList(w)}>
+                                    <AiFillDelete />
+                                </span>
+                            </div>
+                        );
+                    })
+                }
             </>
         </div>
     );
@@ -79,8 +81,7 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        setWordCloudFilterList: (wordList) =>
-            dispatch(setFilterOutWords(wordList)),
+        setWordCloudFilterList: (wordList) => dispatch(setFilterOutWords(wordList)),
     };
 };
 
