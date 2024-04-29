@@ -9,8 +9,6 @@ db.sqlite3
 
 .session
 
-*.csv
-
 #static
 django_static/
 # Logs
