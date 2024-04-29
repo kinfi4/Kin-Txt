@@ -3,6 +3,9 @@ from copy import copy
 
 import pandas as pd
 
+VERIFIED_FILE_PATH = "./raw-data/verified/train-dataset.csv"
+UNVERIFIED_FILE_PATH = "./raw-data/unverified/train-dataset.csv"
+
 
 def on_quit_save_old_df(df_to_save: pd.DataFrame, path: str) -> None:
     df_to_save.to_csv(path, index=False)
@@ -13,7 +16,7 @@ def on_quit_save_new_df(df_to_save: pd.DataFrame, path: str) -> None:
         df_to_save.to_csv(path, index=False)
         return
 
-    verified = pd.read_csv("./raw-data/verified/train-dataset.csv", header=0)
+    verified = pd.read_csv(path, header=0)
     for index, row in df_to_save.iterrows():
         verified.loc[len(verified)] = row
 
@@ -28,7 +31,7 @@ _LABEL_MAPPING = {
     "r": "Corruption",
 }
 
-unverified_df = pd.read_csv("./raw-data/unverified/train-dataset.csv", header=0)
+unverified_df = pd.read_csv(UNVERIFIED_FILE_PATH, header=0)
 df = unverified_df.sort_values(by=["category", "txt"])
 train_data_copy = copy(df.values)
 
@@ -41,8 +44,8 @@ for train_item in train_data_copy:
     correct_label = input("Enter label: ")
 
     if correct_label == "q":
-        on_quit_save_old_df(df, "./raw-data/unverified/train-dataset.csv")
-        on_quit_save_new_df(verified_data_df, "./raw-data/verified/train-dataset.csv")
+        on_quit_save_old_df(df, UNVERIFIED_FILE_PATH)
+        on_quit_save_new_df(verified_data_df, VERIFIED_FILE_PATH)
         exit(0)
     if correct_label == "s":
         df = df.drop(df[df["txt"] == txt].index)
@@ -51,8 +54,8 @@ for train_item in train_data_copy:
     while correct_label.lower() not in _LABEL_MAPPING:
         correct_label = input("This label is not valid. Enter valid label: ")
         if correct_label == "q":
-            on_quit_save_old_df(df, "./raw-data/unverified/train-dataset.csv")
-            on_quit_save_new_df(verified_data_df, "./raw-data/verified/train-dataset.csv")
+            on_quit_save_old_df(df, UNVERIFIED_FILE_PATH)
+            on_quit_save_new_df(verified_data_df, VERIFIED_FILE_PATH)
             exit(0)
 
     verified_data_df.loc[len(verified_data_df.index)] = {
@@ -64,7 +67,7 @@ for train_item in train_data_copy:
 
     df = df.drop(df[df["txt"] == txt].index)
 
-    os.system("cls" if os.name == "nt" else "clear")
+    # os.system("cls" if os.name == "nt" else "clear")
 
-on_quit_save_old_df(df, "./raw-data/unverified/train-dataset.csv")
-on_quit_save_new_df(verified_data_df, "./raw-data/verified/train-dataset.csv")
+on_quit_save_old_df(df, UNVERIFIED_FILE_PATH)
+on_quit_save_new_df(verified_data_df, VERIFIED_FILE_PATH)
