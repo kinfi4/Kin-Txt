@@ -161,39 +161,39 @@ const GenerateReportMenu = ({
                         }
                     />
 
-                    <div className={statsCss.generateReportFormFieldContainer}>
-                        <div className={statsCss.templateButtonsContainer}>
-                            <div
-                                onClick={() =>
-                                    showModalWindow(
-                                        <InputModalWindow
-                                            actionCallback={(blueprintName => blueprintController.saveBlueprint(blueprintName, data))}
-                                            title={"NAME YOUR TEMPLATE"}
-                                            inputPlaceholder={"Template name"}
-                                            submitPlaceholder={"SAVE"}
-                                        />,
-                                        450,
-                                        300
-                                    )
-                                }
-                            >
-                                SAVE AS BLUEPRINT
-                            </div>
-                            <div
-                                onClick={() =>
-                                    showModalWindow(
-                                        <SelectTemplateModalWindow
-                                            setReportData={setData}
-                                        />,
-                                        450,
-                                        800
-                                    )
-                                }
-                            >
-                                LOAD BLUEPRINT
-                            </div>
-                        </div>
-                    </div>
+                    {/*<div className={statsCss.generateReportFormFieldContainer}>*/}
+                    {/*    <div className={statsCss.templateButtonsContainer}>*/}
+                    {/*        <div*/}
+                    {/*            onClick={() =>*/}
+                    {/*                showModalWindow(*/}
+                    {/*                    <InputModalWindow*/}
+                    {/*                        actionCallback={(blueprintName => blueprintController.saveBlueprint(blueprintName, data))}*/}
+                    {/*                        title={"NAME YOUR TEMPLATE"}*/}
+                    {/*                        inputPlaceholder={"Template name"}*/}
+                    {/*                        submitPlaceholder={"SAVE"}*/}
+                    {/*                    />,*/}
+                    {/*                    450,*/}
+                    {/*                    300*/}
+                    {/*                )*/}
+                    {/*            }*/}
+                    {/*        >*/}
+                    {/*            SAVE AS BLUEPRINT*/}
+                    {/*        </div>*/}
+                    {/*        <div*/}
+                    {/*            onClick={() =>*/}
+                    {/*                showModalWindow(*/}
+                    {/*                    <SelectTemplateModalWindow*/}
+                    {/*                        setReportData={setData}*/}
+                    {/*                    />,*/}
+                    {/*                    450,*/}
+                    {/*                    800*/}
+                    {/*                )*/}
+                    {/*            }*/}
+                    {/*        >*/}
+                    {/*            LOAD BLUEPRINT*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
 
                 <div className={statsCss.controls}>
@@ -299,58 +299,58 @@ const GenerateReportMenu = ({
                         )
                     }
 
-                    {
-                        data.reportType === WORD_CLOUD_REPORT && (
-                            <div className={statsCss.generateReportFormFieldContainer}
-                            >
-                                <label
-                                    id="classificationScope"
-                                    className={statsCss.generateReportFormLabel}
-                                >
-                                    Classification scope:
-                                </label>
+                    {/*{*/}
+                    {/*    data.reportType === WORD_CLOUD_REPORT && (*/}
+                    {/*        <div className={statsCss.generateReportFormFieldContainer}*/}
+                    {/*        >*/}
+                    {/*            <label*/}
+                    {/*                id="classificationScope"*/}
+                    {/*                className={statsCss.generateReportFormLabel}*/}
+                    {/*            >*/}
+                    {/*                Classification scope:*/}
+                    {/*            </label>*/}
 
-                                <SelectItem
-                                    name="classificationScope"
-                                    value={{
-                                        value: data.classificationScope,
-                                        label: ClassificationScopes.getLabelFromValue(data.classificationScope),
-                                    }}
-                                    onChange={(selectedItem) =>
-                                        setData({
-                                            ...data,
-                                            classificationScope: selectedItem.value,
-                                        })
-                                    }
-                                    options={ClassificationScopes.getOptionsForSelect()}
-                                />
-                            </div>
+                    {/*            <SelectItem*/}
+                    {/*                name="classificationScope"*/}
+                    {/*                value={{*/}
+                    {/*                    value: data.classificationScope,*/}
+                    {/*                    label: ClassificationScopes.getLabelFromValue(data.classificationScope),*/}
+                    {/*                }}*/}
+                    {/*                onChange={(selectedItem) =>*/}
+                    {/*                    setData({*/}
+                    {/*                        ...data,*/}
+                    {/*                        classificationScope: selectedItem.value,*/}
+                    {/*                    })*/}
+                    {/*                }*/}
+                    {/*                options={ClassificationScopes.getOptionsForSelect()}*/}
+                    {/*            />*/}
+                    {/*        </div>*/}
 
-                        )
-                    }
+                    {/*    )*/}
+                    {/*}*/}
 
-                    <div className={statsCss.generateReportFormFieldContainer}>
-                        <label
-                            id="datasource"
-                            className={statsCss.generateReportFormLabel}
-                        >
-                            Datasource:
-                        </label>
+                    {/*<div className={statsCss.generateReportFormFieldContainer}>*/}
+                    {/*    <label*/}
+                    {/*        id="datasource"*/}
+                    {/*        className={statsCss.generateReportFormLabel}*/}
+                    {/*    >*/}
+                    {/*        Datasource:*/}
+                    {/*    </label>*/}
 
-                        <SelectItem
-                            name="datasource"
-                            value={{
-                                value: data.datasourceType,
-                                label: data.datasourceType,
-                            }}
-                            onChange={(newValue) =>
-                                setData({...data, datasourceType: newValue.value})
-                            }
-                            options={Object.entries(DatasourceTypes).map(
-                                (item) => ({value: item[1], label: item[1]}),
-                            )}
-                        />
-                    </div>
+                    {/*    <SelectItem*/}
+                    {/*        name="datasource"*/}
+                    {/*        value={{*/}
+                    {/*            value: data.datasourceType,*/}
+                    {/*            label: data.datasourceType,*/}
+                    {/*        }}*/}
+                    {/*        onChange={(newValue) =>*/}
+                    {/*            setData({...data, datasourceType: newValue.value})*/}
+                    {/*        }*/}
+                    {/*        options={Object.entries(DatasourceTypes).map(*/}
+                    {/*            (item) => ({value: item[1], label: item[1]}),*/}
+                    {/*        )}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
 
                     <div className={statsCss.generateReportFormFieldContainer}>
                         <label

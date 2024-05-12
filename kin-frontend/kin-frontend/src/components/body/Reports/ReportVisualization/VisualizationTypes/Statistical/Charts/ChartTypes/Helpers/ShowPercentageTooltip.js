@@ -1,8 +1,14 @@
 import tooltipStyles from "./PercentageTooltipStyles.module.css";
 
-export const PercentageTooltip = ({active, payload, label}) => {
+export const PercentageTooltip = ({active, payload, normalize=false, total=0}) => {
     if (active && payload && payload.length) {
-        const total = payload.reduce((acc, item) => acc + item.value, 0);
+        function normalizeValue(value) {
+            if (!normalize) {
+                return value;
+            }
+
+            return (value / total)*100;
+        }
 
         return (
             <div className={tooltipStyles.container}>
@@ -18,7 +24,9 @@ export const PercentageTooltip = ({active, payload, label}) => {
                             className={tooltipStyles.value}
                             style={{color: item.color}}
                         >
-                            {`${item.value.toFixed(2)}%`}
+                            {
+                                `${normalizeValue(item.value).toFixed(2)}%`
+                            }
                         </span>
                     </div>
                 ))}

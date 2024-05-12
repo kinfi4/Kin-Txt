@@ -8,6 +8,7 @@ __pycache__
 db.sqlite3
 
 .session
+session-1.session
 
 #static
 django_static/

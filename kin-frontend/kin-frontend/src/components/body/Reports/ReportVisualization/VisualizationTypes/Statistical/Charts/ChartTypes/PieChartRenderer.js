@@ -10,6 +10,8 @@ import {
 import styles from "../styles.module.css";
 
 import {BaseChartRenderer} from "../BaseChartRenderer";
+import {PercentageTooltip} from "./Helpers/ShowPercentageTooltip";
+import React from "react";
 
 export class PieChartRenderer extends BaseChartRenderer {
     constructor(contentType, width, height, data) {
@@ -33,6 +35,8 @@ export class PieChartRenderer extends BaseChartRenderer {
             "#F46036",
             "#2E294E",
         ]; // You can choose your own colors
+
+        this.total = this._data.reduce((acc, item) => acc + item.value, 0);
     }
 
     render(key = null) {
@@ -64,7 +68,7 @@ export class PieChartRenderer extends BaseChartRenderer {
                             ))}
                         </Pie>
                         <Legend />
-                        <Tooltip />
+                        <Tooltip content={<PercentageTooltip normalize={true} total={this.total} />} />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
