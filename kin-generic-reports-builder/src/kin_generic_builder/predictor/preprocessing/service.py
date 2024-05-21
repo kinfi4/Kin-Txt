@@ -11,12 +11,12 @@ from kin_txt_core.reports_building.domain.entities import PreprocessingConfig
 from kin_txt_core.reports_building.domain.services.predicting.preprocessing import ITextPreprocessor
 
 from kin_generic_builder.predictor.preprocessing.lemmatizer import Lemmatizer
-from kin_generic_builder.predictor.preprocessing.stop_words_loader_mixin import StopWordsLoaderMixin
+from kin_generic_builder.predictor.preprocessing.stop_words_loader import StopWordsLoader
 from kin_generic_builder.predictor.vectorizer.interface import ITextVectorizer
 from kin_generic_builder.constants import emoji_regex_compiled
 
 
-class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin, Lemmatizer):
+class TextPreprocessor(ITextPreprocessor, ITextVectorizer, Lemmatizer):
     def __init__(
         self,
         vectorizer: ITextVectorizer,
@@ -28,6 +28,8 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin,
         self._vectorizer = vectorizer
         self._stop_words_storage_path = stop_words_storage_path
         self._preprocessing_config = preprocessing_config
+
+        self._stop_words_loader = StopWordsLoader()
 
         self._logger = logging.getLogger(__name__)
 
@@ -88,7 +90,7 @@ class TextPreprocessor(ITextPreprocessor, ITextVectorizer, StopWordsLoaderMixin,
         if not settings.remove_stop_words:
             return text
 
-        stop_words_are_valid, stop_words = self.load_stop_words(self._stop_words_storage_path)
+        stop_words_are_valid, stop_words = self._stop_words_loader.load_stop_words(self._stop_words_storage_path)
 
         if not stop_words_are_valid:
             self._logger.warning(f"Stop words file {self._stop_words_storage_path} is not valid")

@@ -6,18 +6,30 @@ from json import JSONDecodeError
 _logger = logging.getLogger(__name__)
 
 
-class StopWordsLoaderMixin:
+class StopWordsLoader:
+    def __init__(self) -> None:
+        self._loaded_words: list[str] | None = None
+
     def load_stop_words(self, stop_words_file_path: str | None) -> tuple[bool, list[str]]:
+        if self._loaded_words is not None:
+            return True, self._loaded_words
+
         if not stop_words_file_path:
             return False, []
 
         try:
             for loader in [self._load_json, self._load_csv, self._load_txt]:
                 success, words_list = loader(stop_words_file_path)
+
                 if success:
+                    self._loaded_words = words_list
                     return True, words_list
         except Exception as ex:
             _logger.warning(f"Stop words file {stop_words_file_path} is not valid: {ex}")
+            # we don't need to load stop words again,
+            # so we just return empty list on future load_stop_words requests
+            self._loaded_words = []
+
             return False, []
 
         return False, []
