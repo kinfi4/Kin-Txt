@@ -69,17 +69,20 @@ export class MultiAreaChartRenderer extends BaseChartRenderer {
                         <XAxis dataKey="date" />
                         <YAxis tickFormatter={toPercent} />
 
-                        {this._categories.map((category, index) => (
-                            <Area
-                                key={category}
-                                dataKey={category}
-                                stackId="1"
-                                stroke={
-                                    this._colors[index % this._colors.length]
-                                }
-                                fill={this._colors[index % this._colors.length]}
-                            />
-                        ))}
+                        {
+                            this._categories.map((category, index) => (
+                                <Area
+                                    key={category}
+                                    dataKey={category}
+                                    stackId="1"
+                                    stroke={
+                                        this._colors[index % this._colors.length]
+                                    }
+                                    fill={this._colors[index % this._colors.length]}
+                                />
+                            ))
+                        }
+
                         <Legend />
                         <Tooltip content={<PercentageTooltip />} />
                     </AreaChart>
@@ -89,11 +92,6 @@ export class MultiAreaChartRenderer extends BaseChartRenderer {
     }
 
     getChartDescription() {
-        switch (this.contentType) {
-            case "ByCategory":
-                return "Radar chart showing the distribution of posts number by each predicted category. ";
-            case "ByChannel":
-                return "Pie chart showing the distribution of posts number by channel";
-        }
+        return "Area chart showing the distribution of posts percentage by each predicted category by date.";
     }
 }
