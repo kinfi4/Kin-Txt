@@ -2,7 +2,7 @@ import logging
 from typing import Any, cast
 
 from sqlalchemy import desc
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 from kin_statistics_api.infrastructure.dtos import ReportIdentitiesQueryResult
 from kin_txt_core.database import Database
@@ -54,8 +54,10 @@ class ReportsRepository(IReportRepository):
     ) -> ReportIdentitiesQueryResult:
         session: Session
         with self._db.session() as session:
-
-            reports_query = session.query(Report).filter(Report.owner_username == username)
+            reports_query = self._user_reports_query(
+                using_session=session,
+                username=username,
+            )
 
             if fetch_settings is not None:
                 reports_query = self._apply_filters(reports_query, fetch_settings)
@@ -65,7 +67,7 @@ class ReportsRepository(IReportRepository):
             for report in reports_query.all()
         ]
 
-        return ReportIdentitiesQueryResult(reports=report_entities, count=reports_query.count())
+        return ReportIdentitiesQueryResult(reports=report_entities, total_reports=reports_query.count())
 
     def get_report_names(
         self,
@@ -113,8 +115,13 @@ class ReportsRepository(IReportRepository):
 
             return report.report_id
 
-    def update_report_name(self, report_id: int, report_name: str) -> ReportIdentificationEntity:
-        report = self.get_report(report_id)
+    def update_report_name(
+        self,
+        report_id: int,
+        username: str,
+        name: str,
+    ) -> ReportIdentificationEntity:
+        report = self.get_report(report_id, username)
 
         if report.processing_status == ReportProcessingResult.PROCESSING:
             raise ImpossibleToModifyProcessingReport("You can not change the report during processing.")
@@ -123,35 +130,47 @@ class ReportsRepository(IReportRepository):
         with self._db.session() as session:
 
             updated_report = session.query(Report).get(report_id)
-            updated_report.name = report_name
+            updated_report.name = name
 
         return self._map_dict_to_identification_entity(updated_report)
 
-    def get_report(self, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
+    def get_report(self, report_id: int, username: str) -> BaseReport | StatisticalReport | WordCloudReport:
         session: Session
         with self._db.session() as session:
-
-            orm_report = session.query(Report).get(report_id)
+            orm_report = (
+                self._user_reports_query(
+                    using_session=session,
+                    username=username,
+                )
+                .get(report_id)
+            )
 
         if orm_report is None:
             raise ReportNotFound("Report with this id was not found")
 
         return self._map_orm_object_to_entity(orm_report)
 
-    def delete_report(self, report_id: int) -> None:
+    def delete_report(self, report_id: int, username: str) -> None:
         session: Session
         with self._db.session() as session:
 
-            if (report := session.query(Report).get(report_id)) is None:
+            if (report := self._user_reports_query(session, username).get(report_id)) is None:
                 return None
 
             session.delete(report)
 
-    def report_exists(self, report_id: int) -> bool:
+    def report_exists(self, report_id: int, username: str) -> bool:
         session: Session
         with self._db.session() as session:
 
-            return session.query(Report).filter(Report.report_id == report_id).count() > 0
+            return (
+                self._user_reports_query(
+                    using_session=session,
+                    username=username,
+                )
+                .filter(Report.report_id == report_id)
+                .total_reports()
+            ) > 0
 
     def get_total_reports_count(self, filters: ReportsFetchSettings | None) -> int:
         session: Session
@@ -195,6 +214,9 @@ class ReportsRepository(IReportRepository):
             report_type=orm_report.report_type,
             generation_date=orm_report.generation_date,
         )
+
+    def _user_reports_query(self, using_session: Session, username: str) -> Query:
+        return using_session.query(Report).filter(Report.owner_username == username)
 
     def _map_orm_object_to_entity(
         self,

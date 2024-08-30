@@ -6,4 +6,4 @@ from kin_statistics_api.domain.entities import ReportIdentificationEntity
 @dataclass
 class ReportIdentitiesQueryResult:
     reports: list[ReportIdentificationEntity]
-    count: int
+    total_reports: int

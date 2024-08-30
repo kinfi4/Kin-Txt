@@ -173,8 +173,7 @@ class ModelRepository:
             )
 
             model.model_status = status
-            if validation_message:
-                model.validation_message = validation_message
+            model.validation_message = validation_message
 
     def _map_orm_to_model_entity(self, orm_model: ORMModel) -> ModelEntity:
         return ModelEntity(

@@ -52,7 +52,7 @@ class IAMRepository:
         return [report.report_id for report in user_with_reports.reports]
 
     def update_user_simultaneous_reports_generation(self, username: str, change: int) -> None:
-        if change not in [-1, 1]:
+        if change not in (-1, 1):
             raise ValueError("Change must be -1 or 1")
 
         session: Session

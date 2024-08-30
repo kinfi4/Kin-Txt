@@ -44,23 +44,27 @@ class IReportRepository(ABC):
         pass
 
     @abstractmethod
-    def get_report(self, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
+    def get_report(self, report_id: int, username: str) -> BaseReport | StatisticalReport | WordCloudReport:
         pass
 
     @abstractmethod
-    def get_report_names(self, report_ids: list[int], apply_settings: ReportsFetchSettings | None = None) -> list[ReportIdentificationEntity]:
+    def get_report_names(
+        self,
+        report_ids: list[int],
+        apply_settings: ReportsFetchSettings | None = None,
+    ) -> list[ReportIdentificationEntity]:
         pass
 
     @abstractmethod
-    def update_report_name(self, report_id: int, report_name: str) -> ReportIdentificationEntity:
+    def update_report_name(self, report_id: int, username: str, name: str) -> ReportIdentificationEntity:
         pass
 
     @abstractmethod
-    def delete_report(self, report_id: int) -> None:
+    def delete_report(self, report_id: int, username: str) -> None:
         pass
 
     @abstractmethod
-    def report_exists(self, report_id: int) -> bool:
+    def report_exists(self, report_id: int, username: str) -> bool:
         pass
 
     @abstractmethod

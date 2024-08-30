@@ -39,8 +39,11 @@ class GenerateReportEntity(BaseModel):
 
     @field_validator("channel_list", mode="before")
     def validate_channels(cls, channels: list[str]) -> list[str]:
-        if len(channels) > Settings().max_channel_per_report_count or not channels:
-            raise ValidationError("You passed invalid list of channels to process!")
+        if not channels:
+            raise ValueError("You have to pass at least one channel to gather information from!")
+
+        if len(channels) > Settings().max_channel_per_report_count:
+            raise ValueError(f"Maximum channels per report is {Settings().max_channel_per_report_count}")
 
         return channels
 
@@ -55,6 +58,9 @@ class GenerateReportEntity(BaseModel):
     def validate_start_and_end_dates_difference(self) -> "GenerateReportEntity":
         if self.end_date < self.start_date:
             raise ValueError("Start date must be earlier than end date.")
+
+        if self.start_date > date.today():
+            raise ValueError("Start date must be earlier than today.")
 
         if (self.end_date - self.start_date).days > 365:
             raise ValueError("The period of time between start and end dates must be less than 1 year")

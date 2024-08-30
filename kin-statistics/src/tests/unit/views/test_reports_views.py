@@ -27,7 +27,7 @@ class TestReportsViews:
                     processing_status="Ready",
                 )
             ],
-            count=1,
+            total_reports=1,
         )
 
         mock__reports_repository.get_user_reports.return_value = query_result
@@ -64,7 +64,7 @@ class TestReportsViews:
         mock__access_management_repository: MagicMock,
     ) -> None:
         mock__access_management_repository.get_user_report_ids.return_value = []
-        mock__reports_repository.get_user_reports.return_value = ReportIdentitiesQueryResult(reports=[], count=0)
+        mock__reports_repository.get_user_reports.return_value = ReportIdentitiesQueryResult(reports=[], total_reports=0)
 
         username, auth_headers = username_with_access_token_headers
         client = test_http_client__unauthorized

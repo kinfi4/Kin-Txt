@@ -7,6 +7,8 @@ from starlette.requests import Request
 
 _logger = logging.getLogger(__name__)
 
+VALUE_ERROR_TYPE = "value_error"
+
 
 def pydantic_validation_exception_handler(_: Request, exc: RequestValidationError) -> Response:
     messages: list[str] = []
@@ -14,11 +16,12 @@ def pydantic_validation_exception_handler(_: Request, exc: RequestValidationErro
     _logger.warning(f"Request validation error: {exc.errors()}")
 
     for error in exc.errors():
-        if error["type"] == "value_error":
-            message: str = error["msg"]
-            messages.append(message.replace("Value error, ", ""))
-        else:
-            messages.append(error["msg"])
+        error_message: str = error["msg"]
+
+        if error["type"] == VALUE_ERROR_TYPE:
+            error_message = error_message.replace("Value error, ", "")
+
+        messages.append(error_message)
 
     return JSONResponse(
         status_code=422,

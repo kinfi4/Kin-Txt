@@ -66,7 +66,7 @@ class TestManagingReportsService:
         username = "test-username"
         fetch_settings = ReportsFetchSettings(page=1, items_per_page=10)
 
-        reports_service.get_user_reports_names(username, fetch_settings)
+        reports_service.get_reports_preview(username, fetch_settings)
 
         mock__reports_repository.get_user_reports.assert_called_once_with(username, fetch_settings=fetch_settings)
 
@@ -117,7 +117,7 @@ class TestManagingReportsService:
 
         mock__access_management_repository.get_user_report_ids.return_value = [report_id, 2, 3]
 
-        reports_service.get_user_detailed_report(username, report_id)
+        reports_service.get_detailed_report(username, report_id)
 
         mock__reports_repository.get_report.assert_called_once_with(report_id)
 

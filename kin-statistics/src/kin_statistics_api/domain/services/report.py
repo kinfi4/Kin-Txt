@@ -15,7 +15,6 @@ from kin_statistics_api.domain.entities import (
     ReportsFetchSettings,
 )
 from kin_statistics_api.domain.events import GenerateReportRequestOccurred
-from kin_statistics_api.exceptions import ReportAccessForbidden
 from kin_statistics_api.infrastructure.interfaces import IReportRepository
 from kin_statistics_api.infrastructure.repositories.iam import IAMRepository
 from kin_statistics_api.constants import REPORTS_BUILDER_EXCHANGE, ReportProcessingResult
@@ -35,9 +34,12 @@ class ManagingReportsService:
         self._logger = logging.getLogger(self.__class__.__name__)
 
     def report_processing_finished(self, username: str, report: StatisticalReport | WordCloudReport) -> None:
-        self._iam_repository.update_user_simultaneous_reports_generation(username, -1)
+        self._iam_repository.update_user_simultaneous_reports_generation(
+            username=username,
+            change=-1,
+        )
 
-        if not self._reports_repository.report_exists(report.report_id):
+        if not self._reports_repository.report_exists(report.report_id, username):
             return  # that means user has deleted report before it was finished
 
         self._reports_repository.save_finished_report(report)
@@ -70,35 +72,38 @@ class ManagingReportsService:
 
         self._reports_repository.update_report_status(report_id, new_status)
 
-    def get_user_reports_names(
+    def get_reports_preview(
         self,
         username: str,
         fetch_settings: ReportsFetchSettings | None = None,
     ) -> PaginatedDataEntity[ReportIdentificationEntity]:
-        query_result: ReportIdentitiesQueryResult = self._reports_repository.get_user_reports(
+        data: ReportIdentitiesQueryResult = self._reports_repository.get_user_reports(
             username,
             fetch_settings=fetch_settings,
         )
 
-        print(query_result)
-
-        self._logger.info(f"[ManagingReportsService] got reports {query_result.count} identities for user: {username}")
+        self._logger.info(
+            f"[ManagingReportsService] User {username} has totally: {data.total_reports} reports. "
+            f"Has fetched {len(data.reports)} for page #{fetch_settings.page}."
+        )
 
         return PaginatedDataEntity(
-            data=query_result.reports,
-            total_pages=math.ceil(query_result.count / ITEMS_PER_PAGE),
+            data=data.reports,
+            total_pages=math.ceil(data.total_reports / ITEMS_PER_PAGE),
             page=fetch_settings.page if fetch_settings else 0,
         )
 
-    def set_report_name(self, username: str, report_name: str, report_id: int) -> ReportIdentificationEntity:
-        self._check_user_access(username, report_ids=[report_id])
-
+    def set_report_name(self, username: str, name: str, report_id: int) -> ReportIdentificationEntity:
         self._logger.info(
             f"[ManagingReportsService] "
-            f"updating report {report_id} with new name: {report_name}"
+            f"Updating report `{report_id}` with new name: `{name}`"
         )
 
-        new_report = self._reports_repository.update_report_name(report_id, report_name)
+        new_report = self._reports_repository.update_report_name(
+            report_id=report_id,
+            username=username,
+            name=name,
+        )
 
         return ReportIdentificationEntity(
             report_id=new_report.report_id,
@@ -108,21 +113,12 @@ class ManagingReportsService:
             processing_status=new_report.processing_status,
         )
 
-    def get_user_detailed_report(self, username: str, report_id: int) -> BaseReport | StatisticalReport | WordCloudReport:
-        # TODO: We can remove this check and implement filtering in the repository.
-        # TODO: This way we can avoid fetching all reports and then filtering them
-
-        self._check_user_access(username, report_ids=[report_id])
-
-        return self._reports_repository.get_report(report_id)
+    def get_detailed_report(
+        self,
+        username: str,
+        report_id: int,
+    ) -> BaseReport | StatisticalReport | WordCloudReport:
+        return self._reports_repository.get_report(report_id, username=username)
 
     def delete_report(self, username: str, report_id: int) -> None:
-        self._check_user_access(username, [report_id])
-
-        self._reports_repository.delete_report(report_id=report_id)
-
-    def _check_user_access(self, username: str, report_ids: list[int]) -> None:
-        user_reports = self._iam_repository.get_user_report_ids(username=username)
-
-        if not all([report_id in user_reports for report_id in report_ids]):
-            raise ReportAccessForbidden("You do not have permission for this report!")
+        self._reports_repository.delete_report(report_id=report_id, username=username)

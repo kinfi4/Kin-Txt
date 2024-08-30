@@ -34,7 +34,7 @@ def get_reports(
     current_user: User = Depends(get_current_user),
     reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
 ):
-    return reports_service.get_user_reports_names(current_user.username, fetch_settings=fetch_settings)
+    return reports_service.get_reports_preview(current_user.username, fetch_settings=fetch_settings)
 
 
 @router.post("")
@@ -74,7 +74,7 @@ def get_report_details(
     reports_service: ManagingReportsService = Depends(Provide[Container.services.managing_reports_service]),
 ):
     try:
-        report = reports_service.get_user_detailed_report(current_user.username, report_id)
+        report = reports_service.get_detailed_report(current_user.username, report_id)
     except ReportAccessForbidden:
         return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
